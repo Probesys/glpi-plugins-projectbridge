@@ -137,18 +137,25 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
         $contract->canUpdate()
         && isset($contract->input['projectbridge_project_id'])
     ) {
-        $selected_project_id = (int) $contract->input['projectbridge_project_id'];
+        if (empty($contract->input['projectbridge_project_id'])) {
+            $selected_project_id = 0;
+        } else {
+            $selected_project_id = (int) $contract->input['projectbridge_project_id'];
+        }
+
         $bridge_contract = new PluginProjectbridgeContract($contract);
-        $project_id = (int) $bridge_contract->getProjectId();
+        $project_id = $bridge_contract->getProjectId();
 
-        if ($selected_project_id != $project_id) {
-            $update_data = array(
-                'id' => $bridge_contract->getId(),
-                'contract_id' => $contract->getId(),
-                'project_id' => $selected_project_id,
-            );
+        $post_data = array(
+            'contract_id' => $contract->getId(),
+            'project_id' => $selected_project_id,
+        );
 
-            $bridge_contract->update($update_data);
+        if ($project_id === null) {
+            $bridge_contract->add($post_data);
+        } else if ($selected_project_id != $project_id) {
+            $post_data['id'] = $bridge_contract->getId();
+            $bridge_contract->update($post_data);
         }
     }
 }
@@ -159,7 +166,6 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
  *
  * @param Contract $contract
  * @return void
- * @todo remove update
  */
 function plugin_projectbridge_contract_create(Contract $contract)
 {
