@@ -65,15 +65,23 @@ class PluginProjectbridgeEntity extends CommonDBTM
         $html_parts[] = 'Contrat par défaut'; // todo: i18n
         $html_parts[] = '</td>' . "\n";
 
-        $html_parts[] = '<td colspan="2">';
+        $html_parts[] = '<td colspan="2">' . "\n";
         $html_parts[] = Contract::dropdown($contract_config);
 
-        if (!empty($contract_id)) {
-            global $CFG_GLPI;
+        global $CFG_GLPI;
 
+        if (!empty($contract_id)) {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/contract.form.php?id=' . $contract_id . '" style="margin-left: 5px;" target="_blank">';
             $html_parts[] = 'Accéder au contrat par défaut'; // todo: i18n
-            $html_parts[] = '</a>';
+            $html_parts[] = '</a>' . "\n";
+        } else {
+            $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/setup.templates.php?itemtype=Contract&add=1" style="margin-left: 5px;" target="_blank">';
+            $html_parts[] = 'Créer un contrat ?'; // todo: i18n
+            $html_parts[] = '</a>' . "\n";
+
+            $html_parts[] = '<small>';
+            $html_parts[] = 'Pensez à rafraîchir cette page après avoir créé le contrat';
+            $html_parts[] = '</small>' . "\n";
         }
 
         $html_parts[] = '</td>' . "\n";

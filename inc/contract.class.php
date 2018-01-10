@@ -78,15 +78,24 @@ class PluginProjectbridgeContract extends CommonDBTM
         $html_parts[] = 'Projet lié'; // todo: i18n
         $html_parts[] = '</td>' . "\n";
 
-        $html_parts[] = '<td colspan="2">';
+        $html_parts[] = '<td colspan="2">' . "\n";
         $html_parts[] = Dropdown::showFromArray('projectbridge_project_id', $project_list, $project_config);
 
-        if (!empty($project_id)) {
-            global $CFG_GLPI;
+        global $CFG_GLPI;
 
+        if (!empty($project_id)) {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left: 5px;" target="_blank">';
             $html_parts[] = 'Accéder au projet lié'; // todo: i18n
-            $html_parts[] = '</a>';
+            $html_parts[] = '</a>' . "\n";
+        } else {
+            $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/setup.templates.php?itemtype=Project&add=1" style="margin-left: 5px;" target="_blank">';
+            $html_parts[] = 'Créer un projet ?'; // todo: i18n
+            $html_parts[] = '</a>' . "\n";
+
+            $html_parts[] = '<small>';
+            $html_parts[] = 'Pensez à rafraîchir cette page après avoir créé le projet';
+            $html_parts[] = '</small>' . "\n";
+
         }
 
         $html_parts[] = '</td>' . "\n";
