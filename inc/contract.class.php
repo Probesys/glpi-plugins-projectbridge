@@ -27,6 +27,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     public function getProjectId()
     {
         if ($this->_project_id === null) {
+            $this->_project_id = 0;
             $result = $this->getFromDBByQuery("WHERE contract_id = " . $this->_contract->getId());
 
             if ($result) {
@@ -48,9 +49,7 @@ class PluginProjectbridgeContract extends CommonDBTM
             $result = $this->getFromDBByQuery("WHERE contract_id = " . $this->_contract->getId());
 
             if ($result) {
-                // todo
-                // $this->_nb_hours = (int) $this->fields['nb_hours'];
-                $this->_nb_hours = 24;
+                $this->_nb_hours = (int) $this->fields['nb_hours'];
             }
         }
 

@@ -32,6 +32,7 @@ function plugin_projectbridge_install()
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `contract_id` INT(11) NOT NULL,
                 `project_id` INT(11) NOT NULL,
+                `nb_hours` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX (`contract_id`)
             )
@@ -137,10 +138,19 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
         $contract->canUpdate()
         && isset($contract->input['projectbridge_project_id'])
     ) {
+        $nb_hours = 0;
+
         if (empty($contract->input['projectbridge_project_id'])) {
             $selected_project_id = 0;
         } else {
             $selected_project_id = (int) $contract->input['projectbridge_project_id'];
+
+            if (
+                !empty($contract->input['projectbridge_project_hours'])
+                && $contract->input['projectbridge_project_hours'] > 0
+            ) {
+                $nb_hours = (int) $contract->input['projectbridge_project_hours'];
+            }
         }
 
         $bridge_contract = new PluginProjectbridgeContract($contract);
@@ -149,11 +159,12 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
         $post_data = array(
             'contract_id' => $contract->getId(),
             'project_id' => $selected_project_id,
+            'nb_hours' => $nb_hours,
         );
 
         if ($project_id === null) {
             $bridge_contract->add($post_data);
-        } else if ($selected_project_id != $project_id) {
+        } else {
             $post_data['id'] = $bridge_contract->getId();
             $bridge_contract->update($post_data);
         }
