@@ -126,12 +126,42 @@ function plugin_projectbridge_pre_entity_update(Entity $entity)
 }
 
 /**
- * Hook called on creation or update of a contract
+ * Hook called before the update of a contract
  *
  * @param Contract $contract
  * @return void
  */
-function plugin_projectbridge_contract_create_update(Contract $contract)
+function plugin_projectbridge_pre_contract_update(Contract $contract)
+{
+    if (
+        $contract->canUpdate()
+        && isset($contract->input['projectbridge_project_id'])
+    ) {
+        $selected_project_id = (int) $contract->input['projectbridge_project_id'];
+        $bridge_contract = new PluginProjectbridgeContract($contract);
+        $project_id = (int) $bridge_contract->getProjectId();
+
+        if ($selected_project_id != $project_id) {
+            $update_data = array(
+                'id' => $bridge_contract->getId(),
+                'contract_id' => $contract->getId(),
+                'project_id' => $selected_project_id,
+            );
+
+            $bridge_contract->update($update_data);
+        }
+    }
+}
+
+
+/**
+ * Hook called on creation of a contract
+ *
+ * @param Contract $contract
+ * @return void
+ * @todo remove update
+ */
+function plugin_projectbridge_contract_create(Contract $contract)
 {
     if (
         $contract->canUpdate()

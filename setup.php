@@ -34,11 +34,11 @@ function plugin_init_projectbridge()
         $PLUGIN_HOOKS['post_show_item'][PluginProjectBridgeConfig::NAMESPACE] = 'plugin_projectbridge_post_show_item';
         $PLUGIN_HOOKS['pre_item_update'][PluginProjectBridgeConfig::NAMESPACE] = array(
             'Entity' => 'plugin_projectbridge_pre_entity_update',
-            'Contract' => 'plugin_projectbridge_contract_create_update',
+            'Contract' => 'plugin_projectbridge_pre_contract_update',
         );
 
         $PLUGIN_HOOKS['item_add'][PluginProjectBridgeConfig::NAMESPACE] = array(
-            'Contract' => 'plugin_projectbridge_contract_create_update',
+            'Contract' => 'plugin_projectbridge_contract_create',
         );
     }
 }
