@@ -17,7 +17,7 @@ function plugin_projectbridge_install()
                 `entity_id` INT(11) NOT NULL,
                 `contract_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
-                INDEX (`entity_id`, `contract_id`)
+                INDEX (`entity_id`)
             )
             COLLATE='utf8_unicode_ci'
             ENGINE=MyISAM
@@ -33,7 +33,7 @@ function plugin_projectbridge_install()
                 `contract_id` INT(11) NOT NULL,
                 `project_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
-                INDEX (`contract_id`, `project_id`)
+                INDEX (`contract_id`)
             )
             COLLATE='utf8_unicode_ci'
             ENGINE=MyISAM
