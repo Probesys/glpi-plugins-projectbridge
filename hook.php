@@ -237,7 +237,33 @@ function plugin_projectbridge_contract_add(Contract $contract)
 
             $bridge_contract->add($bridge_data);
 
-            // todo: add task for this year with $nb_hours as "durée planifiée"
+            $project_task_data = array(
+                // data from contract
+                'name' => 'Année ' . date('Y'),
+                'entities_id' => $contract->fields['entities_id'],
+                'is_recursive' => $contract->fields['is_recursive'],
+                'projects_id' => $project_id,
+                'content' => $contract->fields['comment'],
+                'plan_start_date' => (!empty($contract->fields['begin_date']) ? $contract->fields['begin_date'] : ''),
+                'planned_duration' => $nb_hours * 3600, // in seconds
+                'projectstates_id' => 1, // "new"
+                // 'projectstates_id' => 1, // "processing"
+
+                // standard data to bootstrap project
+                'projecttasktemplates_id' => 0,
+                'projecttasks_id' => 0,
+                'projecttasktypes_id' => 0,
+                'percent_done' => 0,
+                'is_milestone' => 0,
+                'real_start_date' => '',
+                'plan_end_date' => '',
+                'real_end_date' => '',
+                'effective_duration' => 0,
+                'comment' => '',
+            );
+
+            $project_task = new ProjectTask();
+            $project_task->add($project_task_data);
         }
     }
 }
