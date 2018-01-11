@@ -177,7 +177,10 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         global $CFG_GLPI;
 
-        if (!empty($project_id)) {
+        if (
+            !empty($project_id)
+            && isset($project_list[$project_id])
+        ) {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left: 5px;" target="_blank">';
             $html_parts[] = 'Accéder au projet lié';
             $html_parts[] = '</a>' . "\n";
