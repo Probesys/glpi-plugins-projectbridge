@@ -224,17 +224,19 @@ function plugin_projectbridge_contract_add(Contract $contract)
             'template_name' => '',
         );
 
+        // create the project
         $project = new Project();
         $project_id = $project->add($project_data);
 
         if ($project_id) {
-            $bridge_contract = new PluginProjectbridgeContract($contract);
             $bridge_data = array(
                 'contract_id' => $contract->getId(),
                 'project_id' => $project_id,
                 'nb_hours' => $nb_hours,
             );
 
+            // link the project to the contract
+            $bridge_contract = new PluginProjectbridgeContract($contract);
             $bridge_contract->add($bridge_data);
 
             $project_task_data = array(
@@ -262,6 +264,7 @@ function plugin_projectbridge_contract_add(Contract $contract)
                 'comment' => '',
             );
 
+            // create the project's task
             $project_task = new ProjectTask();
             $project_task->add($project_task_data);
         }
