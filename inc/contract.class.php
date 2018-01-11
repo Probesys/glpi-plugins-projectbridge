@@ -184,6 +184,49 @@ class PluginProjectbridgeContract extends CommonDBTM
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left: 5px;" target="_blank">';
             $html_parts[] = 'Accéder au projet lié';
             $html_parts[] = '</a>' . "\n";
+
+            $html_parts[] = '&nbsp;';
+            $html_parts[] = '-';
+            $html_parts[] = '&nbsp;';
+
+            $nb_hours = $bridge_contract->getNbHours();
+            $consumption = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'consumption');
+            $consumption_ratio = $consumption / $nb_hours;
+
+            $html_parts[] = 'Consommation : ';
+            $html_parts[] = $consumption . '/' . $nb_hours . ' heures';
+            $html_parts[] = '&nbsp;';
+            $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
+
+            $plan_end_date = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'plan_end_date');
+            $end_date_reached = false;
+
+            if (!empty($plan_end_date)) {
+                $datediff = strtotime($plan_end_date) - time($plan_end_date);
+                $end_date_delta = floor($datediff / (60 * 60 * 24));
+
+                $html_parts[] = '&nbsp;';
+                $html_parts[] = '-';
+                $html_parts[] = '&nbsp;';
+
+                if ($end_date_delta == 0) {
+                    $end_date_reached = true;
+                    $html_parts[] = 'Expire dans moins de 24h';
+                } else {
+                    $html_parts[] = 'Expire dans ' . $end_date_delta . ' jours';
+                }
+            }
+
+            if (
+                $consumption_ratio >= 1
+                || $end_date_reached
+            ) {
+                $html_parts[] = '&nbsp;';
+                $html_parts[] = '-';
+                $html_parts[] = '&nbsp;';
+
+                $html_parts[] = '<input type="submit" name="projectbridge_renew_contract" value="Renouveller le contrat" class="submit" />';
+            }
         } else {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/setup.templates.php?itemtype=Project&add=1" style="margin-left: 5px;" target="_blank">';
             $html_parts[] = 'Créer un projet ?';
@@ -202,5 +245,57 @@ class PluginProjectbridgeContract extends CommonDBTM
         $html_parts[] = '<input type="number" min="0" max="99999" step="6" name="projectbridge_project_hours" value="' . $bridge_contract->getNbHours() . '" style="width: 50px" />';
 
         return implode('', $html_parts);
+    }
+
+    /**
+     * Get data from a project's task
+     * @param  integer $project_id The project to get the data from
+     * @param  string $data_field The data to get
+     * @return mixed
+     */
+    private static function _getProjectTaskDataByProjectId($project_id, $data_field)
+    {
+        static $project_task;
+
+        if ($project_task === null) {
+            $project_task = new ProjectTask();
+            $project_task->getFromDBByQuery("
+                WHERE TRUE
+                    AND projects_id = " . $project_id . "
+                    AND projectstates_id != 3
+                ORDER BY
+                    id ASC
+                LIMIT 1
+            ");
+        }
+
+        $return = null;
+
+        switch ($data_field) {
+            case 'consumption':
+                $return = 0;
+
+                if ($project_task->getId() > 0) {
+                    $action_time = ProjectTask_Ticket::getTicketsTotalActionTime($project_task->getId());
+
+                    if ($action_time > 0) {
+                        $return = $action_time / 3600;
+                    }
+                }
+
+                break;
+
+            case 'plan_end_date':
+                if (!empty($project_task->fields['plan_end_date'])) {
+                    $return = $project_task->fields['plan_end_date'];
+                }
+
+                break;
+
+            default:
+                // nothing to do
+        }
+
+        return $return;
     }
 }

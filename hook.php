@@ -241,7 +241,7 @@ function plugin_projectbridge_contract_add(Contract $contract)
 
             $project_task_data = array(
                 // data from contract
-                'name' => 'Année ' . date('Y-m'),
+                'name' => date('Y-m'),
                 'entities_id' => $contract->fields['entities_id'],
                 'is_recursive' => $contract->fields['is_recursive'],
                 'projects_id' => $project_id,
