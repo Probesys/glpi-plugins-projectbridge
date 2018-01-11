@@ -241,15 +241,20 @@ function plugin_projectbridge_contract_add(Contract $contract)
 
             $project_task_data = array(
                 // data from contract
-                'name' => 'Année ' . date('Y'),
+                'name' => 'Année ' . date('Y-m'),
                 'entities_id' => $contract->fields['entities_id'],
                 'is_recursive' => $contract->fields['is_recursive'],
                 'projects_id' => $project_id,
                 'content' => $contract->fields['comment'],
                 'plan_start_date' => (!empty($contract->fields['begin_date']) ? $contract->fields['begin_date'] : ''),
+                'plan_end_date' => (
+                    !empty($contract->fields['begin_date'])
+                    && !empty($contract->fields['duration'])
+                        ? Infocom::getWarrantyExpir($contract->fields['begin_date'], $contract->fields['duration'])
+                        : ''
+                ),
                 'planned_duration' => $nb_hours * 3600, // in seconds
-                'projectstates_id' => 1, // "new"
-                // 'projectstates_id' => 1, // "processing"
+                'projectstates_id' => 2, // "processing"
 
                 // standard data to bootstrap project
                 'projecttasktemplates_id' => 0,
@@ -258,7 +263,6 @@ function plugin_projectbridge_contract_add(Contract $contract)
                 'percent_done' => 0,
                 'is_milestone' => 0,
                 'real_start_date' => '',
-                'plan_end_date' => '',
                 'real_end_date' => '',
                 'effective_duration' => 0,
                 'comment' => '',
