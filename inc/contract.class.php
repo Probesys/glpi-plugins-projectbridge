@@ -227,7 +227,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '-';
                 $html_parts[] = '&nbsp;';
 
-                $html_parts[] = '<input type="submit" name="projectbridge_renew_contract" value="Renouveller le contrat" class="submit" />';
+                $html_parts[] = '<input type="submit" name="update" value="Renouveller le contrat" class="submit" />';
             }
         } else {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/setup.templates.php?itemtype=Project&add=1" style="margin-left: 5px;" target="_blank">';
@@ -274,10 +274,26 @@ class PluginProjectbridgeContract extends CommonDBTM
         $return = null;
 
         switch ($data_field) {
+            case 'exists':
+                if ($project_task->getId() > 0) {
+                    $return = true;
+                } else {
+                    $return = false;
+                }
+
+                break;
+
+            case 'task':
+                if (PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'exists')) {
+                    $return = $project_task;
+                }
+
+                break;
+
             case 'consumption':
                 $return = 0;
 
-                if ($project_task->getId() > 0) {
+                if (PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'exists')) {
                     $action_time = ProjectTask_Ticket::getTicketsTotalActionTime($project_task->getId());
 
                     if ($action_time > 0) {
@@ -288,7 +304,10 @@ class PluginProjectbridgeContract extends CommonDBTM
                 break;
 
             case 'plan_end_date':
-                if (!empty($project_task->fields['plan_end_date'])) {
+                if (
+                    PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'exists')
+                    && !empty($project_task->fields['plan_end_date'])
+                ) {
                     $return = $project_task->fields['plan_end_date'];
                 }
 
@@ -299,5 +318,89 @@ class PluginProjectbridgeContract extends CommonDBTM
         }
 
         return $return;
+    }
+
+    /**
+     * Renew the task of the project linked to this contract
+     *
+     * @param void
+     * @return void
+     */
+    public function renewProjectTask()
+    {
+        $project_id = $this->getProjectId();
+
+        if (
+            $project_id <= 0
+            || !PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'exists')
+        ) {
+            return;
+        }
+
+        $nb_hours = $this->getNbHours();
+        $nb_hours_to_use = $nb_hours;
+        $delta_hours_to_use = 0;
+        $consumption = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'consumption');
+
+        if ($consumption > $nb_hours) {
+            $delta_hours_to_use = $consumption - $nb_hours;
+            $nb_hours_to_use -= $delta_hours_to_use;
+        }
+
+        $project_task = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'task');
+
+        // close current task
+        $closed = $project_task->update(array(
+            'id' => $project_task->getId(),
+            'projectstates_id' => 3, // "closed"
+        ));
+
+        if ($closed) {
+            $task_start_date = date('Y-m-d');
+            $delta_hours_to_use_str = '';
+
+            if ($delta_hours_to_use != 0) {
+                $delta_hours_to_use_str .= 'Dépassement de la tâche précédente : ';
+                $delta_hours_to_use_str .= floor($delta_hours_to_use) . ' heures';
+
+                if (floor($delta_hours_to_use) != $delta_hours_to_use) {
+                    $delta_hours_to_use_str .= ' ';
+                    $delta_hours_to_use_str .= (($delta_hours_to_use - floor($delta_hours_to_use)) * 60);
+                    $delta_hours_to_use_str .= ' minutes';
+                }
+            }
+
+            $project_task_data = array(
+                // data from contract
+                'name' => date('Y-m'),
+                'entities_id' => $this->_contract->fields['entities_id'],
+                'is_recursive' => $this->_contract->fields['is_recursive'],
+                'projects_id' => $project_id,
+                'content' => $this->_contract->fields['comment'],
+                'comment' => $delta_hours_to_use_str,
+                'plan_start_date' => $task_start_date,
+                'plan_end_date' => (
+                    !empty($this->_contract->fields['duration'])
+                        ? Infocom::getWarrantyExpir($task_start_date, $this->_contract->fields['duration'])
+                        : ''
+                ),
+                'planned_duration' => $nb_hours_to_use * 3600, // in seconds
+                'projectstates_id' => 2, // "processing"
+
+                // standard data to bootstrap task
+                'projecttasktemplates_id' => 0,
+                'projecttasks_id' => 0,
+                'projecttasktypes_id' => 0,
+                'percent_done' => 0,
+                'is_milestone' => 0,
+                'real_start_date' => '',
+                'real_end_date' => '',
+                'effective_duration' => 0,
+            );
+
+            // create the new project's task
+            $project_task = new ProjectTask();
+            $project_task->add($project_task_data);
+        }
     }
 }

@@ -136,37 +136,46 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
 {
     if (
         $contract->canUpdate()
+        && isset($contract->input['update'])
         && isset($contract->input['projectbridge_project_id'])
     ) {
-        $nb_hours = 0;
+        if ($contract->input['update'] != 'Renouveller le contrat') {
+            // update contract
 
-        if (empty($contract->input['projectbridge_project_id'])) {
-            $selected_project_id = 0;
-        } else {
-            $selected_project_id = (int) $contract->input['projectbridge_project_id'];
+            $nb_hours = 0;
 
-            if (
-                !empty($contract->input['projectbridge_project_hours'])
-                && $contract->input['projectbridge_project_hours'] > 0
-            ) {
-                $nb_hours = (int) $contract->input['projectbridge_project_hours'];
+            if (empty($contract->input['projectbridge_project_id'])) {
+                $selected_project_id = 0;
+            } else {
+                $selected_project_id = (int) $contract->input['projectbridge_project_id'];
+
+                if (
+                    !empty($contract->input['projectbridge_project_hours'])
+                    && $contract->input['projectbridge_project_hours'] > 0
+                ) {
+                    $nb_hours = (int) $contract->input['projectbridge_project_hours'];
+                }
             }
-        }
 
-        $bridge_contract = new PluginProjectbridgeContract($contract);
-        $project_id = $bridge_contract->getProjectId();
+            $bridge_contract = new PluginProjectbridgeContract($contract);
+            $project_id = $bridge_contract->getProjectId();
 
-        $post_data = array(
-            'contract_id' => $contract->getId(),
-            'project_id' => $selected_project_id,
-            'nb_hours' => $nb_hours,
-        );
+            $post_data = array(
+                'contract_id' => $contract->getId(),
+                'project_id' => $selected_project_id,
+                'nb_hours' => $nb_hours,
+            );
 
-        if ($project_id === null) {
-            $bridge_contract->add($post_data);
+            if ($project_id === null) {
+                $bridge_contract->add($post_data);
+            } else {
+                $post_data['id'] = $bridge_contract->getId();
+                $bridge_contract->update($post_data);
+            }
         } else {
-            $post_data['id'] = $bridge_contract->getId();
-            $bridge_contract->update($post_data);
+            // renew the task of the project linked to the contract
+            $bridge_contract = new PluginProjectbridgeContract($contract);
+            $bridge_contract->renewProjectTask();
         }
     }
 }
