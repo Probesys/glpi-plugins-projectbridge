@@ -304,6 +304,10 @@ class PluginProjectbridgeContract extends CommonDBTM
 
                 break;
 
+            case 'task_id':
+                $return = $project_task->getId();
+                break;
+
             case 'task':
                 if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')) {
                     $return = $project_task;

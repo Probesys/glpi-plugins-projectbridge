@@ -35,6 +35,7 @@ function plugin_init_projectbridge()
         $PLUGIN_HOOKS['pre_item_update'][PluginProjectBridgeConfig::NAMESPACE] = array(
             'Entity' => 'plugin_projectbridge_pre_entity_update',
             'Contract' => 'plugin_projectbridge_pre_contract_update',
+            'Ticket' => 'plugin_projectbridge_ticket_update',
         );
 
         $PLUGIN_HOOKS['item_add'][PluginProjectBridgeConfig::NAMESPACE] = array(
