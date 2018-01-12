@@ -212,8 +212,11 @@ class PluginProjectbridgeContract extends CommonDBTM
                 if ($end_date_delta == 0) {
                     $end_date_reached = true;
                     $html_parts[] = 'Expire dans moins de 24h';
-                } else {
+                } else if ($end_date_delta > 0) {
                     $html_parts[] = 'Expire dans ' . $end_date_delta . ' jours';
+                } else {
+                    $end_date_reached = true;
+                    $html_parts[] = 'Expiré il y a ' . (abs($end_date_delta)) . ' jours';
                 }
             }
 
