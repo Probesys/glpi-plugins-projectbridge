@@ -190,9 +190,9 @@ class PluginProjectbridgeContract extends CommonDBTM
             $html_parts[] = '<br />';
             $html_parts[] = '<br />';
 
-            if (PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'exists')) {
+            if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')) {
                 $nb_hours = $bridge_contract->getNbHours();
-                $consumption = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'consumption');
+                $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption');
                 $consumption_ratio = $consumption / $nb_hours;
 
                 $html_parts[] = 'Consommation : ';
@@ -200,7 +200,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '&nbsp;';
                 $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
 
-                $plan_end_date = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'plan_end_date');
+                $plan_end_date = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'plan_end_date');
                 $end_date_reached = false;
 
                 if (!empty($plan_end_date)) {
@@ -276,7 +276,7 @@ class PluginProjectbridgeContract extends CommonDBTM
      * @param  string $data_field The data to get
      * @return mixed
      */
-    private static function _getProjectTaskDataByProjectId($project_id, $data_field)
+    public static function getProjectTaskDataByProjectId($project_id, $data_field)
     {
         static $project_task;
 
@@ -305,7 +305,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 break;
 
             case 'task':
-                if (PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'exists')) {
+                if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')) {
                     $return = $project_task;
                 }
 
@@ -314,7 +314,7 @@ class PluginProjectbridgeContract extends CommonDBTM
             case 'consumption':
                 $return = 0;
 
-                if (PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'exists')) {
+                if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')) {
                     $action_time = ProjectTask_Ticket::getTicketsTotalActionTime($project_task->getId());
 
                     if ($action_time > 0) {
@@ -326,7 +326,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
             case 'plan_end_date':
                 if (
-                    PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'exists')
+                    PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')
                     && !empty($project_task->fields['plan_end_date'])
                 ) {
                     $return = $project_task->fields['plan_end_date'];
@@ -353,7 +353,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         if (
             $project_id <= 0
-            || !PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'exists')
+            || !PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')
         ) {
             return;
         }
@@ -361,14 +361,14 @@ class PluginProjectbridgeContract extends CommonDBTM
         $nb_hours = $this->getNbHours();
         $nb_hours_to_use = $nb_hours;
         $delta_hours_to_use = 0;
-        $consumption = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'consumption');
+        $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption');
 
         if ($consumption > $nb_hours) {
             $delta_hours_to_use = $consumption - $nb_hours;
             $nb_hours_to_use -= $delta_hours_to_use;
         }
 
-        $project_task = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'task');
+        $project_task = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task');
 
         // close current task
         $closed = $project_task->update(array(
