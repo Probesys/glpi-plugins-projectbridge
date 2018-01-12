@@ -185,6 +185,8 @@ class PluginProjectbridgeContract extends CommonDBTM
             $html_parts[] = 'Accéder au projet lié';
             $html_parts[] = '</a>' . "\n";
 
+            $html_parts[] = PluginProjectbridgeContract::_getPostShowHoursHtml($bridge_contract->getNbHours());
+
             $html_parts[] = '<br />';
             $html_parts[] = '<br />';
 
@@ -241,14 +243,29 @@ class PluginProjectbridgeContract extends CommonDBTM
             $html_parts[] = '<small>';
             $html_parts[] = 'Pensez à rafraîchir cette page après avoir créé le projet';
             $html_parts[] = '</small>' . "\n";
+
+            $html_parts[] = PluginProjectbridgeContract::_getPostShowHoursHtml($bridge_contract->getNbHours());
         }
+
+        return implode('', $html_parts);
+    }
+
+    /**
+     * Get HTML to manage hours
+     *
+     * @param  integer $nb_hours
+     * @return string HTML
+     */
+    private static function _getPostShowHoursHtml($nb_hours)
+    {
+        $html_parts = array();
 
         $html_parts[] = '<br />';
         $html_parts[] = '<br />';
 
         $html_parts[] = 'Nombre d\'heures :';
         $html_parts[] = '&nbsp;';
-        $html_parts[] = '<input type="number" min="0" max="99999" step="6" name="projectbridge_project_hours" value="' . $bridge_contract->getNbHours() . '" style="width: 50px" />';
+        $html_parts[] = '<input type="number" min="0" max="99999" step="6" name="projectbridge_project_hours" value="' . $nb_hours . '" style="width: 50px" />';
 
         return implode('', $html_parts);
     }
