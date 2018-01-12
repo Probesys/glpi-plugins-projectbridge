@@ -191,14 +191,18 @@ class PluginProjectbridgeContract extends CommonDBTM
             $html_parts[] = '<br />';
 
             if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')) {
+                $consumption_ratio = 0;
                 $nb_hours = $bridge_contract->getNbHours();
-                $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption');
-                $consumption_ratio = $consumption / $nb_hours;
 
-                $html_parts[] = 'Consommation : ';
-                $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' heures';
-                $html_parts[] = '&nbsp;';
-                $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
+                if ($nb_hours) {
+                    $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption');
+                    $consumption_ratio = $consumption / $nb_hours;
+
+                    $html_parts[] = 'Consommation : ';
+                    $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' heures';
+                    $html_parts[] = '&nbsp;';
+                    $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
+                }
 
                 $plan_end_date = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'plan_end_date');
                 $end_date_reached = false;
@@ -207,9 +211,11 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $datediff = strtotime($plan_end_date) - time($plan_end_date);
                     $end_date_delta = floor($datediff / (60 * 60 * 24));
 
-                    $html_parts[] = '&nbsp;';
-                    $html_parts[] = '-';
-                    $html_parts[] = '&nbsp;';
+                    if ($nb_hours) {
+                        $html_parts[] = '&nbsp;';
+                        $html_parts[] = '-';
+                        $html_parts[] = '&nbsp;';
+                    }
 
                     if ($end_date_delta == 0) {
                         $end_date_reached = true;
