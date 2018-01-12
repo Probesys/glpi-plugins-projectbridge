@@ -188,46 +188,50 @@ class PluginProjectbridgeContract extends CommonDBTM
             $html_parts[] = '<br />';
             $html_parts[] = '<br />';
 
-            $nb_hours = $bridge_contract->getNbHours();
-            $consumption = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'consumption');
-            $consumption_ratio = $consumption / $nb_hours;
+            if (PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'exists')) {
+                $nb_hours = $bridge_contract->getNbHours();
+                $consumption = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'consumption');
+                $consumption_ratio = $consumption / $nb_hours;
 
-            $html_parts[] = 'Consommation : ';
-            $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' heures';
-            $html_parts[] = '&nbsp;';
-            $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
-
-            $plan_end_date = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'plan_end_date');
-            $end_date_reached = false;
-
-            if (!empty($plan_end_date)) {
-                $datediff = strtotime($plan_end_date) - time($plan_end_date);
-                $end_date_delta = floor($datediff / (60 * 60 * 24));
-
+                $html_parts[] = 'Consommation : ';
+                $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' heures';
                 $html_parts[] = '&nbsp;';
-                $html_parts[] = '-';
-                $html_parts[] = '&nbsp;';
+                $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
 
-                if ($end_date_delta == 0) {
-                    $end_date_reached = true;
-                    $html_parts[] = 'Expire dans moins de 24h';
-                } else if ($end_date_delta > 0) {
-                    $html_parts[] = 'Expire dans ' . $end_date_delta . ' jours';
-                } else {
-                    $end_date_reached = true;
-                    $html_parts[] = 'Expiré il y a ' . (abs($end_date_delta)) . ' jours';
+                $plan_end_date = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'plan_end_date');
+                $end_date_reached = false;
+
+                if (!empty($plan_end_date)) {
+                    $datediff = strtotime($plan_end_date) - time($plan_end_date);
+                    $end_date_delta = floor($datediff / (60 * 60 * 24));
+
+                    $html_parts[] = '&nbsp;';
+                    $html_parts[] = '-';
+                    $html_parts[] = '&nbsp;';
+
+                    if ($end_date_delta == 0) {
+                        $end_date_reached = true;
+                        $html_parts[] = 'Expire dans moins de 24h';
+                    } else if ($end_date_delta > 0) {
+                        $html_parts[] = 'Expire dans ' . $end_date_delta . ' jours';
+                    } else {
+                        $end_date_reached = true;
+                        $html_parts[] = 'Expiré il y a ' . (abs($end_date_delta)) . ' jours';
+                    }
                 }
-            }
 
-            if (
-                $consumption_ratio >= 1
-                || $end_date_reached
-            ) {
-                $html_parts[] = '&nbsp;';
-                $html_parts[] = '-';
-                $html_parts[] = '&nbsp;';
+                if (
+                    $consumption_ratio >= 1
+                    || $end_date_reached
+                ) {
+                    $html_parts[] = '&nbsp;';
+                    $html_parts[] = '-';
+                    $html_parts[] = '&nbsp;';
 
-                $html_parts[] = '<input type="submit" name="update" value="Renouveller le contrat" class="submit" />';
+                    $html_parts[] = '<input type="submit" name="update" value="Renouveller le contrat" class="submit" />';
+                }
+            } else {
+                $html_parts[] = 'Le projet lié n\'a pas de tâche ouverte';
             }
         } else {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/setup.templates.php?itemtype=Project&add=1" style="margin-left: 5px;" target="_blank">';
