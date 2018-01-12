@@ -256,7 +256,7 @@ function plugin_projectbridge_contract_add(Contract $contract)
                 'planned_duration' => $nb_hours * 3600, // in seconds
                 'projectstates_id' => 2, // "processing"
 
-                // standard data to bootstrap project
+                // standard data to bootstrap task
                 'projecttasktemplates_id' => 0,
                 'projecttasks_id' => 0,
                 'projecttasktypes_id' => 0,
