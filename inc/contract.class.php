@@ -185,16 +185,15 @@ class PluginProjectbridgeContract extends CommonDBTM
             $html_parts[] = 'Accéder au projet lié';
             $html_parts[] = '</a>' . "\n";
 
-            $html_parts[] = '&nbsp;';
-            $html_parts[] = '-';
-            $html_parts[] = '&nbsp;';
+            $html_parts[] = '<br />';
+            $html_parts[] = '<br />';
 
             $nb_hours = $bridge_contract->getNbHours();
             $consumption = PluginProjectbridgeContract::_getProjectTaskDataByProjectId($project_id, 'consumption');
             $consumption_ratio = $consumption / $nb_hours;
 
             $html_parts[] = 'Consommation : ';
-            $html_parts[] = $consumption . '/' . $nb_hours . ' heures';
+            $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' heures';
             $html_parts[] = '&nbsp;';
             $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
 
