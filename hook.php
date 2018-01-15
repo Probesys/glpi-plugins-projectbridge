@@ -42,6 +42,21 @@ function plugin_projectbridge_install()
         $DB->query($create_table_query) or die($DB->error());
     }
 
+    if (!TableExists(PluginProjectbridgeConfig::$table_name)) {
+        $create_table_query = "
+            CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeConfig::$table_name . "`
+            (
+                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `user_id` INT(11) NOT NULL,
+                PRIMARY KEY (`id`),
+                INDEX (`user_id`)
+            )
+            COLLATE='utf8_unicode_ci'
+            ENGINE=MyISAM
+        ";
+        $DB->query($create_table_query) or die($DB->error());
+    }
+
     return true;
 }
 
@@ -57,6 +72,7 @@ function plugin_projectbridge_uninstall()
     $tables_to_drop = array(
         PluginProjectbridgeEntity::$table_name,
         PluginProjectbridgeContract::$table_name,
+        PluginProjectbridgeConfig::$table_name,
     );
 
     $drop_table_query = "DROP TABLE IF EXISTS `" . implode('`, `', $tables_to_drop) . "`";

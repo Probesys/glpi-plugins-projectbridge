@@ -31,6 +31,7 @@ function plugin_init_projectbridge()
         global $PLUGIN_HOOKS;
 
         $PLUGIN_HOOKS['csrf_compliant'][PluginProjectBridgeConfig::NAMESPACE] = true;
+        $PLUGIN_HOOKS['config_page'][PluginProjectBridgeConfig::NAMESPACE] = 'front/config.form.php';
         $PLUGIN_HOOKS['post_show_item'][PluginProjectBridgeConfig::NAMESPACE] = 'plugin_projectbridge_post_show_item';
         $PLUGIN_HOOKS['pre_item_update'][PluginProjectBridgeConfig::NAMESPACE] = array(
             'Entity' => 'plugin_projectbridge_pre_entity_update',
