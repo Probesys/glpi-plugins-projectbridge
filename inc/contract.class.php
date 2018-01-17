@@ -147,7 +147,10 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
     private static function _getPostShowUpdateHtml(Contract $contract)
     {
-        $search_filters = array();
+        $search_filters = array(
+            'TRUE',
+            '`is_deleted` = 0',
+        );
 
         if (!empty($_SESSION['glpiactiveentities'])) {
             $search_filters[] = "`entities_id` IN (" . implode(', ', $_SESSION['glpiactiveentities']) . ")";
@@ -157,7 +160,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         $project_id = $bridge_contract->getProjectId();
 
         $project = new Project();
-        $project_results = $project->find(implode(' ', $search_filters));
+        $project_results = $project->find(implode(' AND ', $search_filters));
         $project_list = array(
             null => Dropdown::EMPTY_VALUE,
         );
