@@ -30,10 +30,10 @@ function getPostDataFromFields(array $post_fields)
 
 $can_update = false;
 
-if (class_exists('PluginProjectBridgeConfig')) {
+if (class_exists('PluginProjectbridgeConfig')) {
     $plugin = new Plugin();
 
-    if ($plugin->isActivated(PluginProjectBridgeConfig::NAMESPACE)) {
+    if ($plugin->isActivated(PluginProjectbridgeConfig::NAMESPACE)) {
         $config = new Config();
 
         if (
@@ -62,7 +62,7 @@ if ($can_update) {
     );
 
     $post_data = getPostDataFromFields($post_fields);
-    $recipients = PluginProjectBridgeConfig::getRecipients();
+    $recipients = PluginProjectbridgeConfig::getRecipients();
 
     if (
         !empty($post_data['projectbridge_delete_recipient'])
@@ -71,7 +71,7 @@ if ($can_update) {
         $row_id = key($post_data['projectbridge_delete_recipient']);
 
         if (isset($recipients[$row_id])) {
-            $config = new PluginProjectBridgeConfig();
+            $config = new PluginProjectbridgeConfig();
 
             if ($config->delete(array('id' => $row_id))) {
                 unset($recipients[$row_id]);
@@ -83,10 +83,10 @@ if ($can_update) {
         && !isset($post_data[(int) $post_data['projectbridge_add_recipient']])
     ) {
         $recipient_user_id = (int) $post_data['projectbridge_add_recipient'];
-        $config = new PluginProjectBridgeConfig();
+        $config = new PluginProjectbridgeConfig();
 
         if ($config->add(array('user_id' => $recipient_user_id))) {
-            $recipients = PluginProjectBridgeConfig::getRecipients();
+            $recipients = PluginProjectbridgeConfig::getRecipients();
         }
     }
 
