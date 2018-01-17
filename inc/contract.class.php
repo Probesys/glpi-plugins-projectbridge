@@ -134,12 +134,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         $html_parts[] = '&nbsp;';
         $html_parts[] = Dropdown::showYesNo('projectbridge_create_project', 1, -1, array('display' => false));
 
-        $html_parts[] = '<br />';
-        $html_parts[] = '<br />';
-
-        $html_parts[] = 'Nombre d\'heures :';
-        $html_parts[] = '&nbsp;';
-        $html_parts[] = '<input type="number" min="0" max="99999" step="6" name="projectbridge_project_hours" value="0" style="width: 50px" />';
+        $html_parts[] = PluginProjectbridgeContract::_getPostShowHoursHtml(0);
 
         return implode('', $html_parts);
     }
