@@ -290,11 +290,15 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
     public static function getProjectTaskDataByProjectId($project_id, $data_field)
     {
-        static $project_task;
+        static $project_tasks;
 
-        if ($project_task === null) {
-            $project_task = new ProjectTask();
-            $project_task->getFromDBByQuery("
+        if ($project_tasks === null) {
+            $project_tasks = array();
+        }
+
+        if (!isset($project_tasks[$project_id])) {
+            $project_tasks[$project_id] = new ProjectTask();
+            $project_tasks[$project_id]->getFromDBByQuery("
                 WHERE TRUE
                     AND projects_id = " . $project_id . "
                     AND projectstates_id != 3
@@ -308,7 +312,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         switch ($data_field) {
             case 'exists':
-                if ($project_task->getId() > 0) {
+                if ($project_tasks[$project_id]->getId() > 0) {
                     $return = true;
                 } else {
                     $return = false;
@@ -317,12 +321,12 @@ class PluginProjectbridgeContract extends CommonDBTM
                 break;
 
             case 'task_id':
-                $return = $project_task->getId();
+                $return = $project_tasks[$project_id]->getId();
                 break;
 
             case 'task':
                 if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')) {
-                    $return = $project_task;
+                    $return = $project_tasks[$project_id];
                 }
 
                 break;
@@ -331,7 +335,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $return = 0;
 
                 if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')) {
-                    $action_time = ProjectTask_Ticket::getTicketsTotalActionTime($project_task->getId());
+                    $action_time = ProjectTask_Ticket::getTicketsTotalActionTime($project_tasks[$project_id]->getId());
 
                     if ($action_time > 0) {
                         $return = $action_time / 3600;
@@ -343,9 +347,9 @@ class PluginProjectbridgeContract extends CommonDBTM
             case 'plan_end_date':
                 if (
                     PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')
-                    && !empty($project_task->fields['plan_end_date'])
+                    && !empty($project_tasks[$project_id]->fields['plan_end_date'])
                 ) {
-                    $return = $project_task->fields['plan_end_date'];
+                    $return = $project_tasks[$project_id]->fields['plan_end_date'];
                 }
 
                 break;
