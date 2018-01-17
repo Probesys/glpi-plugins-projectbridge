@@ -39,10 +39,15 @@ class PluginProjectbridgeConfig extends CommonDBTM
                 $user->getFromDB($user_id);
 
                 if ($user->getId()) {
-                    $recipients[(int) $row['id']] = array(
-                        'user_id' => $user_id,
-                        'name' => $user->fields['name'],
-                    );
+                    $default_email = $user->getDefaultEmail();
+
+                    if (!empty($default_email)) {
+                        $recipients[(int) $row['id']] = array(
+                            'user_id' => $user_id,
+                            'name' => $user->fields['name'],
+                            'email' => $user->getDefaultEmail(),
+                        );
+                    }
                 }
             }
         }

@@ -57,6 +57,9 @@ function plugin_projectbridge_install()
         $DB->query($create_table_query) or die($DB->error());
     }
 
+    // cron for alerts
+    CronTask::Register('PluginProjectbridgeContract', 'AlertContractsToRenew', DAY_TIMESTAMP);
+
     return true;
 }
 

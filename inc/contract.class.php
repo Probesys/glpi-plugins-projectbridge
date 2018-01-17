@@ -11,11 +11,16 @@ class PluginProjectbridgeContract extends CommonDBTM
     /**
      * Constructor
      *
-     * @param Contract $contract
+     * @param Contract|null $contract
      */
-    public function __construct(Contract $contract)
+    public function __construct($contract = null)
     {
-        $this->_contract = $contract;
+        if (
+            $contract !== null
+            || $contract instanceof Contract
+        ) {
+            $this->_contract = $contract;
+        }
     }
 
     /**
@@ -443,5 +448,245 @@ class PluginProjectbridgeContract extends CommonDBTM
             $project_task = new ProjectTask();
             $project_task->add($project_task_data);
         }
+    }
+
+    /**
+     * Give cron information
+     *
+     * @param $name string Cron name
+     * @return array of information
+     */
+    public static function cronInfo($name)
+    {
+        switch ($name) {
+            case 'AlertContractsToRenew':
+                return array(
+                    'description' => 'Alerte des contrats à renouveller',
+                );
+
+                break;
+        }
+
+        return array();
+    }
+
+    /**
+     * Cron action to alert on contracts to renew
+     *
+     * @param CronTask|null $task for log, if NULL display (default NULL)
+     * @return integer 1 if an action was done, 0 if not
+     */
+    public static function cronAlertContractsToRenew($task = null)
+    {
+        if (class_exists('PluginProjectbridgeConfig')) {
+            $plugin = new Plugin();
+
+            if (!$plugin->isActivated(PluginProjectbridgeConfig::NAMESPACE)) {
+                echo 'Plugin n\'est pas actif' . "<br />\n";
+                return 0;
+            }
+        } else {
+            echo 'Plugin n\'est pas installé' . "<br />\n";
+            return 0;
+        }
+
+        $nb_successes = 0;
+        $recipients = PluginProjectbridgeConfig::getRecipients();
+        echo 'Trouvé ' . count($recipients) . ' personne(s) à alerter' . "<br />\n";
+
+        if (count($recipients)) {
+            $contracts = PluginProjectbridgeContract::getContractsToRenew();
+            echo 'Trouvé ' . count($contracts) . ' contrats à renouveller' . "<br />\n";
+
+            $subject = 'Contrats : ' . count($contracts) . ' à renouveller';
+
+            $html_parts = array();
+            $html_parts[] = '<p>' . "\n";
+            $html_parts[] = 'Il y a ' . count($contracts) . ' contrats à renouveller :';
+            $html_parts[] = '</p>' . "\n";
+
+            $html_parts[] = '<ol>' . "\n";
+
+            global $CFG_GLPI;
+
+            foreach ($contracts as $contract_id => $contract_data) {
+                $html_parts[] = '<li>' . "\n";
+
+                $html_parts[] = '<strong>Nom</strong> : ';
+                $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/contract.form.php?id=' . $contract_id . '">';
+                $html_parts[] = $contract_data['contract']->fields['name'];
+                $html_parts[] = '</a>';
+                $html_parts[] = '<br />' . "\n";
+
+                if (
+                    $contract_data['overconsumption']
+                    || $contract_data['end_date_reached']
+                ) {
+                    $html_parts[] = '<strong>Motif du renouvellement</strong> : ';
+
+                    if (
+                        $contract_data['overconsumption']
+                        && $contract_data['end_date_reached']
+                    ) {
+                        $html_parts[] = 'Quota atteint + contrat bientôt expiré';
+                    } else if ($contract_data['overconsumption']) {
+                        $html_parts[] = 'Quota atteint';
+                    } else if ($contract_data['end_date_reached']) {
+                        $html_parts[] = 'Contrat bientôt expiré';
+                    }
+                    $html_parts[] = '<br />' . "\n";
+                }
+
+                if ($contract_data['nb_hours']) {
+                    $html_parts[] = '<strong>Quota consommé</strong> : ';
+                    $html_parts[] = $contract_data['consumption'] . ' / ' . $contract_data['nb_hours'] . ' heures';
+                    $html_parts[] = '<br />' . "\n";
+                }
+
+                if ($contract_data['plan_end_date']) {
+                    $html_parts[] = '<strong>Date d\'expiration</strong> : ';
+                    $html_parts[] = $contract_data['plan_end_date'];
+                    $html_parts[] = '<br />' . "\n";
+                }
+
+                $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/contract.form.php?id=' . $contract_id . '">';
+                $html_parts[] = 'Fiche du contrat';
+                $html_parts[] = '</a>';
+
+                $html_parts[] = '</li>' . "\n";
+            }
+
+            $html_parts[] = '</ol>' . "\n";
+
+            foreach ($recipients as $recipient) {
+                $success = PluginProjectbridgeContract::_notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
+
+                if ($success) {
+                    $nb_successes++;
+                    $task->addVolume(count($contracts));
+                }
+            }
+        }
+
+        echo 'Fini' . "<br />\n";
+
+        return ($nb_successes > 0) ? 1 : 0;
+    }
+
+    /**
+     * Notify a recipient
+     *
+     * @param  string $html_content
+     * @param  string $recepient_email
+     * @param  string $recepient_name
+     * @param  string $subject
+     * @return boolean
+     */
+    private static function _notify($html_content, $recepient_email, $recepient_name, $subject)
+    {
+        global $CFG_GLPI;
+
+        $mailer = new GLPIMailer();
+
+        $mailer->AddCustomHeader('Auto-Submitted: auto-generated');
+        // For exchange
+        $mailer->AddCustomHeader('X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN');
+
+        $mailer->SetFrom($CFG_GLPI['admin_email'], $CFG_GLPI['admin_email_name'], false);
+
+        $mailer->isHTML(true);
+        $mailer->Body = $html_content . '<br /><br />' . $CFG_GLPI['mailing_signature'];
+
+        $mailer->AddAddress($recepient_email, $recepient_name);
+        $mailer->Subject = '[GLPI] ' . $subject;
+
+        return $mailer->Send();
+    }
+
+    /**
+     * Get the contracts to renew
+     *
+     * @return array
+     */
+    public static function getContractsToRenew()
+    {
+        global $DB;
+
+        $get_contracts_query = "
+            SELECT
+                id
+            FROM
+                glpi_contracts
+            WHERE TRUE
+                AND is_deleted = 0
+                AND is_template = 0
+        ";
+
+        $result = $DB->query($get_contracts_query);
+        $contracts = array();
+
+        if ($result) {
+            while ($row = $DB->fetch_assoc($result)) {
+                $contract = new Contract();
+                $contract->getFromDB($row['id']);
+                $bridge_contract = new PluginProjectbridgeContract($contract);
+                $project_id = $bridge_contract->getProjectId();
+
+                if (
+                    $project_id
+                    && PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')
+                ) {
+                    $overconsumption = false;
+                    $nb_hours = $bridge_contract->getNbHours();
+                    $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption');
+
+                    if (
+                        $nb_hours
+                        && $consumption >= $nb_hours
+                    ) {
+                        $overconsumption = true;
+                    }
+
+                    $end_date_reached = false;
+                    $plan_end_date = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'plan_end_date');
+                    $end_date_delta = 0;
+
+                    if (!empty($plan_end_date)) {
+                        $datediff = strtotime($plan_end_date) - time();
+                        $date_delta = $datediff / (60 * 60 * 24);
+                        $end_date_delta = floor($date_delta);
+
+                        if (
+                            $end_date_delta <= 1
+                            || (
+                                $date_delta > -1
+                                && $date_delta <= 0
+                            )
+                        ) {
+                            $end_date_reached = true;
+                        }
+                    }
+
+                    if (
+                        $overconsumption
+                        || $end_date_reached
+                    ) {
+                        $contracts[$contract->getId()] = array(
+                            'overconsumption' => $overconsumption,
+                            'nb_hours' => ($nb_hours) ? $nb_hours : 0,
+                            'consumption' => $consumption,
+
+                            'end_date_reached' => $end_date_reached,
+                            'plan_end_date' => $plan_end_date,
+                            'end_date_delta' => $end_date_delta,
+
+                            'contract' => $contract,
+                        );
+                    }
+                }
+            }
+        }
+
+        return $contracts;
     }
 }
