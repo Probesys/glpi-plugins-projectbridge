@@ -612,6 +612,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     {
         global $DB;
 
+        // todo: use Contract::find()
         $get_contracts_query = "
             SELECT
                 id

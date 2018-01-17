@@ -17,6 +17,7 @@ class PluginProjectbridgeConfig extends CommonDBTM
         global $DB;
         $recipients = array();
 
+        // todo: use PluginProjectbridgeConfig::find()
         $get_all_recipients_query = "
             SELECT
                 id,
