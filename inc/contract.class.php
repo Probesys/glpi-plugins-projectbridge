@@ -209,7 +209,8 @@ class PluginProjectbridgeContract extends CommonDBTM
 
                 if (!empty($plan_end_date)) {
                     $datediff = strtotime($plan_end_date) - time();
-                    $end_date_delta = floor($datediff / (60 * 60 * 24));
+                    $date_delta = $datediff / (60 * 60 * 24);
+                    $end_date_delta = floor($date_delta);
 
                     if ($nb_hours) {
                         $html_parts[] = '&nbsp;';
@@ -224,7 +225,12 @@ class PluginProjectbridgeContract extends CommonDBTM
                         $html_parts[] = 'Expire dans ' . $end_date_delta . ' jours';
                     } else {
                         $end_date_reached = true;
-                        $html_parts[] = 'Expiré il y a ' . (abs($end_date_delta)) . ' jours';
+
+                        if ($date_delta > -1) {
+                            $html_parts[] = 'Expire aujourd\'hui';
+                        } else {
+                            $html_parts[] = 'Expiré il y a ' . (abs($end_date_delta)) . ' jours';
+                        }
                     }
                 }
 
