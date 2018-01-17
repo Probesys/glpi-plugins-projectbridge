@@ -208,7 +208,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $end_date_reached = false;
 
                 if (!empty($plan_end_date)) {
-                    $datediff = strtotime($plan_end_date) - time($plan_end_date);
+                    $datediff = strtotime($plan_end_date) - time();
                     $end_date_delta = floor($datediff / (60 * 60 * 24));
 
                     if ($nb_hours) {
