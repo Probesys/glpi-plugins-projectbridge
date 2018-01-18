@@ -193,20 +193,22 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
                 }
             }
 
-            $bridge_contract = new PluginProjectbridgeContract($contract);
-            $project_id = $bridge_contract->getProjectId();
+            if ($selected_project_id > 0) {
+                $bridge_contract = new PluginProjectbridgeContract($contract);
+                $project_id = $bridge_contract->getProjectId();
 
-            $post_data = array(
-                'contract_id' => $contract->getId(),
-                'project_id' => $selected_project_id,
-                'nb_hours' => $nb_hours,
-            );
+                $post_data = array(
+                    'contract_id' => $contract->getId(),
+                    'project_id' => $selected_project_id,
+                    'nb_hours' => $nb_hours,
+                );
 
-            if ($project_id === null) {
-                $bridge_contract->add($post_data);
-            } else {
-                $post_data['id'] = $bridge_contract->getId();
-                $bridge_contract->update($post_data);
+                if (empty($project_id)) {
+                    $bridge_contract->add($post_data);
+                } else {
+                    $post_data['id'] = $bridge_contract->getId();
+                    $bridge_contract->update($post_data);
+                }
             }
         } else {
             // renew the task of the project linked to the contract
