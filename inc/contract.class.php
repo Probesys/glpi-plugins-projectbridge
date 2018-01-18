@@ -511,7 +511,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '<li>' . "\n";
 
                 $html_parts[] = '<strong>Nom</strong> : ';
-                $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/contract.form.php?id=' . $contract_id . '">';
+                $html_parts[] = '<a href="' . $CFG_GLPI['url_base'] . '/front/contract.form.php?id=' . $contract_id . '">';
                 $html_parts[] = $contract_data['contract']->fields['name'];
                 $html_parts[] = '</a>';
                 $html_parts[] = '<br />' . "\n";
@@ -547,7 +547,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $html_parts[] = '<br />' . "\n";
                 }
 
-                $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/contract.form.php?id=' . $contract_id . '">';
+                $html_parts[] = '<a href="' . $CFG_GLPI['url_base'] . '/front/contract.form.php?id=' . $contract_id . '">';
                 $html_parts[] = 'Fiche du contrat';
                 $html_parts[] = '</a>';
 
