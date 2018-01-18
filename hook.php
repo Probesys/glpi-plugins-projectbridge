@@ -91,6 +91,7 @@ function plugin_projectbridge_uninstall()
     $tables_to_drop = array(
         PluginProjectbridgeEntity::$table_name,
         PluginProjectbridgeContract::$table_name,
+        PluginProjectbridgeTicket::$table_name,
         PluginProjectbridgeConfig::$table_name,
     );
 
