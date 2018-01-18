@@ -72,7 +72,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
             );
 
             foreach ($project_results as $project_data) {
-                $project_list[$project_data['id']] = $project_data['name'];
+                $project_list[$project_data['id']] = $project_data['name'] . ' (' . $project_data['id'] . ')';
             }
 
             $bridge_ticket = new PluginProjectbridgeTicket($ticket);
