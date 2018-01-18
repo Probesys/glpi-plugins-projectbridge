@@ -367,3 +367,22 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
         }
     }
 }
+
+/**
+ * Hook called after showing a ticket tab
+ *
+ * @param  array $tab_data
+ * @return void
+ */
+function plugin_projectbridge_post_show_tab(array $tab_data)
+{
+    if (
+        !empty($tab_data['item'])
+        && is_object($tab_data['item'])
+        && $tab_data['item'] instanceof Ticket
+        && !empty($tab_data['options']['itemtype'])
+        && $tab_data['options']['itemtype'] == 'Projecttask_Ticket'
+    ) {
+        PluginProjectbridgeTicket::postShow($tab_data['item']);
+    }
+}
