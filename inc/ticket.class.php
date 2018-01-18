@@ -25,10 +25,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
      */
     public function getProjectId()
     {
-        if (
-            $this->_project_id === null
-            && !isset($this->fields)
-        ) {
+        if ($this->_project_id === null) {
             $result = $this->getFromDBByQuery("WHERE ticket_id = " . $this->_ticket->getId());
 
             if ($result) {
@@ -56,6 +53,8 @@ class PluginProjectbridgeTicket extends CommonDBTM
         $html_parts[] = '</th>' . "\n";
 
         if (true) {
+            global $CFG_GLPI;
+
             $search_filters = array(
                 'TRUE',
                 '`is_deleted` = 0',
@@ -72,7 +71,9 @@ class PluginProjectbridgeTicket extends CommonDBTM
             );
 
             foreach ($project_results as $project_data) {
-                $project_list[$project_data['id']] = $project_data['name'] . ' (' . $project_data['id'] . ')';
+                if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_data['id'], 'exists')) {
+                    $project_list[$project_data['id']] = $project_data['name'] . ' (' . $project_data['id'] . ')';
+                }
             }
 
             $bridge_ticket = new PluginProjectbridgeTicket($ticket);
@@ -103,27 +104,34 @@ class PluginProjectbridgeTicket extends CommonDBTM
                 }
             }
 
+            if (!PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')) {
+                $project_id = null;
+            }
+
             $project_config = array(
                 'value' => $project_id,
                 'values' => $project_list,
                 'display' => false,
             );
 
-            $html_parts[] = '<th colspan="4">' . "\n";
+            $html_parts[] = '<th colspan="5">' . "\n";
+            $html_parts[] = '<form method="post" action="' . $CFG_GLPI['root_doc'] . '/front/ticket.form.php?id=' . $ticket->getId() . '">' . "\n";
             $html_parts[] = Dropdown::showFromArray('projectbridge_project_id', $project_list, $project_config);
 
             if (!empty($project_id)) {
-                global $CFG_GLPI;
-
-                $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left: 5px;" target="_blank">';
+                $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left: 10px" target="_blank">';
                 $html_parts[] = 'Accéder au projet';
                 $html_parts[] = '</a>' . "\n";
             }
 
+            $html_parts[] = '<input type="submit" name="update" value="Faire la liaison" class="submit" style="margin-left: 10px" />' . "\n";
+            $html_parts[] = '<input type="hidden" name="id" value="' . $ticket->getId() . '" />' . "\n";
+
+            $html_parts[] = Html::closeForm(false);
             $html_parts[] = '</th>' . "\n";
         }
 
-        $html_parts[] = '<th colspan="5">&nbsp;</th>' . "\n";
+        $html_parts[] = '<th colspan="4">&nbsp;</th>' . "\n";
 
         $html_parts[] = '</tr>' . "\n";
         $html_parts[] = '</table>' . "\n";

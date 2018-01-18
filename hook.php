@@ -42,6 +42,22 @@ function plugin_projectbridge_install()
         $DB->query($create_table_query) or die($DB->error());
     }
 
+    if (!TableExists(PluginProjectbridgeTicket::$table_name)) {
+        $create_table_query = "
+            CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeTicket::$table_name . "`
+            (
+                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `ticket_id` INT(11) NOT NULL,
+                `project_id` INT(11) NOT NULL,
+                PRIMARY KEY (`id`),
+                INDEX (`ticket_id`)
+            )
+            COLLATE='utf8_unicode_ci'
+            ENGINE=MyISAM
+        ";
+        $DB->query($create_table_query) or die($DB->error());
+    }
+
     if (!TableExists(PluginProjectbridgeConfig::$table_name)) {
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeConfig::$table_name . "`
@@ -306,61 +322,109 @@ function plugin_projectbridge_contract_add(Contract $contract)
 /**
  * Hook called before the update of a ticket
  * If possible, link the ticket to the project task of the entity's default contract
+ * If requested link the ticket to a specific project's task and set the project as default
  *
  * @param  Ticket $ticket
  * @return void
  */
 function plugin_projectbridge_ticket_update(Ticket $ticket)
 {
-    // use a query as ProjectTask_Ticket can only get one item and does not return the number
-    global $DB;
-    $get_nb_links_query = "
-        SELECT
-            COUNT(1) AS nb_links
-        FROM
-            glpi_projecttasks_tickets
-        WHERE TRUE
-            AND tickets_id = " . $ticket->getId() . "
-    ";
+    if (
+        !empty($ticket->input['update'])
+        && $ticket->input['update'] == 'Faire la liaison'
+        && !empty($ticket->input['projectbridge_project_id'])
+    ) {
+        $is_project_link_update = true;
+        $contract_id = null;
+    } else {
+        $is_project_link_update = false;
 
-    $result = $DB->query($get_nb_links_query);
+        $entity = new Entity();
+        $entity->getFromDB($ticket->fields['entities_id']);
+
+        $bridge_entity = new PluginProjectbridgeEntity($entity);
+        $contract_id = $bridge_entity->getContractId();
+    }
 
     if (
-        $result
-        && $DB->numrows($result)
+        $is_project_link_update
+        || $contract_id
     ) {
-        $results = $DB->fetch_assoc($result);
-        $nb_links = (int) $results['nb_links'];
+        // default contract for the entity found or update
 
-        if ($nb_links == 0) {
-            $entity = new Entity();
-            $entity->getFromDB($ticket->fields['entities_id']);
+        if (!$is_project_link_update) {
+            $contract = new Contract();
+            $contract->getFromDB($contract_id);
 
-            $bridge_entity = new PluginProjectbridgeEntity($entity);
-            $contract_id = $bridge_entity->getContractId();
+            $contract_bridge = new PluginProjectbridgeContract($contract);
+            $project_id = $contract_bridge->getProjectId();
+        } else {
+            $project_id = (int) $ticket->input['projectbridge_project_id'];
+        }
 
-            if ($contract_id) {
-                // default contract for the entity found
+        if (
+            $project_id
+            && PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')
+        ) {
+            // project linked to contract found & task exists
 
-                $contract = new Contract();
-                $contract->getFromDB($contract_id);
+            global $DB;
 
-                $contract_bridge = new PluginProjectbridgeContract($contract);
-                $project_id = $contract_bridge->getProjectId();
+            // use a query as ProjectTask_Ticket can only get one item and does not return the number
+            $get_nb_links_query = "
+                SELECT
+                    COUNT(1) AS nb_links
+                FROM
+                    glpi_projecttasks_tickets
+                WHERE TRUE
+                    AND tickets_id = " . $ticket->getId() . "
+            ";
 
-                if (
-                    $project_id
-                    && PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')
-                ) {
-                    // project linked to contract found & task exists
+            $result = $DB->query($get_nb_links_query);
 
-                    $task_id = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_id');
+            if (
+                $result
+                && $DB->numrows($result)
+            ) {
+                $results = $DB->fetch_assoc($result);
+                $nb_links = (int) $results['nb_links'];
+            } else {
+                $nb_links = 0;
+            }
 
-                    // link the task to the ticket
-                    $project_task_link_ticket = new ProjectTask_Ticket();
-                    $project_task_link_ticket->add(array(
-                        'projecttasks_id' => $task_id,
-                        'tickets_id'      => $ticket->getId(),
+            if ($nb_links != 0) {
+                // todo: use a ProjectTask_Ticket method
+                $delete_links_query = "
+                    DELETE FROM
+                        glpi_projecttasks_tickets
+                    WHERE TRUE
+                        AND tickets_id = " . $ticket->getId() . "
+                ";
+
+                $DB->query($delete_links_query);
+            }
+
+            $task_id = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_id');
+
+            // link the task to the ticket
+            $project_task_link_ticket = new ProjectTask_Ticket();
+            $project_task_link_ticket->add(array(
+                'projecttasks_id' => $task_id,
+                'tickets_id'      => $ticket->getId(),
+            ));
+
+            if ($is_project_link_update) {
+                $bridge_ticket = new PluginProjectbridgeTicket($ticket);
+
+                if ($bridge_ticket->getProjectId() > 0) {
+                    $bridge_ticket->update(array(
+                        'id' => $bridge_ticket->getId(),
+                        'project_id' => $project_id,
+                    ));
+                } else {
+                    $bridge_ticket->add(array(
+                        'ticket_id' => $ticket->getId(),
+                        'project_id' => $project_id,
                     ));
                 }
             }
