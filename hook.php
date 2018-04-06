@@ -253,13 +253,19 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
         $begin_date = '';
 
         if (!empty($contract->fields['begin_date'])) {
-            $begin_date = $contract->fields['begin_date'];
+            $begin_date = date('Y-m-d H:i:s', strtotime($contract->fields['begin_date']));
         }
 
         if (!empty($contract->fields['date_creation'])) {
             $date_creation = $contract->fields['date_creation'];
+        } else if (!empty($contract->fields['date'])) {
+            $date_creation = $contract->fields['date'];
         } else {
             $date_creation = $begin_date;
+        }
+
+        if (!empty($date_creation)) {
+            $date_creation = date('Y-m-d H:i:s', strtotime($date_creation));
         }
 
         $project_data = array(
@@ -314,11 +320,13 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
                 'is_recursive' => $contract->fields['is_recursive'],
                 'projects_id' => $project_id,
                 'content' => $contract->fields['comment'],
-                'plan_start_date' => (!empty($contract->fields['begin_date']) ? $contract->fields['begin_date'] : ''),
+                'plan_start_date' => $begin_date,
                 'plan_end_date' => (
-                    !empty($contract->fields['begin_date'])
+                    !empty($begin_date)
                     && !empty($contract->fields['duration'])
-                        ? Infocom::getWarrantyExpir($contract->fields['begin_date'], $contract->fields['duration'])
+                        ? date('Y-m-d H:i:s', strtotime(
+                            Infocom::getWarrantyExpir($begin_date, $contract->fields['duration'])
+                          ))
                         : ''
                 ),
                 'planned_duration' => $nb_hours * 3600, // in seconds
