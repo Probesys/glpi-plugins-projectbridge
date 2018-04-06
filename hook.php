@@ -131,12 +131,16 @@ function plugin_projectbridge_post_show_item(array $post_show_data)
  * Hook called before the update of an entity
  *
  * @param Entity $entity
- * @return void
+ * @param boolean $force (optional)
+ * @return void|integer|boolean
  */
-function plugin_projectbridge_pre_entity_update(Entity $entity)
+function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false)
 {
     if (
-        $entity->canUpdate()
+        (
+            $force === true
+            || $entity->canUpdate()
+        )
         && isset($entity->input['projectbridge_contract_id'])
     ) {
         if (empty($entity->input['projectbridge_contract_id'])) {
@@ -154,10 +158,10 @@ function plugin_projectbridge_pre_entity_update(Entity $entity)
         );
 
         if ($contract_id === null) {
-            $bridge_entity->add($post_data);
+            return $bridge_entity->add($post_data);
         } else if ($selected_contract_id != $contract_id) {
             $post_data['id'] = $bridge_entity->getId();
-            $bridge_entity->update($post_data);
+            return $bridge_entity->update($post_data);
         }
     }
 }
@@ -223,14 +227,18 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
  * Hook called after the creation of a contract
  *
  * @param Contract $contract
- * @return void
+ * @param boolean $force (optional)
+ * @return boolean|void
  */
-function plugin_projectbridge_contract_add(Contract $contract)
+function plugin_projectbridge_contract_add(Contract $contract, $force = false)
 {
     if (
-        $contract->canUpdate()
-        && isset($contract->input['projectbridge_create_project'])
-        && $contract->input['projectbridge_create_project']
+        $force === true
+        || (
+            $contract->canUpdate()
+            && isset($contract->input['projectbridge_create_project'])
+            && $contract->input['projectbridge_create_project']
+        )
     ) {
         $nb_hours = 0;
 
@@ -241,16 +249,29 @@ function plugin_projectbridge_contract_add(Contract $contract)
             $nb_hours = (int) $contract->input['projectbridge_project_hours'];
         }
 
+        $date_creation = '';
+        $begin_date = '';
+
+        if (!empty($contract->fields['begin_date'])) {
+            $begin_date = $contract->fields['begin_date'];
+        }
+
+        if (!empty($contract->fields['date_creation'])) {
+            $date_creation = $contract->fields['date_creation'];
+        } else {
+            $date_creation = $begin_date;
+        }
+
         $project_data = array(
             // data from contract
             'name' => $contract->input['name'],
             'entities_id' => $contract->fields['entities_id'],
             'is_recursive' => $contract->fields['is_recursive'],
             'content' => $contract->fields['comment'],
-            'date' => $contract->fields['date_creation'],
-            'date_mod' => $contract->fields['date_creation'],
-            'date_creation' => $contract->fields['date_creation'],
-            'plan_start_date' => (!empty($contract->fields['begin_date']) ? $contract->fields['begin_date'] : ''),
+            'date' => $date_creation,
+            'date_mod' => $date_creation,
+            'date_creation' => $date_creation,
+            'plan_start_date' => $begin_date,
 
             // standard data to bootstrap project
             'comment' => '',
@@ -318,6 +339,8 @@ function plugin_projectbridge_contract_add(Contract $contract)
             // create the project's task
             $project_task = new ProjectTask();
             $project_task->add($project_task_data);
+
+            return true;
         }
     }
 }
