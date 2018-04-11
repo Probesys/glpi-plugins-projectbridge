@@ -106,7 +106,6 @@ foreach (array_keys($all_contracts) as $contract_id) {
 $nb_entities_too_many_contracts = 0;
 $nb_entities_success = 0;
 $nb_entities_fails = 0;
-$nb_tickets_linked = 0;
 
 // entities
 if (!empty($entities_ids)) {
@@ -132,22 +131,6 @@ if (!empty($entities_ids)) {
       if (plugin_projectbridge_pre_entity_update($entity, true)) {
         echo 'Linked entity #' . $entity_id . ' with default contract' . "\n";
         $nb_entities_success++;
-
-        // find tickets in entity and link them to the contract's project task
-        // $ticket = new Ticket();
-        // $tickets = $ticket->find("TRUE AND entities_id = " . $entity_id);
-
-        // if (!empty($tickets)) {
-        //   $ticket_ids = array_keys($tickets);
-
-        //   foreach ($ticket_ids as $ticket_id) {
-        //     $ticket = new Ticket();
-        //     $ticket->getFromDB($ticket_id);
-
-        //     plugin_projectbridge_ticket_update($ticket);
-        //     $nb_tickets_linked++;
-        //   }
-        // }
       } else {
         echo 'FAILED linking entity #' . $entity_id . ' to contract #' . $contract_id . "\n";
         $nb_entities_fails++;
@@ -163,4 +146,3 @@ echo '--------' . "\n";
 echo '--------' . "\n";
 echo 'Contracts: ' . (count($success_contract_ids)) . ' successes - ' . $nb_fails . ' fails - ' . $nb_ignored . ' ignored' . "\n";
 echo 'Entities: ' . $nb_entities_success . ' successes - ' . $nb_entities_fails . ' fails - ' . $nb_entities_too_many_contracts . ' with too many contracts' . "\n";
-echo 'Tickets: ' . $nb_tickets_linked . ' linked' . "\n";
