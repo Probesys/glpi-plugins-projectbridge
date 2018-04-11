@@ -280,7 +280,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         $html_parts[] = 'Nombre d\'heures :';
         $html_parts[] = '&nbsp;';
-        $html_parts[] = '<input type="number" min="0" max="99999" step="6" name="projectbridge_project_hours" value="' . $nb_hours . '" style="width: 50px" />';
+        $html_parts[] = '<input type="number" min="0" max="99999" step="1" name="projectbridge_project_hours" value="' . $nb_hours . '" style="width: 50px" />';
 
         return implode('', $html_parts);
     }
