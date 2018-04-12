@@ -273,7 +273,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
             'name' => $contract->input['name'],
             'entities_id' => $contract->fields['entities_id'],
             'is_recursive' => $contract->fields['is_recursive'],
-            'content' => $contract->fields['comment'],
+            'content' => addslashes($contract->fields['comment']),
             'date' => $date_creation,
             'date_mod' => $date_creation,
             'date_creation' => $date_creation,
@@ -319,7 +319,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
                 'entities_id' => $contract->fields['entities_id'],
                 'is_recursive' => $contract->fields['is_recursive'],
                 'projects_id' => $project_id,
-                'content' => $contract->fields['comment'],
+                'content' => addslashes($contract->fields['comment']),
                 'plan_start_date' => $begin_date,
                 'plan_end_date' => (
                     !empty($begin_date)
