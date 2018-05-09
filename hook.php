@@ -252,13 +252,22 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
         $date_creation = '';
         $begin_date = '';
 
-        if (!empty($contract->fields['begin_date'])) {
+        if (
+            !empty($contract->fields['begin_date'])
+            && $contract->fields['begin_date'] != 'NULL'
+        ) {
             $begin_date = date('Y-m-d H:i:s', strtotime($contract->fields['begin_date']));
         }
 
-        if (!empty($contract->fields['date_creation'])) {
+        if (
+            !empty($contract->fields['date_creation'])
+            && $contract->fields['date_creation'] != 'NULL'
+        ) {
             $date_creation = $contract->fields['date_creation'];
-        } else if (!empty($contract->fields['date'])) {
+        } else if (
+            !empty($contract->fields['date'])
+            && $contract->fields['date'] != 'NULL'
+        ) {
             $date_creation = $contract->fields['date'];
         } else {
             $date_creation = $begin_date;
@@ -266,6 +275,10 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
 
         if (!empty($date_creation)) {
             $date_creation = date('Y-m-d H:i:s', strtotime($date_creation));
+        }
+
+        if (empty($begin_date)) {
+            $begin_date = $date_creation;
         }
 
         $project_data = array(

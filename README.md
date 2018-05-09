@@ -18,7 +18,7 @@ Features:
 
 Known issues:
 
-* when there is no contract start date or a wrongly formatted one, the project's and task's start date are timestamp zero (Jan 1st 1970), which also messes up renewal
+* when there is no contract start date or a wrongly formatted one, renewal does not work
 * link_data.php script does not link all existing contracts with projects, a manual check is required
 * alerts are still sent even if notifications are disabled
 
