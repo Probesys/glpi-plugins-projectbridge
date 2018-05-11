@@ -13,7 +13,7 @@ function plugin_version_projectbridge()
 {
     return array(
         'name' => 'ProjectBridge',
-        'version' => '1.0',
+        'version' => '1.1',
         'author' => 'Pierre de Vésian - <a href="http://www.probesys.com">Probesys</a>',
         'license' => 'GPLv2+',
         'minGlpiVersion' => PluginProjectbridgeConfig::MIN_GLPI_VERSION,
