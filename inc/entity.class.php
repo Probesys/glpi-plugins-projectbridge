@@ -54,6 +54,7 @@ class PluginProjectbridgeEntity extends CommonDBTM
             'entity' => $entity->getId(),
             'entity_sons'  => (!empty($_SESSION['glpiactive_entity_recursive'])) ? true : false,
             'nochecklimit' => true,
+            'expired' => true,
         );
 
         $html_parts = array();
