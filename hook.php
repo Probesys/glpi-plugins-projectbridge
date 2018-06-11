@@ -259,6 +259,11 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
             $begin_date = date('Y-m-d H:i:s', strtotime($contract->fields['begin_date']));
         }
 
+        if (empty($begin_date)) {
+            Session::addMessageAfterRedirect('Le contrat n\'a pas de date de début. Le projet n\'a pas pu être créé.', false, ERROR);
+            return false;
+        }
+
         if (
             !empty($contract->fields['date_creation'])
             && $contract->fields['date_creation'] != 'NULL'
@@ -275,10 +280,6 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
 
         if (!empty($date_creation)) {
             $date_creation = date('Y-m-d H:i:s', strtotime($date_creation));
-        }
-
-        if (empty($begin_date)) {
-            $begin_date = $date_creation;
         }
 
         $project_data = array(
