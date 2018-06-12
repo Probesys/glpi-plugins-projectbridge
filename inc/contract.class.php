@@ -548,6 +548,13 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '</a>';
                 $html_parts[] = '<br />' . "\n";
 
+                $entity = new Entity();
+                $entity->getFromDB($contract_data['contract']->fields['entities_id']);
+                $html_parts[] = '<strong>Entité</strong> : ';
+                $html_parts[] = $entity->fields['name'];
+                $html_parts[] = '</a>';
+                $html_parts[] = '<br />' . "\n";
+
                 if (
                     $contract_data['overconsumption']
                     || $contract_data['end_date_reached']
@@ -582,6 +589,9 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '<a href="' . $CFG_GLPI['url_base'] . '/front/contract.form.php?id=' . $contract_id . '">';
                 $html_parts[] = 'Fiche du contrat';
                 $html_parts[] = '</a>';
+
+                $html_parts[] = '<br />';
+                $html_parts[] = '<br />';
 
                 $html_parts[] = '</li>' . "\n";
             }
