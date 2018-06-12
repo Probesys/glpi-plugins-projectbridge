@@ -569,7 +569,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
                 if ($contract_data['planned_duration']) {
                     $html_parts[] = '<strong>Quota consommé</strong> : ';
-                    $html_parts[] = $contract_data['consumption'] . ' / ' . $contract_data['planned_duration'] . ' heures';
+                    $html_parts[] = round($contract_data['consumption'], 2) . ' / ' . round($contract_data['planned_duration'], 2) . ' heures';
                     $html_parts[] = '<br />' . "\n";
                 }
 
