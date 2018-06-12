@@ -332,7 +332,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
 
         if (empty($state_in_progress_value)) {
-            Session::addMessageAfterRedirect('La correspondance pour le statut "En cours" n\'a pas été défini. Le projet n\'a pas pu être créé.', false, ERROR);
+            Session::addMessageAfterRedirect('La correspondance pour le statut "En cours" n\'a pas été définie. Le projet n\'a pas pu être créé.', false, ERROR);
             return false;
         }
 

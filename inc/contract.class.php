@@ -406,14 +406,14 @@ class PluginProjectbridgeContract extends CommonDBTM
         $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
 
         if (empty($state_closed_value)) {
-            Session::addMessageAfterRedirect('La correspondance pour le statut "Clos" n\'a pas été défini. Le contrat n\'a pas pu être renouvellé.', false, ERROR);
+            Session::addMessageAfterRedirect('La correspondance pour le statut "Clos" n\'a pas été définie. Le contrat n\'a pas pu être renouvellé.', false, ERROR);
             return false;
         }
 
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
 
         if (empty($state_in_progress_value)) {
-            Session::addMessageAfterRedirect('La correspondance pour le statut "En cours" n\'a pas été défini. Le contrat n\'a pas pu être renouvellé.', false, ERROR);
+            Session::addMessageAfterRedirect('La correspondance pour le statut "En cours" n\'a pas été définie. Le contrat n\'a pas pu être renouvellé.', false, ERROR);
             return false;
         }
 
