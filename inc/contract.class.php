@@ -198,11 +198,12 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $nb_hours = $bridge_contract->getNbHours();
 
                 if ($nb_hours) {
+                    $planned_duration = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_duration');
                     $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption');
-                    $consumption_ratio = $consumption / $nb_hours;
+                    $consumption_ratio = $consumption / $planned_duration;
 
                     $html_parts[] = 'Consommation : ';
-                    $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' heures';
+                    $html_parts[] = round($consumption, 2) . '/' . round($planned_duration, 2) . ' heures';
                     $html_parts[] = '&nbsp;';
                     $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
                 }
@@ -367,6 +368,13 @@ class PluginProjectbridgeContract extends CommonDBTM
                 }
 
                 break;
+
+            case 'task_duration':
+                $return = 0;
+
+                if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')) {
+                    $return = $project_tasks[$project_id]->fields['planned_duration'] / 3600;
+                }
 
             default:
                 // nothing to do
@@ -559,9 +567,9 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $html_parts[] = '<br />' . "\n";
                 }
 
-                if ($contract_data['nb_hours']) {
+                if ($contract_data['planned_duration']) {
                     $html_parts[] = '<strong>Quota consommé</strong> : ';
-                    $html_parts[] = $contract_data['consumption'] . ' / ' . $contract_data['nb_hours'] . ' heures';
+                    $html_parts[] = $contract_data['consumption'] . ' / ' . $contract_data['planned_duration'] . ' heures';
                     $html_parts[] = '<br />' . "\n";
                 }
 
@@ -661,11 +669,13 @@ class PluginProjectbridgeContract extends CommonDBTM
                 ) {
                     $overconsumption = false;
                     $nb_hours = $bridge_contract->getNbHours();
+                    $planned_duration = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_duration');
                     $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption');
 
                     if (
                         $nb_hours
-                        && $consumption >= $nb_hours
+                        && $planned_duration
+                        && $consumption >= $planned_duration
                     ) {
                         $overconsumption = true;
                     }
@@ -698,6 +708,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                             'overconsumption' => $overconsumption,
                             'nb_hours' => ($nb_hours) ? $nb_hours : 0,
                             'consumption' => $consumption,
+                            'planned_duration' => $planned_duration,
 
                             'end_date_reached' => $end_date_reached,
                             'plan_end_date' => $plan_end_date,
