@@ -300,11 +300,22 @@ class PluginProjectbridgeContract extends CommonDBTM
         }
 
         if (!isset($project_tasks[$project_id])) {
+            $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
+
+            if (empty($state_closed_value)) {
+                global $CFG_GLPI;
+                $redirect_url = rtrim($CFG_GLPI['root_doc'], '/') . '/plugins/projectbridge/front/config.form.php';
+
+                Session::addMessageAfterRedirect('Veuillez définir la correspondance du statut "Clos".', false, ERROR);
+                Html::redirect($redirect_url);
+                return null;
+            }
+
             $project_tasks[$project_id] = new ProjectTask();
             $project_tasks[$project_id]->getFromDBByQuery("
                 WHERE TRUE
                     AND projects_id = " . $project_id . "
-                    AND projectstates_id != 3
+                    AND projectstates_id != " . $state_closed_value . "
                 ORDER BY
                     id ASC
                 LIMIT 1
@@ -392,11 +403,24 @@ class PluginProjectbridgeContract extends CommonDBTM
         }
 
         $project_task = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task');
+        $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
+
+        if (empty($state_closed_value)) {
+            Session::addMessageAfterRedirect('La correspondance pour le statut "Clos" n\'a pas été défini. Le contrat n\'a pas pu être renouvellé.', false, ERROR);
+            return false;
+        }
+
+        $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
+
+        if (empty($state_in_progress_value)) {
+            Session::addMessageAfterRedirect('La correspondance pour le statut "En cours" n\'a pas été défini. Le contrat n\'a pas pu être renouvellé.', false, ERROR);
+            return false;
+        }
 
         // close current task
         $closed = $project_task->update(array(
             'id' => $project_task->getId(),
-            'projectstates_id' => 3, // "closed"
+            'projectstates_id' => $state_closed_value, // "closed"
         ));
 
         if ($closed) {
@@ -429,7 +453,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                         : ''
                 ),
                 'planned_duration' => $nb_hours_to_use * 3600, // in seconds
-                'projectstates_id' => 2, // "processing"
+                'projectstates_id' => $state_in_progress_value, // "in progress"
 
                 // standard data to bootstrap task
                 'projecttasktemplates_id' => 0,

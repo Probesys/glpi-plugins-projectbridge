@@ -73,6 +73,22 @@ function plugin_projectbridge_install()
         $DB->query($create_table_query) or die($DB->error());
     }
 
+    if (!TableExists(PluginProjectbridgeState::$table_name)) {
+        $create_table_query = "
+            CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeState::$table_name . "`
+            (
+                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `status` VARCHAR(250) NOT NULL,
+                `projectstates_id` INT(11) NOT NULL,
+                PRIMARY KEY (`id`),
+                INDEX (`status`)
+            )
+            COLLATE='utf8_unicode_ci'
+            ENGINE=MyISAM
+        ";
+        $DB->query($create_table_query) or die($DB->error());
+    }
+
     // cron for alerts
     CronTask::Register('PluginProjectbridgeContract', 'AlertContractsToRenew', DAY_TIMESTAMP);
 
@@ -93,6 +109,7 @@ function plugin_projectbridge_uninstall()
         PluginProjectbridgeContract::$table_name,
         PluginProjectbridgeTicket::$table_name,
         PluginProjectbridgeConfig::$table_name,
+        PluginProjectbridgeState::$table_name,
     );
 
     $drop_table_query = "DROP TABLE IF EXISTS `" . implode('`, `', $tables_to_drop) . "`";
@@ -312,6 +329,13 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
             'template_name' => '',
         );
 
+        $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
+
+        if (empty($state_in_progress_value)) {
+            Session::addMessageAfterRedirect('La correspondance pour le statut "En cours" n\'a pas été défini. Le projet n\'a pas pu être créé.', false, ERROR);
+            return false;
+        }
+
         // create the project
         $project = new Project();
         $project_id = $project->add($project_data);
@@ -344,7 +368,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
                         : ''
                 ),
                 'planned_duration' => $nb_hours * 3600, // in seconds
-                'projectstates_id' => 2, // "processing"
+                'projectstates_id' => $state_in_progress_value, // "in progress"
 
                 // standard data to bootstrap task
                 'projecttasktemplates_id' => 0,
