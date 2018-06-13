@@ -12,7 +12,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
      *
      * @param Ticket $ticket
      */
-    public function __construct(Ticket $ticket)
+    public function __construct(Ticket $ticket = null)
     {
         $this->_ticket = $ticket;
     }

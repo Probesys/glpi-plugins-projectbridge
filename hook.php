@@ -545,6 +545,20 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
             ];
             break;
 
+        case 'Ticket':
+            $options[] = [
+                'id'    => 4201,
+                'name'  => 'ProjectBridge',
+            ];
+
+            $options[] = [
+                'id'    => 4202,
+                'table' => PluginProjectbridgeTicket::$table_name,
+                'field' => 'project_id',
+                'name'  => 'Projet',
+            ];
+            break;
+
        default:
            // nothing to do
     }
@@ -563,11 +577,11 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
  */
 function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 {
+    global $CFG_GLPI;
     $select = "";
 
     switch ($itemtype) {
         case 'Entity':
-            global $CFG_GLPI;
             $contract_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php?id=';
 
             $select = "
@@ -585,6 +599,31 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 END)
                 AS `ITEM_" . $offset . "`,
             ";
+            break;
+
+        case 'Ticket':
+            if ($key == 4202) {
+                // project name
+
+                $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
+
+                $select = "
+                    (CASE
+                        WHEN `glpi_projects`.`id` IS NOT NULL
+                            THEN CONCAT(
+                                '<a href=\"" . $project_link . "',
+                                `glpi_projects`.`id`,
+                                '\">',
+                                `glpi_projects`.`name`,
+                                '</a>'
+                            )
+                        ELSE
+                            NULL
+                    END)
+                    AS `ITEM_" . $offset . "`,
+                ";
+            }
+
             break;
 
         default:
@@ -617,6 +656,17 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
             ";
             break;
 
+        case PluginProjectbridgeTicket::$table_name:
+            $left_join = "
+                LEFT JOIN `glpi_projecttasks_tickets`
+                    ON (`glpi_projecttasks_tickets`.`tickets_id` = `" . $ref_table . "`.`id`)
+                LEFT JOIN `glpi_projecttasks`
+                    ON (`glpi_projecttasks`.`id` = `glpi_projecttasks_tickets`.`projecttasks_id`)
+                LEFT JOIN `glpi_projects`
+                    ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
+            ";
+            break;
+
         default:
             // nothing to do
     }
@@ -642,7 +692,17 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
     switch ($itemtype) {
         case 'Entity':
             if ($searchtype == 'contains') {
-                $where = "`glpi_contracts`.`name` " . Search::makeTextSearch($val);
+                $where = $link . "`glpi_contracts`.`name` " . Search::makeTextSearch($val);
+            }
+
+            break;
+
+        case 'Ticket':
+            if ($searchtype == 'contains') {
+                if ($key == 4202) {
+                    // project name
+                    $where = $link . "`glpi_projects`.`name` " . Search::makeTextSearch($val);
+                }
             }
 
             break;
