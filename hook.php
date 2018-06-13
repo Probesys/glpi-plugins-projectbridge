@@ -522,3 +522,134 @@ function plugin_projectbridge_post_show_tab(array $tab_data)
         PluginProjectbridgeTicket::postShow($tab_data['item']);
     }
 }
+
+/**
+ * Add new search options
+ *
+ * @param string $itemtype
+ * @return array
+ */
+function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
+{
+    $options = [];
+
+    switch ($itemtype) {
+       case 'Entity':
+            $options[] = [
+                'id'    => 4200,
+                'table' => PluginProjectbridgeEntity::$table_name,
+
+                // trick GLPI search into thinking we want the contract id so the addSelect function is called
+                'field' => 'contract_id',
+                'name'  => 'ProjectBridge - Contrat par défaut',
+            ];
+            break;
+
+       default:
+           // nothing to do
+    }
+
+    return $options;
+}
+
+
+/**
+ * Add a custom select part to search
+ *
+ * @param string $itemtype
+ * @param string $key
+ * @param integer $offset
+ * @return string
+ */
+function plugin_projectbridge_addSelect($itemtype, $key, $offset)
+{
+    $select = "";
+
+    switch ($itemtype) {
+        case 'Entity':
+            global $CFG_GLPI;
+            $contract_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php?id=';
+
+            $select = "
+                (CASE
+                    WHEN `" . PluginProjectbridgeEntity::$table_name . "`.`contract_id` IS NOT NULL
+                        THEN CONCAT(
+                            '<a href=\"" . $contract_link . "',
+                            `" . PluginProjectbridgeEntity::$table_name . "`.`contract_id`,
+                            '\">',
+                            `glpi_contracts`.`name`,
+                            '</a>'
+                        )
+                    ELSE
+                        NULL
+                END)
+                AS `ITEM_" . $offset . "`,
+            ";
+            break;
+
+        default:
+           // nothing to do
+    }
+
+    return $select;
+}
+
+/**
+ * Add a custom left join to search
+ *
+ * @param string $itemtype
+ * @param string $ref_table Reference table (glpi_...)
+ * @param integer $new_table Plugin table
+ * @param integer $linkfield
+ * @return string
+ */
+function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $linkfield)
+{
+    $left_join = "";
+
+    switch ($new_table) {
+        case PluginProjectbridgeEntity::$table_name:
+            $left_join = "
+                LEFT JOIN `" . $new_table . "`
+                    ON (`" . $new_table . "`.`entity_id` = `" . $ref_table . "`.`id`)
+                LEFT JOIN `glpi_contracts`
+                    ON (`" . $new_table . "`.`contract_id` = `glpi_contracts`.`id`)
+            ";
+            break;
+
+        default:
+            // nothing to do
+    }
+
+    return $left_join;
+}
+
+/**
+ * Add a custom where to search
+ *
+ * @param  string $link
+ * @param  string $nott
+ * @param  string $itemtype
+ * @param  string $key
+ * @param  string $val        Search argument
+ * @param  string $searchtype Type of search (contains, equals, ...)
+ * @return string
+ */
+function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $searchtype)
+{
+    $where = "";
+
+    switch ($itemtype) {
+        case 'Entity':
+            if ($searchtype == 'contains') {
+                $where = "`glpi_contracts`.`name` " . Search::makeTextSearch($val);
+            }
+
+            break;
+
+        default:
+            // nothing to do
+    }
+
+    return $where;
+}

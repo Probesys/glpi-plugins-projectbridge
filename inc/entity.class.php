@@ -12,7 +12,7 @@ class PluginProjectbridgeEntity extends CommonDBTM
      *
      * @param Entity $entity
      */
-    public function __construct(Entity $entity)
+    public function __construct(Entity $entity = null)
     {
         $this->_entity = $entity;
     }
