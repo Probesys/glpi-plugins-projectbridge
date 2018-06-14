@@ -557,6 +557,13 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
                 'field' => 'project_id',
                 'name'  => 'Projet',
             ];
+
+            $options[] = [
+                'id'    => 4203,
+                'table' => PluginProjectbridgeTicket::$table_name,
+                'field' => 'project_id',
+                'name'  => 'Tâche de projet',
+            ];
             break;
 
        default:
@@ -622,6 +629,24 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
+            } else if ($key == 4203) {
+                // project task
+
+                $task_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/projecttask.form.php?id=';
+
+                $select = "
+                    GROUP_CONCAT(
+                        DISTINCT CONCAT(
+                            '<a href=\"" . $task_link . "',
+                            `glpi_projecttasks`.`id`,
+                            '\">',
+                            `glpi_projecttasks`.`name`,
+                            '</a>'
+                        )
+                        SEPARATOR '$$##$$'
+                    )
+                    AS `ITEM_" . $offset . "`,
+                ";
             }
 
             break;
@@ -640,9 +665,10 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
  * @param string $ref_table Reference table (glpi_...)
  * @param integer $new_table Plugin table
  * @param integer $linkfield
+ * @param array $already_link_tables
  * @return string
  */
-function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $linkfield)
+function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $linkfield, $already_link_tables)
 {
     $left_join = "";
 
