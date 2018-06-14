@@ -726,6 +726,9 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                 if ($key == 4202) {
                     // project name
                     $where = $link . "`glpi_projects`.`name` " . Search::makeTextSearch($val);
+                } else if ($key == 4203) {
+                    // project task
+                    $where = $link . "`glpi_projecttasks`.`name` " . Search::makeTextSearch($val);
                 }
             }
 
