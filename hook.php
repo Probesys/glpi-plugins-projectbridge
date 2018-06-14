@@ -615,18 +615,16 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
 
                 $select = "
-                    (CASE
-                        WHEN `glpi_projects`.`id` IS NOT NULL
-                            THEN CONCAT(
-                                '<a href=\"" . $project_link . "',
-                                `glpi_projects`.`id`,
-                                '\">',
-                                `glpi_projects`.`name`,
-                                '</a>'
-                            )
-                        ELSE
-                            NULL
-                    END)
+                    GROUP_CONCAT(
+                        DISTINCT CONCAT(
+                            '<a href=\"" . $project_link . "',
+                            `glpi_projects`.`id`,
+                            '\">',
+                            `glpi_projects`.`name`,
+                            '</a>'
+                        )
+                        SEPARATOR '$$##$$'
+                    )
                     AS `ITEM_" . $offset . "`,
                 ";
             } else if ($key == 4203) {
