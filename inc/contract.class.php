@@ -111,12 +111,13 @@ class PluginProjectbridgeContract extends CommonDBTM
 
             target.before(projectbridge_config.clone());
             projectbridge_config.remove();
+            projectbridge_config = $("#projectbridge_config");
 
-            $("#projectbridge_config .select2-container").remove();
-            $("#projectbridge_config select").select2({
+            $(".select2-container", projectbridge_config).remove();
+            $("select", projectbridge_config).select2({
                 dropdownAutoWidth: true
             });
-            $("#projectbridge_config .select2-container").show();
+            $(".select2-container", projectbridge_config).show();
         });');
     }
 
