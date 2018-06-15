@@ -137,8 +137,16 @@ class PluginProjectbridgeTicket extends CommonDBTM
         $html_parts[] = '</table>' . "\n";
 
         $html_parts[] = Html::scriptBlock('$(document).ready(function() {
-            var projectbridge_config = $("#projectbridge_config");
-            $("#ui-tabs-8 .tab_cadre_fixehov tr:last").after(projectbridge_config.clone());
+            var
+                projectbridge_config = $("#projectbridge_config"),
+                table = $("#ui-tabs-8 .tab_cadre_fixehov tr:last")
+            ;
+
+            if (table.length == 0) {
+                table = $("#ui-tabs-8 form[id^=projecttaskticket_form]");
+            }
+
+            table.after(projectbridge_config.clone());
             projectbridge_config.remove();
 
             $("#projectbridge_config .select2-container").remove();
