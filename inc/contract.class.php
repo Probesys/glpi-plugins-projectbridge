@@ -247,7 +247,121 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $html_parts[] = '-';
                     $html_parts[] = '&nbsp;';
 
-                    $html_parts[] = '<input type="submit" name="update" value="Renouveller le contrat" class="submit" />';
+                    $html_parts[] = '<input type="submit" value="Renouveller le contrat" class="submit projectbridge-renewal-trigger" />' . "\n";
+
+                    if (true) {
+                        $renewal_data = $bridge_contract->getRenewalData();
+                        $html_parts[] = '<table class="projectbridge-renewal-data" style="display: none; margin-top: 15px; padding: 15px; background: #cacaca;">' . "\n";
+
+                        if (true) {
+                            $html_parts[] = '<tr>' . "\n";
+
+                            $html_parts[] = '<td>';
+                            $html_parts[] = 'Date de début';
+                            $html_parts[] = '</td>' . "\n";
+
+                            $html_parts[] = '<td>';
+                            $html_parts[] = Html::showDateField('projecttask_begin_date', [
+                                'value' => $renewal_data['begin_date'],
+                                'maybeempty' => false,
+                                'display' => false,
+                            ]);
+                            $html_parts[] = '</td>' . "\n";
+                            $html_parts[] = '</tr>' . "\n";
+                        }
+
+                        if (true) {
+                            $html_parts[] = '<tr>' . "\n";
+
+                            $html_parts[] = '<td>';
+                            $html_parts[] = 'Date de fin';
+                            $html_parts[] = '</td>' . "\n";
+
+                            $html_parts[] = '<td>';
+                            $html_parts[] = Html::showDateField('projecttask_end_date', [
+                                'value' => $renewal_data['end_date'],
+                                'maybeempty' => false,
+                                'display' => false,
+                            ]);
+                            $html_parts[] = '</td>' . "\n";
+
+                            $html_parts[] = '</tr>' . "\n";
+                        }
+
+                        if (true) {
+                            $html_parts[] = '<tr>' . "\n";
+
+                            $html_parts[] = '<td>';
+                            $html_parts[] = 'Nombre d\'heures';
+                            $html_parts[] = '</td>' . "\n";
+
+                            $html_parts[] = '<td>';
+                            $html_parts[] = '<input type="number" min="0" max="99999" name="projectbridge_nb_hours_to_use" value="' . $renewal_data['nb_hours_to_use'] . '" style="width: 50px" step="any" />';
+                            $html_parts[] = '</td>' . "\n";
+
+                            $html_parts[] = '</tr>' . "\n";
+                        }
+
+                        if (true) {
+                            $html_parts[] = '<tr>' . "\n";
+
+                            $html_parts[] = '<td>';
+                            $html_parts[] = '<input type="submit" name="update" value="Confirmer le renouvellement" class="submit" />';
+                            $html_parts[] = '</td>' . "\n";
+
+                            $html_parts[] = '<td>';
+                            $html_parts[] = '<input type="submit" name="update" value="Annuler" class="submit projectbridge-renewal-cancel" />';
+                            $html_parts[] = '</td>' . "\n";
+
+                            $html_parts[] = '</tr>' . "\n";
+                        }
+
+                        $html_parts[] = '</table>' . "\n";
+                    }
+
+                    $js_block = '
+                        window.projectbridge_datepicker_init = true;
+
+                        $(document).on("click", ".projectbridge-renewal-trigger", function(e) {
+                            e.preventDefault();
+
+                            if (window.projectbridge_datepicker_init) {
+                                // delete datepicker settings & reload its JS
+
+                                var
+                                    renewal_container = $(".projectbridge-renewal-data"),
+                                    datepicker_triggers = $(".ui-datepicker-trigger", renewal_container),
+                                    datepicker_parents = []
+                                ;
+
+                                datepicker_triggers.each(function() {
+                                    datepicker_parents.push($(this).parents("td").get(0));
+                                });
+
+                                datepicker_triggers.remove();
+                                $(".hasDatepicker", renewal_container).removeClass("hasDatepicker");
+
+                                var datepickerJS;
+                                $(datepicker_parents).find("script").each(function() {
+                                    datepickerJS = new Function($(this).html());
+                                    datepickerJS();
+                                });
+
+                                window.projectbridge_datepicker_init = false;
+                            }
+
+                            $(".projectbridge-renewal-data").show();
+                            $(this).hide();
+                            return false;
+                        })
+                        .on("click", ".projectbridge-renewal-cancel", function(e) {
+                            e.preventDefault();
+                            $(".projectbridge-renewal-data").hide();
+                            $(".projectbridge-renewal-trigger").show();
+                            return false;
+                        });
+                    ';
+                    $html_parts[] = Html::scriptBlock($js_block);
                 }
             } else {
                 $html_parts[] = 'Le projet lié n\'a pas de tâche ouverte';
@@ -401,16 +515,6 @@ class PluginProjectbridgeContract extends CommonDBTM
             return;
         }
 
-        $nb_hours = $this->getNbHours();
-        $nb_hours_to_use = $nb_hours;
-        $delta_hours_to_use = 0;
-        $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption');
-
-        if ($consumption > $nb_hours) {
-            $delta_hours_to_use = $consumption - $nb_hours;
-            $nb_hours_to_use -= $delta_hours_to_use;
-        }
-
         $project_task = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task');
         $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
 
@@ -433,16 +537,16 @@ class PluginProjectbridgeContract extends CommonDBTM
         ));
 
         if ($closed) {
-            $task_start_date = date('Y-m-d');
+            $renewal_data = $this->getRenewalData();
             $delta_hours_to_use_str = '';
 
-            if ($delta_hours_to_use != 0) {
+            if ($renewal_data['delta_hours_to_use'] != 0) {
                 $delta_hours_to_use_str .= 'Dépassement de la tâche précédente : ';
-                $delta_hours_to_use_str .= floor($delta_hours_to_use) . ' heures';
+                $delta_hours_to_use_str .= floor($renewal_data['delta_hours_to_use']) . ' heures';
 
-                if (floor($delta_hours_to_use) != $delta_hours_to_use) {
+                if (floor($renewal_data['delta_hours_to_use']) != $renewal_data['delta_hours_to_use']) {
                     $delta_hours_to_use_str .= ' ';
-                    $delta_hours_to_use_str .= (($delta_hours_to_use - floor($delta_hours_to_use)) * 60);
+                    $delta_hours_to_use_str .= (($renewal_data['delta_hours_to_use'] - floor($renewal_data['delta_hours_to_use'])) * 60);
                     $delta_hours_to_use_str .= ' minutes';
                 }
             }
@@ -455,13 +559,9 @@ class PluginProjectbridgeContract extends CommonDBTM
                 'projects_id' => $project_id,
                 'content' => $this->_contract->fields['comment'],
                 'comment' => $delta_hours_to_use_str,
-                'plan_start_date' => $task_start_date,
-                'plan_end_date' => (
-                    !empty($this->_contract->fields['duration'])
-                        ? Infocom::getWarrantyExpir($task_start_date, $this->_contract->fields['duration'])
-                        : ''
-                ),
-                'planned_duration' => $nb_hours_to_use * 3600, // in seconds
+                'plan_start_date' => date('Y-m-d H:i:s', strtotime($renewal_data['begin_date'])),
+                'plan_end_date' => date('Y-m-d H:i:s', strtotime($renewal_data['end_date'])),
+                'planned_duration' => $renewal_data['nb_hours_to_use'] * 3600, // in seconds
                 'projectstates_id' => $state_in_progress_value, // "in progress"
 
                 // standard data to bootstrap task
@@ -479,6 +579,53 @@ class PluginProjectbridgeContract extends CommonDBTM
             $project_task = new ProjectTask();
             $project_task->add($project_task_data);
         }
+    }
+
+    /**
+     * Get data used to renew the contract
+     *
+     * @return array
+     */
+    public function getRenewalData()
+    {
+        if (empty($this->_contract->input['_projecttask_begin_date'])) {
+            $task_start_date = date('Y-m-d');
+        } else {
+            $task_start_date = $this->_contract->input['_projecttask_begin_date'];
+        }
+
+        if (empty($this->_contract->input['_projecttask_end_date'])) {
+            $task_end_date = (
+                !empty($this->_contract->fields['duration'])
+                    ? Infocom::getWarrantyExpir($task_start_date, $this->_contract->fields['duration'])
+                    : ''
+            );
+        } else {
+            $task_end_date = $this->_contract->input['_projecttask_end_date'];
+        }
+
+        $nb_hours = $this->getNbHours();
+        $nb_hours_to_use = $nb_hours;
+        $delta_hours_to_use = 0;
+        $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($this->getProjectId(), 'consumption');
+
+        if ($consumption > $nb_hours) {
+            $delta_hours_to_use = $consumption - $nb_hours;
+            $nb_hours_to_use -= $delta_hours_to_use;
+        }
+
+        if (!empty($this->_contract->input['projectbridge_nb_hours_to_use'])) {
+            $nb_hours_to_use = $this->_contract->input['projectbridge_nb_hours_to_use'];
+        }
+
+        $renewal_data = [
+            'begin_date' => $task_start_date,
+            'end_date' => $task_end_date,
+            'nb_hours_to_use' => $nb_hours_to_use,
+            'delta_hours_to_use' => $delta_hours_to_use,
+        ];
+
+        return $renewal_data;
     }
 
     /**
