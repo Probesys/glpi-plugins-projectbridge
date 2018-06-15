@@ -159,4 +159,101 @@ class PluginProjectbridgeTicket extends CommonDBTM
 
         echo implode('', $html_parts);
     }
+
+    /**
+     * Show HTML after tickets linked to a task have been shown
+     *
+     * @param  ProjectTask $project_task
+     * @return void
+     */
+    public static function postShowTask(ProjectTask $project_task)
+    {
+        global $CFG_GLPI;
+
+        $get_tickets_actiontime_url = rtrim($CFG_GLPI['root_doc'], '/') . '/plugins/projectbridge/ajax/get_tickets_actiontime.php';
+        $js_block = '
+            var
+                current_table_cell,
+                table_parent,
+                ticket_id,
+                ticket_ids = []
+            ;
+
+            $(".tab_cadre_fixehov tr", "form[id^=massProjectTask_Ticket]").each(function() {
+                current_table_cell = $("td.center:nth-child(2)", this);
+
+                if (current_table_cell.length) {
+                    if (table_parent === undefined) {
+                        table_parent = current_table_cell.parents("table");
+                    }
+
+                    ticket_id = getTicketIdFromCell(current_table_cell);
+
+                    if (ticket_id) {
+                        ticket_ids.push(ticket_id);
+                    }
+                }
+            });
+
+            if (ticket_ids.length) {
+                $.ajax("' . $get_tickets_actiontime_url . '", {
+                    method: "POST",
+                    cache: false,
+                    data: {
+                        ticket_ids: ticket_ids
+                    }
+                }).done(function(response, status) {
+                    if (
+                        status == "success"
+                        && response.length
+                    ) {
+                        try {
+                            var
+                                tickets_actiontime = $.parseJSON(response),
+                                current_row,
+                                current_table_cell,
+                                current_ticket_id,
+                                current_action_time
+                            ;
+
+                            $("tr", table_parent).each(function(idx, elm) {
+                                current_row = $(elm);
+
+                                if (idx > 1) {
+                                    current_table_cell = $("td.center:nth-child(2)", current_row);
+                                    current_ticket_id = getTicketIdFromCell(current_table_cell);
+                                    current_action_time = 0;
+
+                                    if (tickets_actiontime[current_ticket_id] !== undefined) {
+                                        current_action_time = tickets_actiontime[current_ticket_id];
+                                    }
+
+                                    current_row.append("<td>" + current_action_time + " heure(s)</td>");
+                                } else if (idx == 0) {
+                                    current_table_cell = $("th", current_row);
+                                    current_table_cell.attr("colspan", parseInt(current_table_cell.attr("colspan")) + 1);
+                                } else if (idx == 1) {
+                                    current_row.append("<th>Durée</th>");
+                                }
+                            });
+                        } catch (e) {
+                        }
+                    }
+                });
+            }
+
+            /**
+             * Get the ticket ID contained in the table table_cell
+             *
+             * @param jQueryObject table_cell
+             * @return void
+             */
+            function getTicketIdFromCell(table_cell)
+            {
+                return parseInt($.trim(table_cell.text()).replace("ID : ", ""));
+            };
+        ';
+
+        echo Html::scriptBlock($js_block);
+    }
 }

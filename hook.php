@@ -515,11 +515,18 @@ function plugin_projectbridge_post_show_tab(array $tab_data)
     if (
         !empty($tab_data['item'])
         && is_object($tab_data['item'])
-        && $tab_data['item'] instanceof Ticket
         && !empty($tab_data['options']['itemtype'])
-        && $tab_data['options']['itemtype'] == 'Projecttask_Ticket'
+        && (
+            $tab_data['options']['itemtype'] == 'Projecttask_Ticket'
+            || $tab_data['options']['itemtype'] == 'ProjectTask_Ticket'
+            // naming is not uniform: https://github.com/glpi-project/glpi/issues/4177
+        )
     ) {
-        PluginProjectbridgeTicket::postShow($tab_data['item']);
+        if ($tab_data['item'] instanceof Ticket) {
+            PluginProjectbridgeTicket::postShow($tab_data['item']);
+        } else if ($tab_data['item'] instanceof ProjectTask) {
+            PluginProjectbridgeTicket::postShowTask($tab_data['item']);
+        }
     }
 }
 
