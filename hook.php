@@ -406,6 +406,18 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
 }
 
 /**
+ * Hook called after creation of a ticket
+ * Call the update hook to try and link it to a project task
+ *
+ * @param  Ticket $ticket
+ * @return void
+ */
+function plugin_projectbridge_ticket_add(Ticket $ticket)
+{
+    plugin_projectbridge_ticket_update($ticket);
+}
+
+/**
  * Hook called before the update of a ticket
  * If possible, link the ticket to the project task of the entity's default contract
  * If requested link the ticket to a specific project's task and set the project as default
