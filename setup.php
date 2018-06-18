@@ -40,7 +40,6 @@ function plugin_init_projectbridge()
     );
 
     $PLUGIN_HOOKS['item_add'][PluginProjectbridgeConfig::NAMESPACE] = array(
-        // 'Ticket' => 'plugin_projectbridge_ticket_add',
         'Contract' => 'plugin_projectbridge_contract_add',
     );
 }
