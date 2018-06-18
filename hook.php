@@ -138,6 +138,10 @@ function plugin_projectbridge_post_show_item(array $post_show_data)
                 PluginProjectbridgeContract::postShow($post_show_data['item']);
                 break;
 
+            case 'Project':
+                PluginProjectbridgeContract::postShowProject($post_show_data['item']);
+                break;
+
             default:
                 // nothing to do
         }

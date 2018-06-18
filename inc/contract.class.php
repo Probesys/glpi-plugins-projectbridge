@@ -881,4 +881,43 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         return $contracts;
     }
+
+    /**
+     * Display HTML after project has been shown
+     *
+     * @param  Project $project
+     * @return void
+     */
+    public static function postShowProject(Project $project)
+    {
+        $project_id = $project->getId();
+
+        if (!empty($project_id)) {
+            $bridge_contract = new PluginProjectbridgeContract();
+            $contract_bridges = $bridge_contract->find("TRUE AND project_id = " . $project_id);
+
+            $html_parts = [];
+
+            if (!empty($contract_bridges)) {
+                global $CFG_GLPI;
+                $contract_url = rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php?id=';
+
+                foreach ($contract_bridges as $contract_bridge_data) {
+                    $contract = new Contract();
+
+                    if ($contract->getFromDB($contract_bridge_data['contract_id'])) {
+                        $html_parts[] = '<a href="' . $contract_url . $contract->getId() . '">';
+                        $html_parts[] = 'Contrat "' . $contract->fields['name'] . '"';
+                        $html_parts[] = '</a>';
+                    } else {
+                        $html_parts[] = 'Lien vers contrat inexistant : contrat n°' . $contract->getId();
+                    }
+                }
+            } else {
+                $html_parts[] = 'Pas de projet lié';
+            }
+
+            echo implode(' ', $html_parts);
+        }
+    }
 }
