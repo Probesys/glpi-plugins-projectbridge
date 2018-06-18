@@ -414,6 +414,9 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
  */
 function plugin_projectbridge_ticket_add(Ticket $ticket)
 {
+    Event::log($ticket->fields['id'], "ticket", 4, "tracking",
+                 'Hook ticket add', 'Pierre',
+                         $ticket->fields['id']));
     plugin_projectbridge_ticket_update($ticket);
 }
 
@@ -449,7 +452,9 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
         || $contract_id
     ) {
         // default contract for the entity found or update
-
+Event::log($ticket->fields['id'], "ticket", 4, "tracking",
+                 'Inside if', 'Pierre',
+                         $ticket->fields['id']));
         if (!$is_project_link_update) {
             $contract = new Contract();
             $contract->getFromDB($contract_id);
@@ -465,7 +470,9 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
             && PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')
         ) {
             // project linked to contract found & task exists
-
+Event::log($ticket->fields['id'], "ticket", 4, "tracking",
+                 'Project exists', 'Pierre',
+                         $ticket->fields['id']));
             global $DB;
 
             // use a query as ProjectTask_Ticket can only get one item and does not return the number
@@ -510,7 +517,9 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
                 'projecttasks_id' => $task_id,
                 'tickets_id'      => $ticket->getId(),
             ));
-
+Event::log($ticket->fields['id'], "ticket", 4, "tracking",
+                 'DONE', 'Pierre',
+                         $ticket->fields['id']));
             if ($is_project_link_update) {
                 $bridge_ticket = new PluginProjectbridgeTicket($ticket);
 
