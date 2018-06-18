@@ -585,6 +585,13 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
                 'field' => 'project_id',
                 'name'  => 'Tâche de projet',
             ];
+
+            $options[] = [
+                'id'    => 4204,
+                'table' => PluginProjectbridgeTicket::$table_name,
+                'field' => 'project_id',
+                'name'  => 'Statut de tâche',
+            ];
             break;
 
        default:
@@ -666,6 +673,13 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
+            } else if ($key == 4204) {
+                // project task status
+
+                $select = "
+                    GROUP_CONCAT(DISTINCT `glpi_projectstates`.`name` SEPARATOR '$$##$$')
+                    AS `ITEM_" . $offset . "`,
+                ";
             }
 
             break;
@@ -709,6 +723,8 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                     ON (`glpi_projecttasks`.`id` = `glpi_projecttasks_tickets`.`projecttasks_id`)
                 LEFT JOIN `glpi_projects`
                     ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
+                LEFT JOIN `glpi_projectstates`
+                    ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
             ";
             break;
 
@@ -750,6 +766,9 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                 } else if ($key == 4203) {
                     // project task
                     $where = $link . "`glpi_projecttasks`.`name` " . Search::makeTextSearch($val);
+                } else if ($key == 4204) {
+                    // project task status
+                    $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
                 }
             }
 
