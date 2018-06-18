@@ -27,24 +27,22 @@ function plugin_version_projectbridge()
  */
 function plugin_init_projectbridge()
 {
-    if (Session::getLoginUserID()) {
-        global $PLUGIN_HOOKS;
+    global $PLUGIN_HOOKS;
 
-        $PLUGIN_HOOKS['csrf_compliant'][PluginProjectbridgeConfig::NAMESPACE] = true;
-        $PLUGIN_HOOKS['config_page'][PluginProjectbridgeConfig::NAMESPACE] = 'front/config.form.php';
-        $PLUGIN_HOOKS['post_show_item'][PluginProjectbridgeConfig::NAMESPACE] = 'plugin_projectbridge_post_show_item';
-        $PLUGIN_HOOKS['post_show_tab'][PluginProjectbridgeConfig::NAMESPACE] = 'plugin_projectbridge_post_show_tab';
-        $PLUGIN_HOOKS['pre_item_update'][PluginProjectbridgeConfig::NAMESPACE] = array(
-            'Entity' => 'plugin_projectbridge_pre_entity_update',
-            'Contract' => 'plugin_projectbridge_pre_contract_update',
-            'Ticket' => 'plugin_projectbridge_ticket_update',
-        );
+    $PLUGIN_HOOKS['csrf_compliant'][PluginProjectbridgeConfig::NAMESPACE] = true;
+    $PLUGIN_HOOKS['config_page'][PluginProjectbridgeConfig::NAMESPACE] = 'front/config.form.php';
+    $PLUGIN_HOOKS['post_show_item'][PluginProjectbridgeConfig::NAMESPACE] = 'plugin_projectbridge_post_show_item';
+    $PLUGIN_HOOKS['post_show_tab'][PluginProjectbridgeConfig::NAMESPACE] = 'plugin_projectbridge_post_show_tab';
+    $PLUGIN_HOOKS['pre_item_update'][PluginProjectbridgeConfig::NAMESPACE] = array(
+        'Entity' => 'plugin_projectbridge_pre_entity_update',
+        'Contract' => 'plugin_projectbridge_pre_contract_update',
+        'Ticket' => 'plugin_projectbridge_ticket_update',
+    );
 
-        $PLUGIN_HOOKS['item_add'][PluginProjectbridgeConfig::NAMESPACE] = array(
-            'Ticket' => 'plugin_projectbridge_ticket_add',
-            'Contract' => 'plugin_projectbridge_contract_add',
-        );
-    }
+    $PLUGIN_HOOKS['item_add'][PluginProjectbridgeConfig::NAMESPACE] = array(
+        // 'Ticket' => 'plugin_projectbridge_ticket_add',
+        'Contract' => 'plugin_projectbridge_contract_add',
+    );
 }
 
 /**
