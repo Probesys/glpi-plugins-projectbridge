@@ -354,6 +354,46 @@ class PluginProjectbridgeTicket extends CommonDBTM
                 return true;
                 break;
 
+            case 'addProjectTaskLink':
+                $search_filters = [
+                    "TRUE",
+                ];
+
+                if (!empty($_SESSION['glpiactiveentities'])) {
+                    $search_filters[] = "`entities_id` IN (" . implode(', ', $_SESSION['glpiactiveentities']) . ")";
+                }
+
+                $project_task = new ProjectTask();
+                $project_task_results = $project_task->find(implode(" AND ", $search_filters), "entities_id ASC");
+                $project_task_list = [
+                    null => Dropdown::EMPTY_VALUE,
+                ];
+
+                foreach ($project_task_results as $project_task_data) {
+                    $project = new Project();
+
+                    if ($project->getFromDB($project_task_data['projects_id'])) {
+                        $entry_name_parts = [
+                            $project->fields['name'] . ' (' . $project->getId() . ')',
+                            $project_task_data['name'] . ' (' . $project_task_data['id'] . ')'
+                        ];
+
+                        $project_task_list[$project_task_data['id']] = implode(' - ', $entry_name_parts);
+                    }
+                }
+
+                $project_task_config = [
+                    'value' => null,
+                    'values' => $project_task_list,
+                ];
+
+                Dropdown::showFromArray('projectbridge_projecttask_id', $project_task_list, $project_task_config);
+                echo '<br />';
+                echo '<br />';
+                echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
+                return true;
+                break;
+
             default:
                 // nothing to do
         }
@@ -417,6 +457,43 @@ class PluginProjectbridgeTicket extends CommonDBTM
                                     'projecttasks_id' => $task_id,
                                     'tickets_id'      => $ticket_id,
                                 ));
+
+                                $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_OK);
+                            } else {
+                                $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_KO);
+                            }
+                        }
+                    } else {
+                        $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_KO);
+                    }
+                } else {
+                    $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_KO);
+                }
+
+                return;
+                break;
+
+            case 'addProjectTaskLink':
+                if (
+                    $item->getType() == 'Ticket'
+                    && !empty($ma->POST['projectbridge_projecttask_id'])
+                ) {
+                    $project_task_id = (int) trim($ma->POST['projectbridge_projecttask_id']);
+                    $project_task = new ProjectTask();
+
+                    if ($project_task->getFromDB($project_task_id)) {
+                        foreach ($ids as $ticket_id) {
+                            $ticket = new Ticket();
+
+                            if ($ticket->getFromDB($ticket_id)) {
+                                PluginProjectbridgeTicket::deleteProjectLinks($ticket_id);
+
+                                // link the task to the ticket
+                                $project_task_link_ticket = new ProjectTask_Ticket();
+                                $project_task_link_ticket->add([
+                                    'projecttasks_id' => $project_task_id,
+                                    'tickets_id'      => $ticket_id,
+                                ]);
 
                                 $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_OK);
                             } else {
