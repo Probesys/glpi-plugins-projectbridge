@@ -523,12 +523,13 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
     switch ($itemtype) {
        case 'Entity':
             $options[] = [
-                'id'    => 4200,
-                'table' => PluginProjectbridgeEntity::$table_name,
+                'id'            => 4200,
+                'table'         => PluginProjectbridgeEntity::$table_name,
 
                 // trick GLPI search into thinking we want the contract id so the addSelect function is called
-                'field' => 'contract_id',
-                'name'  => 'ProjectBridge - Contrat par défaut',
+                'field'         => 'contract_id',
+                'name'          => 'ProjectBridge - Contrat par défaut',
+                'massiveaction' => false,
             ];
             break;
 
@@ -539,24 +540,27 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
             ];
 
             $options[] = [
-                'id'    => 4202,
-                'table' => PluginProjectbridgeTicket::$table_name,
-                'field' => 'project_id',
-                'name'  => 'Projet',
+                'id'            => 4202,
+                'table'         => PluginProjectbridgeTicket::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Projet',
+                'massiveaction' => false,
             ];
 
             $options[] = [
-                'id'    => 4203,
-                'table' => PluginProjectbridgeTicket::$table_name,
-                'field' => 'project_id',
-                'name'  => 'Tâche de projet',
+                'id'            => 4203,
+                'table'         => PluginProjectbridgeTicket::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Tâche de projet',
+                'massiveaction' => false,
             ];
 
             $options[] = [
-                'id'    => 4204,
-                'table' => PluginProjectbridgeTicket::$table_name,
-                'field' => 'project_id',
-                'name'  => 'Statut de tâche',
+                'id'            => 4204,
+                'table'         => PluginProjectbridgeTicket::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Statut de tâche',
+                'massiveaction' => false,
             ];
             break;
 
