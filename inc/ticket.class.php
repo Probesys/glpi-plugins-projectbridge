@@ -55,26 +55,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
         if (true) {
             global $CFG_GLPI;
 
-            $search_filters = array(
-                'TRUE',
-                '`is_deleted` = 0',
-            );
-
-            if (!empty($_SESSION['glpiactiveentities'])) {
-                $search_filters[] = "`entities_id` IN (" . implode(', ', $_SESSION['glpiactiveentities']) . ")";
-            }
-
-            $project = new Project();
-            $project_results = $project->find(implode(" AND ", $search_filters));
-            $project_list = array(
-                null => Dropdown::EMPTY_VALUE,
-            );
-
-            foreach ($project_results as $project_data) {
-                if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_data['id'], 'exists')) {
-                    $project_list[$project_data['id']] = $project_data['name'] . ' (' . $project_data['id'] . ')';
-                }
-            }
+            $project_list = PluginProjectbridgeTicket::_getProjectList();
 
             $bridge_ticket = new PluginProjectbridgeTicket($ticket);
             $project_id = $bridge_ticket->getProjectId();
@@ -158,6 +139,37 @@ class PluginProjectbridgeTicket extends CommonDBTM
         });');
 
         echo implode('', $html_parts);
+    }
+
+    /**
+     * Get list of projects
+     *
+     * @return array
+     */
+    private static function _getProjectList()
+    {
+        $search_filters = array(
+            'TRUE',
+            '`is_deleted` = 0',
+        );
+
+        if (!empty($_SESSION['glpiactiveentities'])) {
+            $search_filters[] = "`entities_id` IN (" . implode(', ', $_SESSION['glpiactiveentities']) . ")";
+        }
+
+        $project = new Project();
+        $project_results = $project->find(implode(" AND ", $search_filters));
+        $project_list = array(
+            null => Dropdown::EMPTY_VALUE,
+        );
+
+        foreach ($project_results as $project_data) {
+            if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_data['id'], 'exists')) {
+                $project_list[$project_data['id']] = $project_data['name'] . ' (' . $project_data['id'] . ')';
+            }
+        }
+
+        return $project_list;
     }
 
     /**
@@ -322,8 +334,22 @@ class PluginProjectbridgeTicket extends CommonDBTM
     public static function showMassiveActionsSubForm(MassiveAction $ma)
     {
         switch ($ma->getAction()) {
-            case 'deleteProjectLink' :
-                echo "&nbsp;";
+            case 'deleteProjectLink':
+                echo '&nbsp;';
+                echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
+                return true;
+                break;
+
+            case 'addProjectLink':
+                $project_list = PluginProjectbridgeTicket::_getProjectList();
+                $project_config = array(
+                    'value' => null,
+                    'values' => $project_list,
+                );
+
+                Dropdown::showFromArray('projectbridge_project_id', $project_list, $project_config);
+                echo '<br />';
+                echo '<br />';
                 echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
                 return true;
                 break;
@@ -357,6 +383,48 @@ class PluginProjectbridgeTicket extends CommonDBTM
                         } else {
                             $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_KO);
                         }
+                    }
+                } else {
+                    $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_KO);
+                }
+
+                return;
+                break;
+
+            case 'addProjectLink':
+                if (
+                    $item->getType() == 'Ticket'
+                    && !empty($ma->POST['projectbridge_project_id'])
+                ) {
+                    $project_id = (int) trim($ma->POST['projectbridge_project_id']);
+                    $project = new Project();
+
+                    if (
+                        $project->getFromDB($project_id)
+                        && PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')
+                    ) {
+                        $task_id = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_id');
+
+                        foreach ($ids as $ticket_id) {
+                            $ticket = new Ticket();
+
+                            if ($ticket->getFromDB($ticket_id)) {
+                                PluginProjectbridgeTicket::deleteProjectLinks($ticket_id);
+
+                                // link the task to the ticket
+                                $project_task_link_ticket = new ProjectTask_Ticket();
+                                $project_task_link_ticket->add(array(
+                                    'projecttasks_id' => $task_id,
+                                    'tickets_id'      => $ticket_id,
+                                ));
+
+                                $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_OK);
+                            } else {
+                                $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_KO);
+                            }
+                        }
+                    } else {
+                        $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_KO);
                     }
                 } else {
                     $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_KO);
