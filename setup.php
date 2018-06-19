@@ -42,6 +42,8 @@ function plugin_init_projectbridge()
     $PLUGIN_HOOKS['item_add'][PluginProjectbridgeConfig::NAMESPACE] = array(
         'Contract' => 'plugin_projectbridge_contract_add',
     );
+
+    $PLUGIN_HOOKS['use_massive_action'][PluginProjectbridgeConfig::NAMESPACE] = 1;
 }
 
 /**

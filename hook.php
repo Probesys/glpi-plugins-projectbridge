@@ -454,41 +454,7 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
         ) {
             // project linked to contract found & task exists
 
-            global $DB;
-
-            // use a query as ProjectTask_Ticket can only get one item and does not return the number
-            $get_nb_links_query = "
-                SELECT
-                    COUNT(1) AS nb_links
-                FROM
-                    glpi_projecttasks_tickets
-                WHERE TRUE
-                    AND tickets_id = " . $ticket->getId() . "
-            ";
-
-            $result = $DB->query($get_nb_links_query);
-
-            if (
-                $result
-                && $DB->numrows($result)
-            ) {
-                $results = $DB->fetch_assoc($result);
-                $nb_links = (int) $results['nb_links'];
-            } else {
-                $nb_links = 0;
-            }
-
-            if ($nb_links != 0) {
-                // todo: use a ProjectTask_Ticket method
-                $delete_links_query = "
-                    DELETE FROM
-                        glpi_projecttasks_tickets
-                    WHERE TRUE
-                        AND tickets_id = " . $ticket->getId() . "
-                ";
-
-                $DB->query($delete_links_query);
-            }
+            PluginProjectbridgeTicket::deleteProjectLinks($ticket->getId());
 
             $task_id = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_id');
 
@@ -779,4 +745,26 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
     }
 
     return $where;
+}
+
+/**
+ * Add massive action options
+ *
+ * @param  string $type
+ * @return array
+ */
+function plugin_projectbridge_MassiveActions($type)
+{
+    $massive_actions = [];
+
+    switch ($type) {
+        case 'Ticket':
+            $massive_actions['PluginProjectbridgeTicket'. MassiveAction::CLASS_ACTION_SEPARATOR . 'deleteProjectLink'] = 'Supprimer le lien avec toute tâche de projet';
+            break;
+
+        default:
+            // nothing to do
+    }
+
+    return $massive_actions;
 }

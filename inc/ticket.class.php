@@ -256,4 +256,119 @@ class PluginProjectbridgeTicket extends CommonDBTM
 
         echo Html::scriptBlock($js_block);
     }
+
+    /**
+     * Delete project links from ticket
+     *
+     * @param  int $ticket_id
+     * @return void
+     */
+    public static function deleteProjectLinks($ticket_id)
+    {
+        global $DB;
+
+        // use a query as ProjectTask_Ticket can only get one item and does not return the number
+        $get_nb_links_query = "
+            SELECT
+                COUNT(1) AS nb_links
+            FROM
+                glpi_projecttasks_tickets
+            WHERE TRUE
+                AND tickets_id = " . $ticket_id . "
+        ";
+
+        $result = $DB->query($get_nb_links_query);
+
+        if (
+            $result
+            && $DB->numrows($result)
+        ) {
+            $results = $DB->fetch_assoc($result);
+            $nb_links = (int) $results['nb_links'];
+        } else {
+            $nb_links = 0;
+        }
+
+        if ($nb_links != 0) {
+            // todo: use a ProjectTask_Ticket method
+            $delete_links_query = "
+                DELETE FROM
+                    glpi_projecttasks_tickets
+                WHERE TRUE
+                    AND tickets_id = " . $ticket_id . "
+            ";
+
+            $DB->query($delete_links_query);
+            Log::history($ticket_id, 'Ticket', [0, '', 'Lien(s) avec tâche(s) de projet supprimé(s'], 0, Log::HISTORY_LOG_SIMPLE_MESSAGE);
+        }
+
+        // todo: use a native method
+        $delete_bridge_links_query = "
+            DELETE FROM
+                " . PluginProjectbridgeTicket::$table_name . "
+            WHERE TRUE
+                AND ticket_id = " . $ticket_id . "
+        ";
+
+        $DB->query($delete_bridge_links_query);
+    }
+
+    /**
+     * Show form for given massive action
+     *
+     * @param  MassiveAction $ma
+     * @return boolean
+     */
+    public static function showMassiveActionsSubForm(MassiveAction $ma)
+    {
+        switch ($ma->getAction()) {
+            case 'deleteProjectLink' :
+                echo "&nbsp;";
+                echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
+                return true;
+                break;
+
+            default:
+                // nothing to do
+        }
+
+        return parent::showMassiveActionsSubForm($ma);
+    }
+
+    /**
+     * Process a massive action
+     *
+     * @param  MassiveAction $ma
+     * @param  CommonDBTM    $item
+     * @param  array         $ids Item ids
+     * @return void
+     */
+    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids)
+    {
+        switch ($ma->getAction()) {
+            case 'deleteProjectLink':
+                if ($item->getType() == 'Ticket') {
+                    foreach ($ids as $ticket_id) {
+                        $ticket = new Ticket();
+
+                        if ($ticket->getFromDB($ticket_id)) {
+                            PluginProjectbridgeTicket::deleteProjectLinks($ticket_id);
+                            $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_OK);
+                        } else {
+                            $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_KO);
+                        }
+                    }
+                } else {
+                    $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_KO);
+                }
+
+                return;
+                break;
+
+            default:
+                // nothing to do
+        }
+
+        parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
+    }
 }
