@@ -629,6 +629,17 @@ class PluginProjectbridgeContract extends CommonDBTM
     }
 
     /**
+     * Type name for cron
+     *
+     * @param  integer $nb
+     * @return string
+     */
+    public static function getTypeName($nb = 0)
+    {
+        return 'ProjectBridge';
+    }
+
+    /**
      * Give cron information
      *
      * @param $name string Cron name
