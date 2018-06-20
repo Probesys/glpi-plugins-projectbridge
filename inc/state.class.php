@@ -15,6 +15,7 @@ class PluginProjectbridgeState extends CommonDBTM
         $allowed_states = [
             'in_progress',
             'closed',
+            'renewal',
         ];
 
         $project_state_id = null;

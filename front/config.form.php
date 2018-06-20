@@ -60,6 +60,7 @@ if ($can_update) {
     $post_fields = array(
         'projectbridge_state_in_progress',
         'projectbridge_state_closed',
+        'projectbridge_state_renewal',
         'projectbridge_save_states',
 
         'projectbridge_delete_recipient',
@@ -78,7 +79,7 @@ if ($can_update) {
         // status config
 
         echo '<h2>';
-        echo 'Configuration des statuts de tâche';
+        echo 'Configuration des statuts';
         echo '</h2>' . "\n";
 
         echo '<p>';
@@ -95,6 +96,10 @@ if ($can_update) {
 
             echo '<th>';
             echo 'Nom du statut';
+            echo '</th>' . "\n";
+
+            echo '<th>';
+            echo 'Type de statut';
             echo '</th>' . "\n";
 
             echo '<th>';
@@ -146,6 +151,27 @@ if ($can_update) {
                     $state->update($state_data);
                 }
             }
+
+            $state_renewal_value = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
+
+            if ($post_data['projectbridge_state_renewal'] !== $state_renewal_value) {
+                $state = new PluginProjectbridgeState();
+                $state_data = [
+                    'status' => 'renewal',
+                    'projectstates_id' => (int) $post_data['projectbridge_state_renewal'],
+                ];
+
+                if ($state_renewal_value === null) {
+                    $state->add($state_data);
+                } else {
+                    $state = new PluginProjectbridgeState();
+                    $state->getFromDBByQuery("WHERE TRUE AND status = 'renewal'");
+                    $state_data['id'] = $state->fields['id'];
+                    $state->update($state_data);
+                }
+            }
+
+
         }
 
         $state_dropdown_conf = [
@@ -160,6 +186,10 @@ if ($can_update) {
 
             echo '<td>';
             echo 'En cours';
+            echo '</td>' . "\n";
+
+            echo '<td>';
+            echo 'Tâche';
             echo '</td>' . "\n";
 
             echo '<td>';
@@ -179,7 +209,31 @@ if ($can_update) {
             echo '</td>' . "\n";
 
             echo '<td>';
+            echo 'Tâche';
+            echo '</td>' . "\n";
+
+            echo '<td>';
             ProjectState::dropdown($state_dropdown_conf + ['value' => $state_closed_value, 'name' => 'projectbridge_state_closed']);
+            echo '</td>' . "\n";
+
+            echo '</tr>' . "\n";
+        }
+
+        if (true) {
+            $state_renewal_value = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
+
+            echo '<tr>' . "\n";
+
+            echo '<td>';
+            echo 'Renouvellement';
+            echo '</td>' . "\n";
+
+            echo '<td>';
+            echo 'Ticket';
+            echo '</td>' . "\n";
+
+            echo '<td>';
+            RequestType::dropdown($state_dropdown_conf + ['value' => $state_renewal_value, 'name' => 'projectbridge_state_renewal']);
             echo '</td>' . "\n";
 
             echo '</tr>' . "\n";
@@ -188,7 +242,7 @@ if ($can_update) {
         if (true) {
             echo '<tr style="text-align: center">' . "\n";
 
-            echo '<td colspan="2">';
+            echo '<td colspan="3">';
             echo '<input type="submit" class="submit" name="projectbridge_save_states" value="Enregistrer" />';
             echo '</td>' . "\n";
 
