@@ -188,7 +188,6 @@ class PluginProjectbridgeTask extends CommonDBTM
 
                             $ticket = new Ticket();
 
-// liens ticket
                             if ($ticket->add($ticket_fields)) {
                                 $ticket->update([
                                     'id' => $ticket->getId(),
@@ -231,6 +230,28 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         'alternative_email' => $ticket_user_data['alternative_email'],
                                     ]);
                                 }
+
+                                $ticket_link = new Ticket_Ticket();
+                                $ticket_links = $ticket_link->find("
+                                    TRUE
+                                    AND tickets_id_1 = " . $old_ticket_id . "
+                                ");
+
+                                foreach ($ticket_links as $ticket_link_data) {
+                                    $ticket_link = new Ticket_Ticket();
+                                    $ticket_link->add([
+                                        'tickets_id_1' => $ticket->getId(),
+                                        'tickets_id_2' => $ticket_link_data['tickets_id_2'],
+                                        'link' => $ticket_link_data['link'],
+                                    ]);
+                                }
+
+                                $ticket_link = new Ticket_Ticket();
+                                $ticket_link->add([
+                                    'tickets_id_1' => $ticket->getId(),
+                                    'tickets_id_2' => $old_ticket_id,
+                                    'link' => Ticket_Ticket::LINK_TO,
+                                ]);
 echo 'yeah ' . $ticket->getId();
                                 $nb_successes++;
                             }
