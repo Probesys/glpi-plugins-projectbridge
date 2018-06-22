@@ -134,11 +134,10 @@ class PluginProjectbridgeTask extends CommonDBTM
         echo 'Fermeture de la tâche ' . $this->_task->getId() . "<br />\n";
 
         // close task
-        // $closed = $this->_task->update([
-        //     'id' => $this->_task->getId(),
-        //     'projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('closed'),
-        // ]);
-        $closed = true;
+        $closed = $this->_task->update([
+            'id' => $this->_task->getId(),
+            'projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('closed'),
+        ]);
 
         if ($closed) {
             $ticket_link = new ProjectTask_Ticket();
@@ -176,11 +175,10 @@ class PluginProjectbridgeTask extends CommonDBTM
 
                         // close the ticket
                         $ticket_fields = $ticket->fields;
-                        // $closed = $ticket->update([
-                        //     'id' => $ticket->getId(),
-                        //     'status' => Ticket::CLOSED,
-                        // ]);
-                        $closed = true;
+                        $closed = $ticket->update([
+                            'id' => $ticket->getId(),
+                            'status' => Ticket::CLOSED,
+                        ]);
 
                         if ($closed) {
 
@@ -365,12 +363,9 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         $_SESSION['glpi_currenttime'] = $glpi_time_before;
                                     }
                                 }
-echo 'yeah ' . $ticket->getId();
+
                                 $nb_successes++;
                             }
-echo ' done';
-die;
-
                         }
                     }
                 }
