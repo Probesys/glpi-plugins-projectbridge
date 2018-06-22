@@ -158,8 +158,6 @@ class PluginProjectbridgeTask extends CommonDBTM
                     'closedate' => null,
                     'solvedate' => null,
                     'users_id_lastupdater' => null,
-                    'solutiontypes_id' => null,
-                    'solution' => null,
                     'close_delay_stat' => null,
                     'solve_delay_stat' => null,
                 ];
@@ -336,6 +334,36 @@ class PluginProjectbridgeTask extends CommonDBTM
 
                                     $ticket_task = new TicketTask();
                                     $ticket_task->add($ticket_new_task_data);
+                                }
+
+                                // add solution
+                                $log = new Log();
+                                $solutions = $log->find("
+                                    TRUE
+                                    AND items_id = " . $old_ticket_id . "
+                                    AND id_search_option = 24
+                                    AND itemtype = 'Ticket'
+                                ", "id DESC", 1);
+
+                                if (!empty($solutions)) {
+                                    $ticket_new_solution_data = array_diff_key(current($solutions), ['id' => null, ]);
+                                    $ticket_new_solution_data['items_id'] = $ticket->getId();
+                                    $ticket_new_solution_data['user_name'] = str_replace("'", "\'", $ticket_new_solution_data['user_name']);
+                                    $ticket_new_solution_data['new_value'] = str_replace("'", "\'", $ticket_new_solution_data['new_value']);
+
+                                    $log_id = $log->add($ticket_new_solution_data);
+
+                                    if ($log_id) {
+                                        $glpi_time_before = $_SESSION['glpi_currenttime'];
+                                        $_SESSION['glpi_currenttime'] = $ticket_new_solution_data['date_mod'];
+
+                                        $log->update([
+                                            'id' => $log_id,
+                                            'date_mod' => $ticket_new_solution_data['date_mod'],
+                                        ]);
+
+                                        $_SESSION['glpi_currenttime'] = $glpi_time_before;
+                                    }
                                 }
 echo 'yeah ' . $ticket->getId();
                                 $nb_successes++;
