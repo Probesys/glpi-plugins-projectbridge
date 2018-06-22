@@ -321,6 +321,22 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         $_SESSION['glpi_currenttime'] = $glpi_time_before;
                                     }
                                 }
+
+                                // add tasks
+                                $ticket_task = new TicketTask();
+                                $ticket_tasks = $ticket_task->find("
+                                    TRUE
+                                    AND tickets_id = " . $old_ticket_id . "
+                                ");
+
+                                foreach ($ticket_tasks as $ticket_task_data) {
+                                    $ticket_new_task_data = array_diff_key($ticket_task_data, ['id' => null, 'actiontime' => null, 'begin' => null, 'end' => null]);
+                                    $ticket_new_task_data['tickets_id'] = $ticket->getId();
+                                    $ticket_new_task_data['content'] = str_replace("'", "\'", $ticket_new_task_data['content']);
+
+                                    $ticket_task = new TicketTask();
+                                    $ticket_task->add($ticket_new_task_data);
+                                }
 echo 'yeah ' . $ticket->getId();
                                 $nb_successes++;
                             }
