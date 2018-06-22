@@ -186,6 +186,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                             $additional_content = "(Ce ticket est issu d'une copie automatique du ticket " . $old_ticket_id . " suite au dépassement d'heures ou l'expiration du contrat de maintenance)";
                             $ticket_fields['content'] = $additional_content . $ticket_fields['content'];
                             $ticket_fields['content'] = str_replace("'", "\'", $ticket_fields['content']);
+                            $ticket_fields['actiontime'] = 0;
                             $ticket_fields['requesttypes_id'] = $ticket_request_type;
 
                             $ticket = new Ticket();
