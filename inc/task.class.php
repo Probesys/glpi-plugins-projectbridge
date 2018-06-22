@@ -133,6 +133,7 @@ class PluginProjectbridgeTask extends CommonDBTM
         $nb_successes = 0;
         echo 'Fermeture de la tâche ' . $this->_task->getId() . "<br />\n";
 
+        // close task
         // $closed = $this->_task->update([
         //     'id' => $this->_task->getId(),
         //     'projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('closed'),
@@ -173,6 +174,9 @@ class PluginProjectbridgeTask extends CommonDBTM
                         && !in_array($ticket->fields['status'], $ticket_states_to_ignore)
                         && $ticket->fields['is_deleted'] == 0
                     ) {
+                        // use only not deleted not resolved not closed tickets
+
+                        // close the ticket
                         $ticket_fields = $ticket->fields;
                         // $closed = $ticket->update([
                         //     'id' => $ticket->getId(),
@@ -181,6 +185,9 @@ class PluginProjectbridgeTask extends CommonDBTM
                         $closed = true;
 
                         if ($closed) {
+
+                            // clone the old ticket into a new one WITHOUT the link to the project task
+
                             $old_ticket_id = $ticket->getId();
                             $ticket_fields = array_diff_key($ticket_fields, $ticket_fields_to_ignore);
                             $additional_content = "(Ce ticket est issu d'une copie automatique du ticket " . $old_ticket_id . " suite au dépassement d'heures ou l'expiration du contrat de maintenance)";
@@ -192,11 +199,14 @@ class PluginProjectbridgeTask extends CommonDBTM
                             $ticket = new Ticket();
 
                             if ($ticket->add($ticket_fields)) {
+
+                                // force ticket update
                                 $ticket->update([
                                     'id' => $ticket->getId(),
                                     'users_id_recipient' => $ticket_fields['users_id_recipient'],
                                 ]);
 
+                                // link groups (requesters, observers, technicians)
                                 $group_ticket = new Group_Ticket();
 
                                 $ticket_groups = $group_ticket->find("
@@ -217,6 +227,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     }
                                 }
 
+                                // link users (requesters, observers, technicians)
                                 $ticket_user = new Ticket_User();
                                 $ticket_users = $ticket_user->find("
                                     TRUE
@@ -234,6 +245,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     ]);
                                 }
 
+                                // reproduce links to other tickets
                                 $ticket_link = new Ticket_Ticket();
                                 $ticket_links = $ticket_link->find("
                                     TRUE
@@ -249,6 +261,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     ]);
                                 }
 
+                                // link the clone to the old ticket
                                 $ticket_link = new Ticket_Ticket();
                                 $ticket_link->add([
                                     'tickets_id_1' => $ticket->getId(),
@@ -256,6 +269,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     'link' => Ticket_Ticket::LINK_TO,
                                 ]);
 
+                                // add followups
                                 $ticket_followup = new TicketFollowup();
                                 $ticket_followups = $ticket_followup->find("
                                     TRUE
@@ -279,6 +293,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     }
                                 }
 
+                                // add documents
                                 $document_item = new Document_Item();
                                 $ticket_document_items = $document_item->find("
                                     TRUE
