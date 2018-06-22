@@ -278,6 +278,33 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         ]);
                                     }
                                 }
+
+                                $document_item = new Document_Item();
+                                $ticket_document_items = $document_item->find("
+                                    TRUE
+                                    AND items_id = " . $old_ticket_id . "
+                                    AND itemtype = 'Ticket'
+                                ");
+
+                                foreach ($ticket_document_items as $ticket_document_item_data) {
+                                    $ticket_new_document_item_data = array_diff_key($ticket_document_item_data, ['id' => null, 'date_mod' => null]);
+                                    $ticket_new_document_item_data['items_id'] = $ticket->getId();
+
+                                    $document_item = new Document_Item();
+                                    $document_item_id = $document_item->add($ticket_new_document_item_data);
+
+                                    if ($document_item_id) {
+                                        $glpi_time_before = $_SESSION['glpi_currenttime'];
+                                        $_SESSION['glpi_currenttime'] = $ticket_document_item_data['date_mod'];
+
+                                        $document_item->update([
+                                            'id' => $document_item_id,
+                                            'date_mod' => $ticket_document_item_data['date_mod'],
+                                        ]);
+
+                                        $_SESSION['glpi_currenttime'] = $glpi_time_before;
+                                    }
+                                }
 echo 'yeah ' . $ticket->getId();
                                 $nb_successes++;
                             }
