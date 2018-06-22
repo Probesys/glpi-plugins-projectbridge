@@ -255,6 +255,29 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     'tickets_id_2' => $old_ticket_id,
                                     'link' => Ticket_Ticket::LINK_TO,
                                 ]);
+
+                                $ticket_followup = new TicketFollowup();
+                                $ticket_followups = $ticket_followup->find("
+                                    TRUE
+                                    AND tickets_id = " . $old_ticket_id . "
+                                ");
+
+                                foreach ($ticket_followups as $ticket_followup_data) {
+                                    $ticket_new_followup_data = array_diff_key($ticket_followup_data, ['id' => null]);
+                                    $ticket_new_followup_data['tickets_id'] = $ticket->getId();
+
+                                    $ticket_followup = new TicketFollowup();
+                                    $ticket_followup_id = $ticket_followup->add($ticket_new_followup_data);
+
+                                    if ($ticket_followup_id) {
+                                        $ticket_followup->update([
+                                            'id' => $ticket_followup_id,
+                                            'date' => $ticket_followup_data['date'],
+                                            'date_mod' => $ticket_followup_data['date_mod'],
+                                            'date_creation' => $ticket_followup_data['date_creation'],
+                                        ]);
+                                    }
+                                }
 echo 'yeah ' . $ticket->getId();
                                 $nb_successes++;
                             }
