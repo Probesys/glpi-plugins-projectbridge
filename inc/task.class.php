@@ -279,6 +279,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                 foreach ($ticket_followups as $ticket_followup_data) {
                                     $ticket_new_followup_data = array_diff_key($ticket_followup_data, ['id' => null]);
                                     $ticket_new_followup_data['tickets_id'] = $ticket->getId();
+                                    $ticket_new_followup_data['content'] = str_replace("'", "\'", $ticket_new_followup_data['content']);
 
                                     $ticket_followup = new TicketFollowup();
                                     $ticket_followup_id = $ticket_followup->add($ticket_new_followup_data);
