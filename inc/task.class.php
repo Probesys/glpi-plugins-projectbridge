@@ -186,16 +186,18 @@ class PluginProjectbridgeTask extends CommonDBTM
 
                             $old_ticket_id = $ticket->getId();
                             $ticket_fields = array_diff_key($ticket_fields, $ticket_fields_to_ignore);
+                            $ticket_fields['name'] = str_replace("'", "\'", $ticket_fields['name']);
+                            $ticket_fields['name'] = str_replace('"', '\"', $ticket_fields['name']);
                             $additional_content = "(Ce ticket est issu d'une copie automatique du ticket " . $old_ticket_id . " suite au dépassement d'heures ou l'expiration du contrat de maintenance)";
                             $ticket_fields['content'] = $additional_content . $ticket_fields['content'];
                             $ticket_fields['content'] = str_replace("'", "\'", $ticket_fields['content']);
+                            $ticket_fields['content'] = str_replace('"', '\"', $ticket_fields['content']);
                             $ticket_fields['actiontime'] = 0;
                             $ticket_fields['requesttypes_id'] = $ticket_request_type;
 
                             $ticket = new Ticket();
 
                             if ($ticket->add($ticket_fields)) {
-
                                 // force ticket update
                                 $ticket->update([
                                     'id' => $ticket->getId(),
@@ -276,6 +278,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     $ticket_new_followup_data = array_diff_key($ticket_followup_data, ['id' => null]);
                                     $ticket_new_followup_data['tickets_id'] = $ticket->getId();
                                     $ticket_new_followup_data['content'] = str_replace("'", "\'", $ticket_new_followup_data['content']);
+                                    $ticket_new_followup_data['content'] = str_replace('"', '\"', $ticket_new_followup_data['content']);
 
                                     $ticket_followup = new TicketFollowup();
                                     $ticket_followup_id = $ticket_followup->add($ticket_new_followup_data);
@@ -329,6 +332,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     $ticket_new_task_data = array_diff_key($ticket_task_data, ['id' => null, 'actiontime' => null, 'begin' => null, 'end' => null]);
                                     $ticket_new_task_data['tickets_id'] = $ticket->getId();
                                     $ticket_new_task_data['content'] = str_replace("'", "\'", $ticket_new_task_data['content']);
+                                    $ticket_new_task_data['content'] = str_replace('"', '\"', $ticket_new_task_data['content']);
 
                                     $ticket_task = new TicketTask();
                                     $ticket_task->add($ticket_new_task_data);
@@ -347,7 +351,9 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     $ticket_new_solution_data = array_diff_key(current($solutions), ['id' => null, ]);
                                     $ticket_new_solution_data['items_id'] = $ticket->getId();
                                     $ticket_new_solution_data['user_name'] = str_replace("'", "\'", $ticket_new_solution_data['user_name']);
+                                    $ticket_new_solution_data['user_name'] = str_replace('"', '\"', $ticket_new_solution_data['user_name']);
                                     $ticket_new_solution_data['new_value'] = str_replace("'", "\'", $ticket_new_solution_data['new_value']);
+                                    $ticket_new_solution_data['new_value'] = str_replace('"', '\"', $ticket_new_solution_data['new_value']);
 
                                     $log_id = $log->add($ticket_new_solution_data);
 
