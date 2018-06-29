@@ -97,23 +97,37 @@ class PluginProjectbridgeTask extends CommonDBTM
         ");
 
         foreach ($tasks as $task_data) {
+            $expired = false;
+            $timediff = 0;
+            $action_time = null;
+
             if (
                 !empty($task_data['plan_end_date'])
                 && time() >= strtotime($task_data['plan_end_date'])
             ) {
-                $brige_task = new PluginProjectbridgeTask($task_data['id']);
-                $nb_successes += $brige_task->closeTask();
-                continue;
+                $expired = true;
             }
 
             if (!empty($task_data['planned_duration'])) {
                 $action_time = ProjectTask_Ticket::getTicketsTotalActionTime($task_data['id']);
+                $timediff = $action_time - $task_data['planned_duration'];
+            }
 
-                if ($action_time >= $task_data['planned_duration']) {
-                    $brige_task = new PluginProjectbridgeTask($task_data['id']);
-                    $nb_successes += $brige_task->closeTask();
-                    continue;
+            if (
+                $expired
+                || (
+                    $timediff > 0
+                    && $action_time !== null
+                )
+            ) {
+                $brige_task = new PluginProjectbridgeTask($task_data['id']);
+                $nb_successes += $brige_task->closeTask();
+
+                if ($timediff > 0) {
+                    $brige_task->createExcessTicket($timediff, $task_data['entities_id']);
                 }
+
+                continue;
             }
         }
 
@@ -379,5 +393,41 @@ class PluginProjectbridgeTask extends CommonDBTM
         }
 
         return $nb_successes;
+    }
+
+    /**
+     * Create excess ticket
+     *
+     * @param int $timediff
+     * @param int $entities_id
+     * @return void
+     */
+    public function createExcessTicket($timediff, $entities_id)
+    {
+        $ticket_request_type = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
+
+        $ticket_fields = [
+            'entities_id' => $entities_id,
+            'name' => 'Ticket de réajustement',
+            'content' => 'Ticket de réajustement de temps',
+            'actiontime' => 0,
+            'requesttypes_id' => $ticket_request_type,
+            'status' => Ticket::CLOSED,
+        ];
+
+        $ticket = new Ticket();
+
+        if ($ticket->add($ticket_fields)) {
+            $ticket_task_data = [
+                'actiontime' => $timediff,
+                'tickets_id' => $ticket->getId(),
+                'content' => 'Tâche de réajustement',
+            ];
+
+            $ticket_task = new TicketTask();
+            $ticket_task->add($ticket_task_data);
+
+            PluginProjectbridgeTicket::deleteProjectLinks($ticket->getId());
+        }
     }
 }
