@@ -758,7 +758,7 @@ class PluginProjectbridgeContract extends CommonDBTM
             $html_parts[] = '</ol>' . "\n";
 
             foreach ($recipients as $recipient) {
-                $success = PluginProjectbridgeContract::_notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
+                $success = PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
 
                 if ($success) {
                     $nb_successes++;
@@ -770,36 +770,6 @@ class PluginProjectbridgeContract extends CommonDBTM
         echo 'Fini' . "<br />\n";
 
         return ($nb_successes > 0) ? 1 : 0;
-    }
-
-    /**
-     * Notify a recipient
-     *
-     * @param  string $html_content
-     * @param  string $recepient_email
-     * @param  string $recepient_name
-     * @param  string $subject
-     * @return boolean
-     */
-    private static function _notify($html_content, $recepient_email, $recepient_name, $subject)
-    {
-        global $CFG_GLPI;
-
-        $mailer = new GLPIMailer();
-
-        $mailer->AddCustomHeader('Auto-Submitted: auto-generated');
-        // For exchange
-        $mailer->AddCustomHeader('X-Auto-Response-Suppress: OOF, DR, NDR, RN, NRN');
-
-        $mailer->SetFrom($CFG_GLPI['admin_email'], $CFG_GLPI['admin_email_name'], false);
-
-        $mailer->isHTML(true);
-        $mailer->Body = $html_content . '<br /><br />' . $CFG_GLPI['mailing_signature'];
-
-        $mailer->AddAddress($recepient_email, $recepient_name);
-        $mailer->Subject = '[GLPI] ' . $subject;
-
-        return $mailer->Send();
     }
 
     /**

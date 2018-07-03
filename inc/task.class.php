@@ -57,10 +57,10 @@ class PluginProjectbridgeTask extends CommonDBTM
     /**
      * Cron action to process tasks (close if expired or quota reached)
      *
-     * @param CronTask|null $task for log, if NULL display (default NULL)
+     * @param CronTask|null $cron_task for log, if NULL display (default NULL)
      * @return integer 1 if an action was done, 0 if not
      */
-    public static function cronProcessTasks($task = null)
+    public static function cronProcessTasks($cron_task = null)
     {
         if (class_exists('PluginProjectbridgeConfig')) {
             $plugin = new Plugin();
@@ -121,7 +121,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                 )
             ) {
                 $brige_task = new PluginProjectbridgeTask($task_data['id']);
-                $nb_successes += $brige_task->closeTask();
+                $nb_successes += $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0);
 
                 if ($timediff > 0) {
                     $brige_task->createExcessTicket($timediff, $task_data['entities_id']);
@@ -130,6 +130,8 @@ class PluginProjectbridgeTask extends CommonDBTM
                 continue;
             }
         }
+
+        $cron_task->addVolume(count($nb_successes));
 
         echo 'Fini' . "<br />\n";
 
@@ -140,9 +142,11 @@ class PluginProjectbridgeTask extends CommonDBTM
      * Close a task
      * Recreate all not closed or solved tickets linked to the task
      *
+     * @param boolean $expired
+     * @param integer $action_time
      * @return int
      */
-    public function closeTask()
+    public function closeTask($expired = false, $action_time = 0)
     {
         $nb_successes = 0;
         echo 'Fermeture de la tâche ' . $this->_task->getId() . "<br />\n";
@@ -388,6 +392,39 @@ class PluginProjectbridgeTask extends CommonDBTM
                             }
                         }
                     }
+                }
+            }
+        }
+
+        if ($nb_successes > 0) {
+            $recipients = PluginProjectbridgeConfig::getRecipients();
+            echo 'Trouvé ' . count($recipients) . ' personne(s) à alerter' . "<br />\n";
+
+            if (count($recipients)) {
+                global $CFG_GLPI;
+
+                $project = new Project();
+                $project->getFromDB($this->_task->fields['projects_id']);
+
+                $subject = 'Tâche de projet "' . $project->fields['name'] . '" fermée';
+
+                $html_parts = [];
+                $html_parts[] = '<p>' . "\n";
+                $html_parts[] = 'Bonjour.';
+                $html_parts[] = '<br />';
+                $html_parts[] = 'La tâche ouverte du projet "<a href="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=' . $this->_task->getId() . '">"' . $project->fields['name'] . '</a> vient d\'être fermée.';
+                $html_parts[] = '<br />';
+                $html_parts[] = '<br />';
+                $html_parts[] = 'Motif(s) :';
+                $html_parts[] = '<br />';
+                $html_parts[] = 'Expirée : ' . ($expired ? 'oui' : 'non');
+                $html_parts[] = '<br />';
+                $html_parts[] = 'Dépassement : ' . ($action_time > 0 ? 'oui' : 'non');
+
+                $html_parts[] = '</p>' . "\n";
+
+                foreach ($recipients as $recipient) {
+                    PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
                 }
             }
         }
