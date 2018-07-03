@@ -895,7 +895,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                     }
                 }
             } else {
-                $html_parts[] = 'Pas de projet lié';
+                $html_parts[] = 'Pas de contrat lié';
             }
 
             echo implode(' ', $html_parts);
