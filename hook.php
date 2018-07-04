@@ -203,7 +203,7 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
         && isset($contract->input['update'])
         && isset($contract->input['projectbridge_project_id'])
     ) {
-        if ($contract->input['update'] != 'Confirmer le renouvellement') {
+        if ($contract->input['update'] != 'Lier les tickets au renouvellement') {
             // update contract
 
             $nb_hours = 0;
@@ -245,6 +245,8 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
                 empty($contract->input['_projecttask_begin_date'])
                 || empty($contract->input['_projecttask_end_date'])
                 || empty($contract->input['projectbridge_nb_hours_to_use'])
+                || empty($contract->input['ticket_ids'])
+                || !is_array($contract->input['ticket_ids'])
             ) {
                 Session::addMessageAfterRedirect('Veuillez remplir tous les champs de renouvellement.', false, ERROR);
                 return false;

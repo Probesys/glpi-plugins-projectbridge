@@ -317,7 +317,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                         $html_parts[] = '<tr>' . "\n";
 
                         $html_parts[] = '<td>';
-                        $html_parts[] = '<input type="submit" name="update" value="Confirmer le renouvellement" class="submit" />';
+                        $html_parts[] = '<input type="submit" name="update" value="Confirmer le renouvellement" class="submit projectbridge-renewal-tickets" />';
                         $html_parts[] = '</td>' . "\n";
 
                         $html_parts[] = '<td>';
@@ -330,8 +330,34 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $html_parts[] = '</table>' . "\n";
                 }
 
+                $modal_url = rtrim($CFG_GLPI['root_doc'], '/') . '/plugins/projectbridge/ajax/get_renewal_tickets.php';
+                $html_parts[] = Ajax::createModalWindow('renewal_tickets_modal', $modal_url, [
+                    'display' => false,
+                    'extraparams' => [
+                        'task_id' => PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_id', $search_closed),
+                        'contract_id' => $contract->getId(),
+                    ],
+                ]);
+
                 $js_block = '
                     window.projectbridge_datepicker_init = true;
+
+                    /**
+                     * Trigger a timeout until a modal is open
+                     *
+                     * @param jQueryObject modal
+                     * @param function callback
+                     */
+                    function timeoutUntilModalOpen(modal, callback)
+                    {
+                        if ($("form", modal).length) {
+                            callback();
+                        } else {
+                            window.setTimeout(function() {
+                                timeoutUntilModalOpen(modal, callback);
+                            }, 300);
+                        }
+                    }
 
                     $(document).on("click", ".projectbridge-renewal-trigger", function(e) {
                         e.preventDefault();
@@ -369,6 +395,29 @@ class PluginProjectbridgeContract extends CommonDBTM
                         e.preventDefault();
                         $(".projectbridge-renewal-data").hide();
                         $(".projectbridge-renewal-trigger").show();
+                        return false;
+                    })
+                    .on("click", ".projectbridge-renewal-tickets", function(e) {
+                        e.preventDefault();
+                        renewal_tickets_modal.dialog("open");
+
+                        var data_to_add_to_modal = {
+                            projectbridge_project_id: $("[id^=dropdown_projectbridge_project_id]").val(),
+                            _projecttask_begin_date: $("input[name=_projecttask_begin_date]").val(),
+                            _projecttask_end_date: $("input[name=_projecttask_end_date]").val(),
+                            projectbridge_nb_hours_to_use: $("input[name=projectbridge_nb_hours_to_use]").val()
+                        };
+
+                        var html_to_add_to_modal = "";
+
+                        for (var data_name in data_to_add_to_modal) {
+                            html_to_add_to_modal += "<input type=\"hidden\" name=\"" + data_name + "\" value=\"" + data_to_add_to_modal[data_name] + "\" />";
+                        }
+
+                        timeoutUntilModalOpen(renewal_tickets_modal, function() {
+                            $("form", renewal_tickets_modal).append(html_to_add_to_modal);
+                        });
+
                         return false;
                     });
                 ';
@@ -524,19 +573,8 @@ class PluginProjectbridgeContract extends CommonDBTM
     {
         $project_id = $this->getProjectId();
 
-        if (
-            $project_id <= 0
-            || !PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')
-        ) {
+        if ($project_id <= 0) {
             return;
-        }
-
-        $project_task = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task');
-        $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
-
-        if (empty($state_closed_value)) {
-            Session::addMessageAfterRedirect('La correspondance pour le statut "Clos" n\'a pas été définie. Le contrat n\'a pas pu être renouvellé.', false, ERROR);
-            return false;
         }
 
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
@@ -546,54 +584,46 @@ class PluginProjectbridgeContract extends CommonDBTM
             return false;
         }
 
-        // close current task
-        $closed = $project_task->update(array(
-            'id' => $project_task->getId(),
-            'projectstates_id' => $state_closed_value, // "closed"
-        ));
+        $renewal_data = $this->getRenewalData();
+        $project_task_data = [
+            // data from contract
+            'name' => date('Y-m'),
+            'entities_id' => $this->_contract->fields['entities_id'],
+            'is_recursive' => $this->_contract->fields['is_recursive'],
+            'projects_id' => $project_id,
+            'content' => $this->_contract->fields['comment'],
+            'comment' => '',
+            'plan_start_date' => date('Y-m-d H:i:s', strtotime($renewal_data['begin_date'])),
+            'plan_end_date' => date('Y-m-d H:i:s', strtotime($renewal_data['end_date'])),
+            'planned_duration' => $renewal_data['nb_hours_to_use'] * 3600, // in seconds
+            'projectstates_id' => $state_in_progress_value, // "in progress"
 
-        if ($closed) {
-            $renewal_data = $this->getRenewalData();
-            $delta_hours_to_use_str = '';
+            // standard data to bootstrap task
+            'projecttasktemplates_id' => 0,
+            'projecttasks_id' => 0,
+            'projecttasktypes_id' => 0,
+            'percent_done' => 0,
+            'is_milestone' => 0,
+            'real_start_date' => '',
+            'real_end_date' => '',
+            'effective_duration' => 0,
+        ];
 
-            if ($renewal_data['delta_hours_to_use'] != 0) {
-                $delta_hours_to_use_str .= 'Dépassement de la tâche précédente : ';
-                $delta_hours_to_use_str .= floor($renewal_data['delta_hours_to_use']) . ' heures';
+        // create the new project's task
+        $project_task = new ProjectTask();
+        $task_id = $project_task->add($project_task_data);
 
-                if (floor($renewal_data['delta_hours_to_use']) != $renewal_data['delta_hours_to_use']) {
-                    $delta_hours_to_use_str .= ' ';
-                    $delta_hours_to_use_str .= (($renewal_data['delta_hours_to_use'] - floor($renewal_data['delta_hours_to_use'])) * 60);
-                    $delta_hours_to_use_str .= ' minutes';
+        if ($task_id) {
+            // link selected tickets
+            foreach ($this->_contract->input['ticket_ids'] as $ticket_id => $selected) {
+                if ($selected) {
+                    $project_task_ticket = new ProjectTask_Ticket();
+                    $project_task_ticket->add([
+                        'tickets_id' => $ticket_id,
+                        'projecttasks_id' => $task_id,
+                    ]);
                 }
             }
-
-            $project_task_data = array(
-                // data from contract
-                'name' => date('Y-m'),
-                'entities_id' => $this->_contract->fields['entities_id'],
-                'is_recursive' => $this->_contract->fields['is_recursive'],
-                'projects_id' => $project_id,
-                'content' => $this->_contract->fields['comment'],
-                'comment' => $delta_hours_to_use_str,
-                'plan_start_date' => date('Y-m-d H:i:s', strtotime($renewal_data['begin_date'])),
-                'plan_end_date' => date('Y-m-d H:i:s', strtotime($renewal_data['end_date'])),
-                'planned_duration' => $renewal_data['nb_hours_to_use'] * 3600, // in seconds
-                'projectstates_id' => $state_in_progress_value, // "in progress"
-
-                // standard data to bootstrap task
-                'projecttasktemplates_id' => 0,
-                'projecttasks_id' => 0,
-                'projecttasktypes_id' => 0,
-                'percent_done' => 0,
-                'is_milestone' => 0,
-                'real_start_date' => '',
-                'real_end_date' => '',
-                'effective_duration' => 0,
-            );
-
-            // create the new project's task
-            $project_task = new ProjectTask();
-            $project_task->add($project_task_data);
         }
     }
 
