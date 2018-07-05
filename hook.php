@@ -672,13 +672,24 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 
             $select = "
                 GROUP_CONCAT(
-                    DISTINCT CONCAT(
-                        '<a href=\"" . $task_link . "',
-                        `glpi_projecttasks`.`id`,
-                        '\">',
-                        `glpi_projectstates`.`name`,
-                        '</a>'
-                    )
+                    CASE
+                        WHEN `glpi_projects`.`id` IS NOT NULL AND `glpi_projectstates`.`id` IS NULL
+                            THEN CONCAT(
+                                '<a href=\"" . $task_link . "',
+                                `glpi_projecttasks`.`id`,
+                                '\">',
+                                'Sans statut',
+                                '</a>'
+                            )
+                    ELSE
+                        CONCAT(
+                            '<a href=\"" . $task_link . "',
+                            `glpi_projecttasks`.`id`,
+                            '\">',
+                            `glpi_projectstates`.`name`,
+                            '</a>'
+                        )
+                    END
                     SEPARATOR '$$##$$'
                 )
                 AS `ITEM_" . $offset . "`,
