@@ -643,7 +643,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         if (empty($this->_contract->input['_projecttask_end_date'])) {
             $task_end_date = (
                 !empty($this->_contract->fields['duration'])
-                    ? Infocom::getWarrantyExpir($task_start_date, $this->_contract->fields['duration'])
+                    ? Infocom::getWarrantyExpir(date('Y-m-d', strtotime($task_start_date . ' -1 day')), $this->_contract->fields['duration'])
                     : ''
             );
         } else {
