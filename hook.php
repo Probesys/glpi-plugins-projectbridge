@@ -524,7 +524,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
     $options = [];
 
     switch ($itemtype) {
-       case 'Entity':
+        case 'Entity':
             $options[] = [
                 'id'            => 4200,
                 'table'         => PluginProjectbridgeEntity::$table_name,
@@ -538,12 +538,12 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
 
         case 'Ticket':
             $options[] = [
-                'id'    => 4201,
+                'id'    => 4210,
                 'name'  => 'ProjectBridge',
             ];
 
             $options[] = [
-                'id'            => 4202,
+                'id'            => 4211,
                 'table'         => PluginProjectbridgeTicket::$table_name,
                 'field'         => 'project_id',
                 'name'          => 'Projet',
@@ -551,7 +551,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
             ];
 
             $options[] = [
-                'id'            => 4203,
+                'id'            => 4212,
                 'table'         => PluginProjectbridgeTicket::$table_name,
                 'field'         => 'project_id',
                 'name'          => 'Tâche de projet',
@@ -559,7 +559,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
             ];
 
             $options[] = [
-                'id'            => 4204,
+                'id'            => 4213,
                 'table'         => PluginProjectbridgeTicket::$table_name,
                 'field'         => 'project_id',
                 'name'          => 'Statut de tâche',
@@ -567,8 +567,8 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
             ];
             break;
 
-       default:
-           // nothing to do
+        default:
+            // nothing to do
     }
 
     return $options;
@@ -610,7 +610,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
             break;
 
         case 'Ticket':
-            if ($key == 4202) {
+            if ($key == 4211) {
                 // project name
 
                 $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
@@ -628,7 +628,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4203) {
+            } else if ($key == 4212) {
                 // project task
 
                 $task_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/projecttask.form.php?id=';
@@ -646,7 +646,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4204) {
+            } else if ($key == 4213) {
                 // project task status
 
                 $select = "
@@ -733,13 +733,13 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
 
         case 'Ticket':
             if ($searchtype == 'contains') {
-                if ($key == 4202) {
+                if ($key == 4211) {
                     // project name
                     $where = $link . "`glpi_projects`.`name` " . Search::makeTextSearch($val);
-                } else if ($key == 4203) {
+                } else if ($key == 4212) {
                     // project task
                     $where = $link . "`glpi_projecttasks`.`name` " . Search::makeTextSearch($val);
-                } else if ($key == 4204) {
+                } else if ($key == 4213) {
                     // project task status
                     $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
                 }
