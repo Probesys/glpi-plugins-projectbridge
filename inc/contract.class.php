@@ -539,6 +539,16 @@ class PluginProjectbridgeContract extends CommonDBTM
 
                 break;
 
+            case 'plan_start_date':
+                if (
+                    PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed)
+                    && !empty($project_tasks[$project_id][$search_closed]->fields['plan_start_date'])
+                ) {
+                    $return = $project_tasks[$project_id][$search_closed]->fields['plan_start_date'];
+                }
+
+                break;
+
             case 'plan_end_date':
                 if (
                     PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed)
@@ -638,26 +648,48 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
     public function getRenewalData()
     {
-        if (empty($this->_contract->input['_projecttask_begin_date'])) {
-            $task_start_date = date('Y-m-d');
-        } else {
-            $task_start_date = $this->_contract->input['_projecttask_begin_date'];
-        }
+        $project_id = $this->getProjectId();
+        $open_exists = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', false);
+        $closed_exists = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', true);
+        $use_closed = false;
 
-        if (empty($this->_contract->input['_projecttask_end_date'])) {
-            $task_end_date = (
-                !empty($this->_contract->fields['duration'])
-                    ? Infocom::getWarrantyExpir(date('Y-m-d', strtotime($task_start_date . ' -1 day')), $this->_contract->fields['duration'])
-                    : ''
-            );
+        if (
+            $closed_exists
+            && !$open_exists
+        ) {
+            $use_closed = true;
+
+            $previous_task_start = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'plan_start_date', true);
+            $previous_task_end = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'plan_end_date', true);
+
+            $datediff = ceil((strtotime($previous_task_end) - strtotime($previous_task_start)) / 3600 / 24);
+            $task_start_date = date('Y-m-d', strtotime($previous_task_end . ' + 1 day'));
+            $task_end_date = date('Y-m-d', strtotime($task_start_date . ' + ' . $datediff . ' days'));
+
         } else {
-            $task_end_date = $this->_contract->input['_projecttask_end_date'];
+            if (empty($this->_contract->input['_projecttask_begin_date'])) {
+                $task_start_date = date('Y-m-d');
+            } else {
+                $task_start_date = $this->_contract->input['_projecttask_begin_date'];
+                $use_closed = true;
+            }
+
+            if (empty($this->_contract->input['_projecttask_end_date'])) {
+                $task_end_date = (
+                    !empty($this->_contract->fields['duration'])
+                        ? Infocom::getWarrantyExpir(date('Y-m-d', strtotime($task_start_date . ' -1 day')), $this->_contract->fields['duration'])
+                        : ''
+                );
+                $use_closed = true;
+            } else {
+                $task_end_date = $this->_contract->input['_projecttask_end_date'];
+            }
         }
 
         $nb_hours = $this->getNbHours();
         $nb_hours_to_use = $nb_hours;
         $delta_hours_to_use = 0;
-        $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($this->getProjectId(), 'consumption');
+        $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($this->getProjectId(), 'consumption', $use_closed);
 
         if ($consumption > $nb_hours) {
             $delta_hours_to_use = $consumption - $nb_hours;
