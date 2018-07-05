@@ -613,7 +613,11 @@ class PluginProjectbridgeContract extends CommonDBTM
         $project_task = new ProjectTask();
         $task_id = $project_task->add($project_task_data);
 
-        if ($task_id) {
+        if (
+            $task_id
+            && !empty($this->_contract->input['ticket_ids'])
+            && is_array($this->_contract->input['ticket_ids'])
+        ) {
             // link selected tickets
             foreach ($this->_contract->input['ticket_ids'] as $ticket_id => $selected) {
                 if ($selected) {
