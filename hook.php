@@ -567,6 +567,16 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
             ];
             break;
 
+        case 'Contract':
+            $options[] = [
+                'id'            => 4220,
+                'table'         => PluginProjectbridgeContract::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'ProjectBridge - Tâche de projet',
+                'massiveaction' => false,
+            ];
+            break;
+
         default:
             // nothing to do
     }
@@ -657,6 +667,24 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 
             break;
 
+        case 'Contract':
+            $task_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/projecttask.form.php?id=';
+
+            $select = "
+                GROUP_CONCAT(
+                    DISTINCT CONCAT(
+                        '<a href=\"" . $task_link . "',
+                        `glpi_projecttasks`.`id`,
+                        '\">',
+                        `glpi_projectstates`.`name`,
+                        '</a>'
+                    )
+                    SEPARATOR '$$##$$'
+                )
+                AS `ITEM_" . $offset . "`,
+            ";
+            break;
+
         default:
            // nothing to do
     }
@@ -695,6 +723,19 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                 LEFT JOIN `glpi_projecttasks`
                     ON (`glpi_projecttasks`.`id` = `glpi_projecttasks_tickets`.`projecttasks_id`)
                 LEFT JOIN `glpi_projects`
+                    ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
+                LEFT JOIN `glpi_projectstates`
+                    ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
+            ";
+            break;
+
+        case PluginProjectbridgeContract::$table_name:
+            $left_join = "
+                LEFT JOIN `" . $new_table . "`
+                    ON (`" . $new_table . "`.`contract_id` = `" . $ref_table . "`.`id`)
+                LEFT JOIN `glpi_projects`
+                    ON (`" . $new_table . "`.`project_id` = `glpi_projects`.`id`)
+                LEFT JOIN `glpi_projecttasks`
                     ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
                 LEFT JOIN `glpi_projectstates`
                     ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
@@ -743,6 +784,14 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     // project task status
                     $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
                 }
+            }
+
+            break;
+
+        case 'Contract':
+            if ($searchtype == 'contains') {
+                // project task status
+                $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
             }
 
             break;
