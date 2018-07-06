@@ -671,27 +671,18 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
             $task_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/projecttask.form.php?id=';
 
             $select = "
-                GROUP_CONCAT(
-                    CASE
-                        WHEN `glpi_projects`.`id` IS NOT NULL AND `glpi_projectstates`.`id` IS NULL
-                            THEN CONCAT(
-                                '<a href=\"" . $task_link . "',
-                                `glpi_projecttasks`.`id`,
-                                '\">',
-                                'Sans statut',
-                                '</a>'
-                            )
-                    ELSE
-                        CONCAT(
-                            '<a href=\"" . $task_link . "',
-                            `glpi_projecttasks`.`id`,
-                            '\">',
-                            `glpi_projectstates`.`name`,
-                            '</a>'
-                        )
-                    END
-                    SEPARATOR '$$##$$'
-                )
+                (CASE WHEN `last_tasks`.`project_task_id` IS NOT NULL
+                THEN
+                    CONCAT(
+                        '<a href=\"" . $task_link . "',
+                        `last_tasks`.`project_task_id`,
+                        '\">',
+                        COALESCE(`last_tasks`.`project_state`, '" . NOT_AVAILABLE . "'),
+                        '</a>'
+                    )
+                ELSE
+                    NULL
+                END)
                 AS `ITEM_" . $offset . "`,
             ";
             break;
@@ -746,10 +737,33 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                     ON (`" . $new_table . "`.`contract_id` = `" . $ref_table . "`.`id`)
                 LEFT JOIN `glpi_projects`
                     ON (`" . $new_table . "`.`project_id` = `glpi_projects`.`id`)
-                LEFT JOIN `glpi_projecttasks`
-                    ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
-                LEFT JOIN `glpi_projectstates`
-                    ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
+                LEFT JOIN (
+                    SELECT
+                        `glpi_projecttasks`.`projects_id` AS `project_id`,
+                        `glpi_projecttasks`.`id` AS `project_task_id`,
+                        `glpi_projectstates`.`name` AS `project_state`
+                    FROM
+                        `glpi_projecttasks`
+                    INNER JOIN (
+                        /*
+                          Get last tasks for each project
+                         */
+                        SELECT
+                            MAX(`glpi_projecttasks`.`id`) AS `id`
+                        FROM
+                            `glpi_projecttasks`
+                        WHERE TRUE
+                        GROUP BY
+                            `glpi_projecttasks`.`projects_id`
+                    ) AS `max_ids`
+                        ON (`max_ids`.`id` = `glpi_projecttasks`.`id`)
+                    INNER JOIN `glpi_projects`
+                        ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
+                    LEFT JOIN `glpi_projectstates`
+                        ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
+                    WHERE TRUE
+                ) AS `last_tasks`
+                    ON (`last_tasks`.`project_id` = `glpi_projects`.`id`)
             ";
             break;
 
@@ -802,7 +816,19 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
         case 'Contract':
             if ($searchtype == 'contains') {
                 // project task status
-                $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
+
+                $where_parts = [
+                    "`last_tasks`.`project_state` " . Search::makeTextSearch($val),
+                ];
+
+                if (stripos(NOT_AVAILABLE, $val) !== false) {
+                    $where_parts[] = "(
+                        `last_tasks`.`project_task_id` IS NOT NULL
+                        AND `last_tasks`.`project_state` IS NULL
+                    )";
+                }
+
+                $where = $link . "(" . implode(' OR ', $where_parts) . ")";
             }
 
             break;
