@@ -527,11 +527,24 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
         case 'Entity':
             $options[] = [
                 'id'            => 4200,
+                'name'          => 'ProjectBridge',
+            ];
+
+            $options[] = [
+                'id'            => 4201,
                 'table'         => PluginProjectbridgeEntity::$table_name,
 
                 // trick GLPI search into thinking we want the contract id so the addSelect function is called
                 'field'         => 'contract_id',
-                'name'          => 'ProjectBridge - Contrat par défaut',
+                'name'          => 'Contrat par défaut',
+                'massiveaction' => false,
+            ];
+
+            $options[] = [
+                'id'            => 4202,
+                'table'         => PluginProjectbridgeTicket::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Temps non affecté à une tâche',
                 'massiveaction' => false,
             ];
             break;
@@ -600,23 +613,37 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 
     switch ($itemtype) {
         case 'Entity':
-            $contract_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php?id=';
+            if ($key == 4201) {
+                $contract_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php?id=';
 
-            $select = "
-                (CASE
-                    WHEN `" . PluginProjectbridgeEntity::$table_name . "`.`contract_id` IS NOT NULL
-                        THEN CONCAT(
-                            '<a href=\"" . $contract_link . "',
-                            `" . PluginProjectbridgeEntity::$table_name . "`.`contract_id`,
-                            '\">',
-                            `glpi_contracts`.`name`,
-                            '</a>'
-                        )
-                    ELSE
-                        NULL
-                END)
-                AS `ITEM_" . $offset . "`,
-            ";
+                $select = "
+                    (CASE
+                        WHEN `" . PluginProjectbridgeEntity::$table_name . "`.`contract_id` IS NOT NULL
+                            THEN CONCAT(
+                                '<a href=\"" . $contract_link . "',
+                                `" . PluginProjectbridgeEntity::$table_name . "`.`contract_id`,
+                                '\">',
+                                `glpi_contracts`.`name`,
+                                '</a>'
+                            )
+                        ELSE
+                            NULL
+                    END)
+                    AS `ITEM_" . $offset . "`,
+                ";
+            } else if ($key == 4202) {
+                $select = "
+                    COALESCE(
+                        CONCAT(
+                            ROUND(`unlinked_ticket_actiontimes`.`actiontime_sum`, 2),
+                            'heure(s)'
+                        ),
+                        '0 heures'
+                    )
+                    AS `ITEM_" . $offset . "`,
+                ";
+            }
+
             break;
 
         case 'Ticket':
@@ -716,19 +743,41 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                 LEFT JOIN `glpi_contracts`
                     ON (`" . $new_table . "`.`contract_id` = `glpi_contracts`.`id`)
             ";
+
             break;
 
         case PluginProjectbridgeTicket::$table_name:
-            $left_join = "
-                LEFT JOIN `glpi_projecttasks_tickets`
-                    ON (`glpi_projecttasks_tickets`.`tickets_id` = `" . $ref_table . "`.`id`)
-                LEFT JOIN `glpi_projecttasks`
-                    ON (`glpi_projecttasks`.`id` = `glpi_projecttasks_tickets`.`projecttasks_id`)
-                LEFT JOIN `glpi_projects`
-                    ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
-                LEFT JOIN `glpi_projectstates`
-                    ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
-            ";
+            if ($itemtype == 'Entity') {
+                $left_join = "
+                    LEFT JOIN (
+                        SELECT
+                            `glpi_tickets`.`entities_id`,
+                            SUM(`glpi_tickets`.`actiontime`) / 3600 AS `actiontime_sum`
+                        FROM
+                            `glpi_tickets`
+                        LEFT OUTER JOIN `glpi_projecttasks_tickets`
+                            ON (`glpi_tickets`.`id` = `glpi_projecttasks_tickets`.`tickets_id`)
+                        WHERE TRUE
+                            AND `glpi_tickets`.`is_deleted` = 0
+                            AND `glpi_projecttasks_tickets`.`tickets_id` IS NULL
+                        GROUP BY
+                            `glpi_tickets`.`entities_id`
+                    ) AS `unlinked_ticket_actiontimes`
+                        ON (`unlinked_ticket_actiontimes`.`entities_id` = `" . $ref_table . "`.`id`)
+                ";
+            } else {
+                $left_join = "
+                    LEFT JOIN `glpi_projecttasks_tickets`
+                        ON (`glpi_projecttasks_tickets`.`tickets_id` = `" . $ref_table . "`.`id`)
+                    LEFT JOIN `glpi_projecttasks`
+                        ON (`glpi_projecttasks`.`id` = `glpi_projecttasks_tickets`.`projecttasks_id`)
+                    LEFT JOIN `glpi_projects`
+                        ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
+                    LEFT JOIN `glpi_projectstates`
+                        ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
+                ";
+            }
+
             break;
 
         case PluginProjectbridgeContract::$table_name:
@@ -792,7 +841,11 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
     switch ($itemtype) {
         case 'Entity':
             if ($searchtype == 'contains') {
-                $where = $link . "`glpi_contracts`.`name` " . Search::makeTextSearch($val);
+                if ($key == 4201) {
+                    $where = $link . "`glpi_contracts`.`name` " . Search::makeTextSearch($val);
+                } else {
+                    $where = $link . "`unlinked_ticket_actiontimes`.`actiontime_sum` " . Search::makeTextSearch($val);
+                }
             }
 
             break;
