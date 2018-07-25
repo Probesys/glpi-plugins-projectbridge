@@ -75,6 +75,10 @@ if ($can_update) {
     echo '    table td:first-child, table th:first-child { border-left: 0px;}';
     echo '</style>' . "\n";
 
+    echo '<a href="' . rtrim($CFG_GLPI['root_doc'], '/') . '/plugins/projectbridge/front/projecttask.php">';
+    echo 'Tâches de projet';
+    echo '</a>';
+
     if (true) {
         // status config
 
