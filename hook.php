@@ -583,9 +583,22 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
         case 'Contract':
             $options[] = [
                 'id'            => 4220,
+                'name'          => 'ProjectBridge',
+            ];
+
+            $options[] = [
+                'id'            => 4221,
                 'table'         => PluginProjectbridgeContract::$table_name,
                 'field'         => 'project_id',
-                'name'          => 'ProjectBridge - Tâche de projet',
+                'name'          => 'Nom du projet',
+                'massiveaction' => false,
+            ];
+
+            $options[] = [
+                'id'            => 4222,
+                'table'         => PluginProjectbridgeContract::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Tâche de projet',
                 'massiveaction' => false,
             ];
             break;
@@ -695,23 +708,48 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
             break;
 
         case 'Contract':
-            $task_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/projecttask.form.php?id=';
+            if ($key == 4222) {
+                // last task's status
 
-            $select = "
-                (CASE WHEN `last_tasks`.`project_task_id` IS NOT NULL
-                THEN
-                    CONCAT(
-                        '<a href=\"" . $task_link . "',
-                        `last_tasks`.`project_task_id`,
-                        '\">',
-                        COALESCE(`last_tasks`.`project_state`, '" . NOT_AVAILABLE . "'),
-                        '</a>'
-                    )
-                ELSE
-                    NULL
-                END)
-                AS `ITEM_" . $offset . "`,
-            ";
+                $task_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/projecttask.form.php?id=';
+
+                $select = "
+                    (CASE WHEN `last_tasks`.`project_task_id` IS NOT NULL
+                    THEN
+                        CONCAT(
+                            '<a href=\"" . $task_link . "',
+                            `last_tasks`.`project_task_id`,
+                            '\">',
+                            COALESCE(`last_tasks`.`project_state`, '" . NOT_AVAILABLE . "'),
+                            '</a>'
+                        )
+                    ELSE
+                        NULL
+                    END)
+                    AS `ITEM_" . $offset . "`,
+                ";
+            } else if ($key == 4221) {
+                // project's name
+
+                $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
+
+                $select = "
+                    (CASE WHEN `last_tasks`.`project_name` IS NOT NULL
+                    THEN
+                        CONCAT(
+                            '<a href=\"" . $project_link . "',
+                            `last_tasks`.`project_id`,
+                            '\">',
+                            COALESCE(`last_tasks`.`project_name`, '" . NOT_AVAILABLE . "'),
+                            '</a>'
+                        )
+                    ELSE
+                        NULL
+                    END)
+                    AS `ITEM_" . $offset . "`,
+                ";
+            }
+
             break;
 
         default:
@@ -790,7 +828,8 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                     SELECT
                         `glpi_projecttasks`.`projects_id` AS `project_id`,
                         `glpi_projecttasks`.`id` AS `project_task_id`,
-                        `glpi_projectstates`.`name` AS `project_state`
+                        `glpi_projectstates`.`name` AS `project_state`,
+                        `glpi_projects`.`name` AS `project_name`
                     FROM
                         `glpi_projecttasks`
                     INNER JOIN (
@@ -868,20 +907,37 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
 
         case 'Contract':
             if ($searchtype == 'contains') {
-                // project task status
+                if ($key == 4222) {
+                    // project task status
 
-                $where_parts = [
-                    "`last_tasks`.`project_state` " . Search::makeTextSearch($val),
-                ];
+                    $where_parts = [
+                        "`last_tasks`.`project_state` " . Search::makeTextSearch($val),
+                    ];
 
-                if (stripos(NOT_AVAILABLE, $val) !== false) {
-                    $where_parts[] = "(
-                        `last_tasks`.`project_task_id` IS NOT NULL
-                        AND `last_tasks`.`project_state` IS NULL
-                    )";
+                    if (stripos(NOT_AVAILABLE, $val) !== false) {
+                        $where_parts[] = "(
+                            `last_tasks`.`project_task_id` IS NOT NULL
+                            AND `last_tasks`.`project_state` IS NULL
+                        )";
+                    }
+
+                    $where = $link . "(" . implode(' OR ', $where_parts) . ")";
+                } elseif ($key == 4221) {
+                    // project task status
+
+                    $where_parts = [
+                        "`last_tasks`.`project_name` " . Search::makeTextSearch($val),
+                    ];
+
+                    if (stripos(NOT_AVAILABLE, $val) !== false) {
+                        $where_parts[] = "(
+                            `last_tasks`.`project_id` IS NOT NULL
+                            AND `last_tasks`.`project_name` = ''
+                        )";
+                    }
+
+                    $where = $link . "(" . implode(' OR ', $where_parts) . ")";
                 }
-
-                $where = $link . "(" . implode(' OR ', $where_parts) . ")";
             }
 
             break;
