@@ -693,7 +693,6 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         if ($consumption > $nb_hours) {
             $delta_hours_to_use = $consumption - $nb_hours;
-            $nb_hours_to_use -= $delta_hours_to_use;
         }
 
         if (!empty($this->_contract->input['projectbridge_nb_hours_to_use'])) {
