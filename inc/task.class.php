@@ -116,7 +116,7 @@ class PluginProjectbridgeTask extends CommonDBTM
             if (
                 $expired
                 || (
-                    $timediff > 0
+                    $timediff >= 0
                     && $action_time !== null
                 )
             ) {
@@ -131,7 +131,7 @@ class PluginProjectbridgeTask extends CommonDBTM
             }
         }
 
-        $cron_task->addVolume(count($nb_successes));
+        $cron_task->addVolume($nb_successes);
 
         echo 'Fini' . "<br />\n";
 
