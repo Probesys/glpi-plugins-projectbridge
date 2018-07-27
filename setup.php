@@ -37,10 +37,12 @@ function plugin_init_projectbridge()
         'Entity' => 'plugin_projectbridge_pre_entity_update',
         'Contract' => 'plugin_projectbridge_pre_contract_update',
         'Ticket' => 'plugin_projectbridge_ticket_update',
+        'TicketTask' => 'plugin_projectbridge_ticketask_update',
     ];
 
     $PLUGIN_HOOKS['item_add'][PluginProjectbridgeConfig::NAMESPACE] = [
         'Contract' => 'plugin_projectbridge_contract_add',
+        'TicketTask' => 'plugin_projectbridge_ticketask_add',
     ];
 
     $PLUGIN_HOOKS['use_massive_action'][PluginProjectbridgeConfig::NAMESPACE] = 1;

@@ -467,4 +467,44 @@ class PluginProjectbridgeTask extends CommonDBTM
             PluginProjectbridgeTicket::deleteProjectLinks($ticket->getId());
         }
     }
+
+    /**
+     * Update the progress percentage of tasks linked to a ticket
+     *
+     * @param  integer $ticket_id
+     * @param  integer $timediff
+     * @return void
+     */
+    public static function updateProgressPercent($ticket_id, $timediff = 0)
+    {
+        $task_link = new ProjectTask_Ticket();
+        $task_links = $task_link->find("
+            TRUE
+            AND tickets_id = " . $ticket_id . "
+        ");
+
+        if (!empty($task_links)) {
+            foreach ($task_links as $task_link) {
+                $task = new ProjectTask();
+
+                if ($task->getFromDB($task_link['projecttasks_id'])) {
+                    $total_actiontime = ProjectTask_Ticket::getTicketsTotalActionTime($task->getId());
+
+                    $target = $total_actiontime + $timediff;
+                    $target_percent = round(($target / $task->fields['planned_duration']) * 100);
+
+                    if ($target_percent > 100) {
+                        $target_percent = 100;
+                    } else if ($target_percent < 0) {
+                        $target_percent = 0;
+                    }
+
+                    $task->update([
+                        'id' => $task->getId(),
+                        'percent_done' => $target_percent,
+                    ]);
+                }
+            }
+        }
+    }
 }

@@ -488,6 +488,39 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
 }
 
 /**
+ * Hook called after the creation of a ticket task
+ * If possible, update the linked project task's progress percentage
+ *
+ * @param  TicketTask $ticket_task
+ * @return void
+ */
+function plugin_projectbridge_ticketask_add(TicketTask $ticket_task)
+{
+    if (isset($ticket_task->fields['actiontime'])) {
+        // no timediff needed because it's already in DB
+        PluginProjectbridgeTask::updateProgressPercent((int) $ticket_task->fields['tickets_id']);
+    }
+}
+
+/**
+ * Hook called before the update of a ticket task
+ * If possible, update the linked project task's progress percentage
+ *
+ * @param  TicketTask $ticket_task
+ * @return void
+ */
+function plugin_projectbridge_ticketask_update(TicketTask $ticket_task)
+{
+    if (
+        isset($ticket_task->fields['actiontime'])
+        && isset($ticket_task->input['actiontime'])
+    ) {
+        $timediff = $ticket_task->input['actiontime'] - $ticket_task->fields['actiontime'];
+        PluginProjectbridgeTask::updateProgressPercent((int) $ticket_task->fields['tickets_id'], (int) $timediff);
+    }
+}
+
+/**
  * Hook called after showing a ticket tab
  *
  * @param  array $tab_data
