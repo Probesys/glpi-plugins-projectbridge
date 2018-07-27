@@ -380,7 +380,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
                     !empty($begin_date)
                     && !empty($contract->fields['duration'])
                         ? date('Y-m-d H:i:s', strtotime(
-                            Infocom::getWarrantyExpir($begin_date, $contract->fields['duration'])
+                            Infocom::getWarrantyExpir($begin_date, $contract->fields['duration']) . ' - 1 day'
                           ))
                         : ''
                 ),
