@@ -605,7 +605,8 @@ class PluginProjectbridgeContract extends CommonDBTM
             return false;
         }
 
-        $renewal_data = $this->getRenewalData();
+        $renewal_data = $this->getRenewalData($use_input_data = true);
+
         $project_task_data = [
             // data from contract
             'name' => date('Y-m'),
@@ -655,9 +656,10 @@ class PluginProjectbridgeContract extends CommonDBTM
     /**
      * Get data used to renew the contract
      *
+     * @param boolean $use_input_data
      * @return array
      */
-    public function getRenewalData()
+    public function getRenewalData($use_input_data = false)
     {
         $project_id = $this->getProjectId();
         $open_exists = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', false);
@@ -665,7 +667,8 @@ class PluginProjectbridgeContract extends CommonDBTM
         $use_closed = false;
 
         if (
-            $closed_exists
+            !$use_input_data
+            && $closed_exists
             && !$open_exists
         ) {
             $use_closed = true;
