@@ -603,6 +603,22 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
             ];
             break;
 
+        case 'projecttask':
+            $options[] = [
+                'id'            => 4230,
+                'name'          => 'ProjectBridge',
+            ];
+
+            $options[] = [
+                'id'            => 4231,
+                'table'         => PluginProjectbridgeTicket::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Durée effective',
+                'massiveaction' => false,
+            ];
+
+            break;
+
         default:
             // nothing to do
     }
@@ -752,6 +768,20 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 
             break;
 
+        case 'projecttask':
+            $select = "
+                COALESCE(
+                    CONCAT(
+                        ROUND(`ticket_actiontimes`.`actiontime_sum`, 2),
+                        'heure(s)'
+                    ),
+                    '0 heures'
+                )
+                AS `ITEM_" . $offset . "`,
+            ";
+
+            break;
+
         default:
            // nothing to do
     }
@@ -802,6 +832,23 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                             `glpi_tickets`.`entities_id`
                     ) AS `unlinked_ticket_actiontimes`
                         ON (`unlinked_ticket_actiontimes`.`entities_id` = `" . $ref_table . "`.`id`)
+                ";
+            } else if ($itemtype == 'projecttask') {
+                $left_join = "
+                    LEFT JOIN (
+                        SELECT
+                            `glpi_projecttasks_tickets`.`projecttasks_id`,
+                            SUM(`glpi_tickets`.`actiontime`) / 3600 AS `actiontime_sum`
+                        FROM
+                            `glpi_tickets`
+                        INNER JOIN `glpi_projecttasks_tickets`
+                            ON (`glpi_tickets`.`id` = `glpi_projecttasks_tickets`.`tickets_id`)
+                        WHERE TRUE
+                            AND `glpi_tickets`.`is_deleted` = 0
+                        GROUP BY
+                            `glpi_projecttasks_tickets`.`projecttasks_id`
+                    ) AS `ticket_actiontimes`
+                        ON (`ticket_actiontimes`.`projecttasks_id` = `" . $ref_table . "`.`id`)
                 ";
             } else {
                 $left_join = "
@@ -937,6 +984,15 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     }
 
                     $where = $link . "(" . implode(' OR ', $where_parts) . ")";
+                }
+            }
+
+            break;
+
+        case 'projecttask':
+            if ($searchtype == 'contains') {
+                if ($key == 4231) {
+                    $where = $link . "`ticket_actiontimes`.`actiontime_sum` " . Search::makeTextSearch($val);
                 }
             }
 
