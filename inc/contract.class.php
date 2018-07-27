@@ -679,7 +679,6 @@ class PluginProjectbridgeContract extends CommonDBTM
             $datediff = ceil((strtotime($previous_task_end) - strtotime($previous_task_start)) / 3600 / 24);
             $task_start_date = date('Y-m-d', strtotime($previous_task_end . ' + 1 day'));
             $task_end_date = date('Y-m-d', strtotime($task_start_date . ' + ' . $datediff . ' days'));
-
         } else {
             if (empty($this->_contract->input['_projecttask_begin_date'])) {
                 $task_start_date = date('Y-m-d');
