@@ -71,7 +71,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     {
         $contract_id = $contract->getId();
 
-        $html_parts = array();
+        $html_parts = [];
         $html_parts[] = '<div style="display: none;">' . "\n";
         $html_parts[] = '<table>' . "\n";
         $html_parts[] = '<tr id="projectbridge_config">' . "\n";
@@ -129,11 +129,11 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
     private static function _getPostShowCreateHtml(Contract $contract)
     {
-        $html_parts = array();
+        $html_parts = [];
 
         $html_parts[] = 'Créer le projet :';
         $html_parts[] = '&nbsp;';
-        $html_parts[] = Dropdown::showYesNo('projectbridge_create_project', 1, -1, array('display' => false));
+        $html_parts[] = Dropdown::showYesNo('projectbridge_create_project', 1, -1, ['display' => false]);
 
         $html_parts[] = PluginProjectbridgeContract::_getPostShowHoursHtml(0);
 
@@ -148,10 +148,10 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
     private static function _getPostShowUpdateHtml(Contract $contract)
     {
-        $search_filters = array(
+        $search_filters = [
             'TRUE',
             '`is_deleted` = 0',
-        );
+        ];
 
         if (!empty($_SESSION['glpiactiveentities'])) {
             $search_filters[] = "`entities_id` IN (" . implode(', ', $_SESSION['glpiactiveentities']) . ")";
@@ -162,21 +162,21 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         $project = new Project();
         $project_results = $project->find(implode(' AND ', $search_filters));
-        $project_list = array(
+        $project_list = [
             null => Dropdown::EMPTY_VALUE,
-        );
+        ];
 
         foreach ($project_results as $project_data) {
             $project_list[$project_data['id']] = $project_data['name'] . ' (' . $project_data['id'] . ')';
         }
 
-        $project_config = array(
+        $project_config = [
             'value' => $project_id,
             'display' => false,
             'values' => $project_list,
-        );
+        ];
 
-        $html_parts = array();
+        $html_parts = [];
         $html_parts[] = Dropdown::showFromArray('projectbridge_project_id', $project_list, $project_config);
 
         global $CFG_GLPI;
@@ -446,7 +446,7 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
     private static function _getPostShowHoursHtml($nb_hours)
     {
-        $html_parts = array();
+        $html_parts = [];
 
         $html_parts[] = '<br />';
         $html_parts[] = '<br />';
@@ -471,7 +471,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         static $project_tasks;
 
         if ($project_tasks === null) {
-            $project_tasks = array();
+            $project_tasks = [];
         }
 
         if (!isset($project_tasks[$project_id][$search_closed])) {
@@ -730,14 +730,14 @@ class PluginProjectbridgeContract extends CommonDBTM
     {
         switch ($name) {
             case 'AlertContractsToRenew':
-                return array(
+                return [
                     'description' => 'Alerte des contrats à renouveller',
-                );
+                ];
 
                 break;
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -770,7 +770,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
             $subject = 'Contrats : ' . count($contracts) . ' à renouveller';
 
-            $html_parts = array();
+            $html_parts = [];
             $html_parts[] = '<p>' . "\n";
             $html_parts[] = 'Il y a ' . count($contracts) . ' contrats à renouveller :';
             $html_parts[] = '</p>' . "\n";
@@ -874,7 +874,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         ";
 
         $result = $DB->query($get_contracts_query);
-        $contracts = array();
+        $contracts = [];
 
         if ($result) {
             while ($row = $DB->fetch_assoc($result)) {
@@ -924,7 +924,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                         $overconsumption
                         || $end_date_reached
                     ) {
-                        $contracts[$contract->getId()] = array(
+                        $contracts[$contract->getId()] = [
                             'overconsumption' => $overconsumption,
                             'nb_hours' => ($nb_hours) ? $nb_hours : 0,
                             'consumption' => $consumption,
@@ -935,7 +935,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                             'end_date_delta' => $end_date_delta,
 
                             'contract' => $contract,
-                        );
+                        ];
                     }
                 }
             }

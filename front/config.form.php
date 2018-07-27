@@ -19,7 +19,7 @@ function getPostDataFromField($post_field)
 
 function getPostDataFromFields(array $post_fields)
 {
-    $post_data = array();
+    $post_data = [];
 
     foreach ($post_fields as $post_field) {
         $post_data[$post_field] = getPostDataFromField($post_field);
@@ -57,7 +57,7 @@ echo '</h1>' . "\n";
 echo '<hr />' . "\n";
 
 if ($can_update) {
-    $post_fields = array(
+    $post_fields = [
         'projectbridge_state_in_progress',
         'projectbridge_state_closed',
         'projectbridge_state_renewal',
@@ -66,7 +66,7 @@ if ($can_update) {
         'projectbridge_delete_recipient',
         'projectbridge_add_recipient',
         'projectbridge_add_recipient_submit',
-    );
+    ];
 
     $post_data = getPostDataFromFields($post_fields);
 
@@ -274,7 +274,7 @@ if ($can_update) {
             if (isset($recipients[$row_id])) {
                 $config = new PluginProjectbridgeConfig();
 
-                if ($config->delete(array('id' => $row_id))) {
+                if ($config->delete(['id' => $row_id])) {
                     unset($recipients[$row_id]);
                 }
             }
@@ -286,7 +286,7 @@ if ($can_update) {
             $recipient_user_id = (int) $post_data['projectbridge_add_recipient'];
             $config = new PluginProjectbridgeConfig();
 
-            if ($config->add(array('user_id' => $recipient_user_id))) {
+            if ($config->add(['user_id' => $recipient_user_id])) {
                 $recipients = PluginProjectbridgeConfig::getRecipients();
             }
         }
@@ -320,7 +320,7 @@ if ($can_update) {
             global $CFG_GLPI;
 
             echo '<tbody>' . "\n";
-            $recipient_user_ids = array();
+            $recipient_user_ids = [];
 
             foreach ($recipients as $row_id => $recipient) {
                 $recipient_user_ids[] = $recipient['user_id'];
@@ -354,13 +354,13 @@ if ($can_update) {
                 echo '<tr">' . "\n";
 
                 echo '<td>' . "\n";
-                echo User::dropdown(array(
+                echo User::dropdown([
                     'name' => 'projectbridge_add_recipient',
                     'used' => $recipient_user_ids,
                     'right' => 'all',
                     'comments' => false,
                     'display' => false,
-                ));
+                ]);
                 echo '</td>' . "\n";
 
                 echo '<td>';

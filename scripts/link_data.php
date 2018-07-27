@@ -5,7 +5,7 @@ require_once('../../../inc/includes.php');
 require_once('../hook.php');
 
 // number of hours for each type of contract
-$nb_hours_per_contract_type = array (
+$nb_hours_per_contract_type = [
   // ContractType -> nbHours
   8 => 42,
   10 => 5,
@@ -42,7 +42,7 @@ $nb_hours_per_contract_type = array (
   93 => 60,
   112 => 30,
   113 => 30,
-);
+];
 
 
 // all project names

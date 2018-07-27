@@ -47,7 +47,7 @@ class PluginProjectbridgeEntity extends CommonDBTM
         $bridge_entity = new PluginProjectbridgeEntity($entity);
         $contract_id = $bridge_entity->getContractId();
 
-        $contract_config = array(
+        $contract_config = [
             'value' => $contract_id,
             'name' => 'projectbridge_contract_id',
             'display' => false,
@@ -55,9 +55,9 @@ class PluginProjectbridgeEntity extends CommonDBTM
             'entity_sons'  => (!empty($_SESSION['glpiactive_entity_recursive'])) ? true : false,
             'nochecklimit' => true,
             'expired' => true,
-        );
+        ];
 
-        $html_parts = array();
+        $html_parts = [];
         $html_parts[] = '<div style="display: none;">' . "\n";
         $html_parts[] = '<table>' . "\n";
         $html_parts[] = '<tr id="projectbridge_config">' . "\n";

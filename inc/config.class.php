@@ -18,7 +18,7 @@ class PluginProjectbridgeConfig extends CommonDBTM
         static $recipients;
 
         if ($recipients === null) {
-            $recipients = array();
+            $recipients = [];
 
             // todo: use PluginProjectbridgeConfig::find()
             $get_all_recipients_query = "
@@ -46,11 +46,11 @@ class PluginProjectbridgeConfig extends CommonDBTM
                         $default_email = $user->getDefaultEmail();
 
                         if (!empty($default_email)) {
-                            $recipients[(int) $row['id']] = array(
+                            $recipients[(int) $row['id']] = [
                                 'user_id' => $user_id,
                                 'name' => $user->fields['name'],
                                 'email' => $user->getDefaultEmail(),
-                            );
+                            ];
                         }
                     }
                 }

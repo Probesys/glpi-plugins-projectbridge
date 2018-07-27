@@ -107,13 +107,13 @@ function plugin_projectbridge_uninstall()
 {
     global $DB;
 
-    $tables_to_drop = array(
+    $tables_to_drop = [
         PluginProjectbridgeEntity::$table_name,
         PluginProjectbridgeContract::$table_name,
         PluginProjectbridgeTicket::$table_name,
         PluginProjectbridgeConfig::$table_name,
         PluginProjectbridgeState::$table_name,
-    );
+    ];
 
     $drop_table_query = "DROP TABLE IF EXISTS `" . implode('`, `', $tables_to_drop) . "`";
 
@@ -176,10 +176,10 @@ function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false)
         $bridge_entity = new PluginProjectbridgeEntity($entity);
         $contract_id = $bridge_entity->getContractId();
 
-        $post_data = array(
+        $post_data = [
             'entity_id' => $entity->getId(),
             'contract_id' => $selected_contract_id,
-        );
+        ];
 
         if ($contract_id === null) {
             return $bridge_entity->add($post_data);
@@ -225,11 +225,11 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
                 $bridge_contract = new PluginProjectbridgeContract($contract);
                 $project_id = $bridge_contract->getProjectId();
 
-                $post_data = array(
+                $post_data = [
                     'contract_id' => $contract->getId(),
                     'project_id' => $selected_project_id,
                     'nb_hours' => $nb_hours,
-                );
+                ];
 
                 if (empty($project_id)) {
                     $bridge_contract->add($post_data);
@@ -316,7 +316,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
             $date_creation = date('Y-m-d H:i:s', strtotime($date_creation));
         }
 
-        $project_data = array(
+        $project_data = [
             // data from contract
             'name' => $contract->input['name'],
             'entities_id' => $contract->fields['entities_id'],
@@ -344,7 +344,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
             'projecttemplates_id' => 0,
             'is_template' => 0,
             'template_name' => '',
-        );
+        ];
 
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
 
@@ -358,17 +358,17 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
         $project_id = $project->add($project_data);
 
         if ($project_id) {
-            $bridge_data = array(
+            $bridge_data = [
                 'contract_id' => $contract->getId(),
                 'project_id' => $project_id,
                 'nb_hours' => $nb_hours,
-            );
+            ];
 
             // link the project to the contract
             $bridge_contract = new PluginProjectbridgeContract($contract);
             $bridge_contract->add($bridge_data);
 
-            $project_task_data = array(
+            $project_task_data = [
                 // data from contract
                 'name' => date('Y-m'),
                 'entities_id' => $contract->fields['entities_id'],
@@ -397,7 +397,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
                 'real_end_date' => '',
                 'effective_duration' => 0,
                 'comment' => '',
-            );
+            ];
 
             // create the project's task
             $project_task = new ProjectTask();
@@ -463,24 +463,24 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
 
             // link the task to the ticket
             $project_task_link_ticket = new ProjectTask_Ticket();
-            $project_task_link_ticket->add(array(
+            $project_task_link_ticket->add([
                 'projecttasks_id' => $task_id,
                 'tickets_id'      => $ticket->getId(),
-            ));
+            ]);
 
             if ($is_project_link_update) {
                 $bridge_ticket = new PluginProjectbridgeTicket($ticket);
 
                 if ($bridge_ticket->getProjectId() > 0) {
-                    $bridge_ticket->update(array(
+                    $bridge_ticket->update([
                         'id' => $bridge_ticket->getId(),
                         'project_id' => $project_id,
-                    ));
+                    ]);
                 } else {
-                    $bridge_ticket->add(array(
+                    $bridge_ticket->add([
                         'ticket_id' => $ticket->getId(),
                         'project_id' => $project_id,
-                    ));
+                    ]);
                 }
             }
         }

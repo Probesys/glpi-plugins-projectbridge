@@ -44,7 +44,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
      */
     public static function postShow(Ticket $ticket)
     {
-        $html_parts = array();
+        $html_parts = [];
         $html_parts[] = '<table>' . "\n";
         $html_parts[] = '<tr id="projectbridge_config">' . "\n";
 
@@ -89,11 +89,11 @@ class PluginProjectbridgeTicket extends CommonDBTM
                 $project_id = null;
             }
 
-            $project_config = array(
+            $project_config = [
                 'value' => $project_id,
                 'values' => $project_list,
                 'display' => false,
-            );
+            ];
 
             $html_parts[] = '<th colspan="5">' . "\n";
             $html_parts[] = '<form method="post" action="' . $CFG_GLPI['root_doc'] . '/front/ticket.form.php?id=' . $ticket->getId() . '">' . "\n";
@@ -148,10 +148,10 @@ class PluginProjectbridgeTicket extends CommonDBTM
      */
     private static function _getProjectList()
     {
-        $search_filters = array(
+        $search_filters = [
             'TRUE',
             '`is_deleted` = 0',
-        );
+        ];
 
         if (!empty($_SESSION['glpiactiveentities'])) {
             $search_filters[] = "`entities_id` IN (" . implode(', ', $_SESSION['glpiactiveentities']) . ")";
@@ -159,9 +159,9 @@ class PluginProjectbridgeTicket extends CommonDBTM
 
         $project = new Project();
         $project_results = $project->find(implode(" AND ", $search_filters));
-        $project_list = array(
+        $project_list = [
             null => Dropdown::EMPTY_VALUE,
-        );
+        ];
 
         foreach ($project_results as $project_data) {
             if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_data['id'], 'exists')) {
@@ -342,10 +342,10 @@ class PluginProjectbridgeTicket extends CommonDBTM
 
             case 'addProjectLink':
                 $project_list = PluginProjectbridgeTicket::_getProjectList();
-                $project_config = array(
+                $project_config = [
                     'value' => null,
                     'values' => $project_list,
-                );
+                ];
 
                 Dropdown::showFromArray('projectbridge_project_id', $project_list, $project_config);
                 echo '<br />';
@@ -453,10 +453,10 @@ class PluginProjectbridgeTicket extends CommonDBTM
 
                                 // link the task to the ticket
                                 $project_task_link_ticket = new ProjectTask_Ticket();
-                                $project_task_link_ticket->add(array(
+                                $project_task_link_ticket->add([
                                     'projecttasks_id' => $task_id,
                                     'tickets_id'      => $ticket_id,
-                                ));
+                                ]);
 
                                 $ma->itemDone($item->getType(), $ticket_id, MassiveAction::ACTION_OK);
                             } else {
