@@ -341,6 +341,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
                 $js_block = '
                     window.projectbridge_datepicker_init = true;
+                    window._renewal_modal_js = undefined;
 
                     /**
                      * Trigger a timeout until a modal is open
@@ -399,6 +400,15 @@ class PluginProjectbridgeContract extends CommonDBTM
                     })
                     .on("click", ".projectbridge-renewal-tickets", function(e) {
                         e.preventDefault();
+
+                        if (renewal_tickets_modal === undefined) {
+                            if (window._renewal_modal_js === undefined) {
+                                window._renewal_modal_js = new Function($(".projectbridge-renewal-data").next().html() + "return renewal_tickets_modal;");
+                            }
+
+                            renewal_tickets_modal = window._renewal_modal_js();
+                        }
+
                         renewal_tickets_modal.dialog("open");
 
                         var data_to_add_to_modal = {
@@ -415,7 +425,8 @@ class PluginProjectbridgeContract extends CommonDBTM
                         }
 
                         timeoutUntilModalOpen(renewal_tickets_modal, function() {
-                            $("form", renewal_tickets_modal).append(html_to_add_to_modal);
+                            $("form", renewal_tickets_modal).prepend(html_to_add_to_modal);
+                            renewal_tickets_modal = undefined;
                         });
 
                         return false;
