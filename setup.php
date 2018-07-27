@@ -11,13 +11,13 @@ if (!class_exists('PluginProjectbridgeConfig')) {
  */
 function plugin_version_projectbridge()
 {
-    return array(
+    return [
         'name' => 'ProjectBridge',
         'version' => '1.2.1',
         'author' => 'Pierre de Vésian - <a href="http://www.probesys.com">Probesys</a>',
         'license' => 'GPLv2+',
         'minGlpiVersion' => PluginProjectbridgeConfig::MIN_GLPI_VERSION,
-    );
+    ];
 }
 
 /**
@@ -33,15 +33,15 @@ function plugin_init_projectbridge()
     $PLUGIN_HOOKS['config_page'][PluginProjectbridgeConfig::NAMESPACE] = 'front/config.form.php';
     $PLUGIN_HOOKS['post_show_item'][PluginProjectbridgeConfig::NAMESPACE] = 'plugin_projectbridge_post_show_item';
     $PLUGIN_HOOKS['post_show_tab'][PluginProjectbridgeConfig::NAMESPACE] = 'plugin_projectbridge_post_show_tab';
-    $PLUGIN_HOOKS['pre_item_update'][PluginProjectbridgeConfig::NAMESPACE] = array(
+    $PLUGIN_HOOKS['pre_item_update'][PluginProjectbridgeConfig::NAMESPACE] = [
         'Entity' => 'plugin_projectbridge_pre_entity_update',
         'Contract' => 'plugin_projectbridge_pre_contract_update',
         'Ticket' => 'plugin_projectbridge_ticket_update',
-    );
+    ];
 
-    $PLUGIN_HOOKS['item_add'][PluginProjectbridgeConfig::NAMESPACE] = array(
+    $PLUGIN_HOOKS['item_add'][PluginProjectbridgeConfig::NAMESPACE] = [
         'Contract' => 'plugin_projectbridge_contract_add',
-    );
+    ];
 
     $PLUGIN_HOOKS['use_massive_action'][PluginProjectbridgeConfig::NAMESPACE] = 1;
 }
