@@ -698,7 +698,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     COALESCE(
                         CONCAT(
                             ROUND(`unlinked_ticket_actiontimes`.`actiontime_sum`, 2),
-                            'heure(s)'
+                            ' heure(s)'
                         ),
                         '0 heures'
                     )
