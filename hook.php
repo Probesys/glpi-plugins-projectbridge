@@ -914,7 +914,7 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                         `glpi_projecttasks`
                     INNER JOIN (
                         /*
-                          Get last tasks for each project
+                          Get last task for each project
                          */
                         SELECT
                             `glpi_projecttasks`.`projects_id`,
