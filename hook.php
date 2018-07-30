@@ -658,6 +658,14 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
                 'massiveaction' => false,
             ];
 
+            $options[] = [
+                'id'            => 4233,
+                'table'         => PluginProjectbridgeTicket::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Dernière tâche ?',
+                'massiveaction' => false,
+            ];
+
             break;
 
         default:
@@ -811,6 +819,8 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 
         case 'projecttask':
             if ($key == 4231) {
+                // effective duration
+
                 $select = "
                     COALESCE(
                         CONCAT(
@@ -822,6 +832,8 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     AS `ITEM_" . $offset . "`,
                 ";
             } else if ($key == 4232) {
+                // planned duration
+
                 $select = "
                     COALESCE(
                         CONCAT(
@@ -830,6 +842,23 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                         ),
                         '0 heures'
                     )
+                    AS `ITEM_" . $offset . "`,
+                ";
+            } else if ($key == 4233) {
+                // last task in the project?
+
+                $select = "
+                    (CASE WHEN `glpi_projecttasks`.`id` = `last_tasks`.`id`
+                    THEN
+                        'Oui'
+                    ELSE
+                        CASE WHEN `glpi_projecttasks`.`plan_end_date` IS NOT NULL
+                        THEN
+                            'Non'
+                        ELSE
+                            '" . NOT_AVAILABLE . "'
+                        END
+                    END)
                     AS `ITEM_" . $offset . "`,
                 ";
             }
@@ -903,6 +932,36 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                             `glpi_projecttasks_tickets`.`projecttasks_id`
                     ) AS `ticket_actiontimes`
                         ON (`ticket_actiontimes`.`projecttasks_id` = `" . $ref_table . "`.`id`)
+                    LEFT JOIN (
+                        SELECT
+                            `glpi_projecttasks`.`id`,
+                            `glpi_projecttasks`.`projects_id`,
+                            `glpi_projecttasks`.`plan_end_date`
+                        FROM
+                            `glpi_projecttasks`
+                        INNER JOIN
+                        (
+                            /*
+                              Get last task for each project
+                             */
+                            SELECT
+                                `glpi_projecttasks`.`projects_id`,
+                                MAX(`glpi_projecttasks`.`plan_end_date`) AS `plan_end_date`
+                            FROM
+                                `glpi_projecttasks`
+                            WHERE TRUE
+                            GROUP BY
+                                `glpi_projecttasks`.`projects_id`
+                        ) AS `max_end_dates`
+                            ON (
+                                `max_end_dates`.`projects_id` = `glpi_projecttasks`.`projects_id`
+                                AND `max_end_dates`.`plan_end_date` = `glpi_projecttasks`.`plan_end_date`
+                            )
+                        WHERE TRUE
+                        GROUP BY
+                            `glpi_projecttasks`.`projects_id`
+                    ) AS `last_tasks`
+                        ON (`last_tasks`.`id` = `glpi_projecttasks`.`id`)
                 ";
             } else {
                 $left_join = "
@@ -1054,6 +1113,33 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     $where = $link . "`ticket_actiontimes`.`actiontime_sum` " . Search::makeTextSearch($val);
                 } else if ($key == 4232) {
                     $where = $link . " ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2) " . Search::makeTextSearch($val);
+                } else if ($key == 4233) {
+                    $searching_yes = (stripos('Oui', $val) !== false);
+                    $searching_no = (stripos('Non', $val) !== false);
+                    $searching_not_available = (stripos(NOT_AVAILABLE, $val) !== false);
+
+                    $where_parts = [];
+
+                    if ($searching_yes) {
+                        $where_parts[] = "( `glpi_projecttasks`.`id` = `last_tasks`.`id` )";
+                    }
+
+                    if ($searching_no) {
+                        $where_parts[] = "(
+                            `glpi_projecttasks`.`plan_end_date` IS NOT NULL
+                            AND `last_tasks`.`id` IS NULL
+                        )";
+                    }
+
+                    if ($searching_not_available) {
+                        $where_parts[] = "( `glpi_projecttasks`.`plan_end_date` IS NULL )";
+                    }
+
+                    if (empty($where_parts)) {
+                        $where_parts[] = "TRUE";
+                    }
+
+                    $where = $link . "(" . implode(' OR ', $where_parts) . ")";
                 }
             }
 
