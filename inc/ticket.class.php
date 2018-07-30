@@ -61,7 +61,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
             $project_id = $bridge_ticket->getProjectId();
 
             if (!$project_id) {
-                // so link between ticket and project in DB, get the contract for the current entity
+                // no link between ticket and project in DB, get the contract for the current entity
 
                 $entity = new Entity();
                 $entity->getFromDB($_SESSION['glpiactive_entity']);
@@ -85,7 +85,10 @@ class PluginProjectbridgeTicket extends CommonDBTM
                 }
             }
 
-            if (!PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')) {
+            if (
+                empty($project_id)
+                || !isset($project_list[$project_id])
+            ) {
                 $project_id = null;
             }
 

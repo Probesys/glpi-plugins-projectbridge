@@ -869,6 +869,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     /**
      * Get the contracts to renew
      *
+     * @todo Send only if project is not closed and task is closed
      * @return array
      */
     public static function getContractsToRenew()
