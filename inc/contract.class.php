@@ -509,6 +509,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                     AND projects_id = " . $project_id . "
                     AND " . $projectstate_filter . "
                 ORDER BY
+                    plan_end_date DESC,
                     id DESC
                 LIMIT 1
             ");
