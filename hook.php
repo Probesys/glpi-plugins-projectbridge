@@ -917,19 +917,24 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                           Get last tasks for each project
                          */
                         SELECT
-                            MAX(`glpi_projecttasks`.`id`) AS `id`
+                            `glpi_projecttasks`.`projects_id`,
+                            MAX(`glpi_projecttasks`.`plan_end_date`) AS `plan_end_date`
                         FROM
                             `glpi_projecttasks`
                         WHERE TRUE
                         GROUP BY
                             `glpi_projecttasks`.`projects_id`
-                    ) AS `max_ids`
-                        ON (`max_ids`.`id` = `glpi_projecttasks`.`id`)
+                    ) AS `max_end_dates`
+                        ON (
+                            `max_end_dates`.`projects_id` = `glpi_projecttasks`.`projects_id`
+                            AND `max_end_dates`.`plan_end_date` = `glpi_projecttasks`.`plan_end_date`
+                        )
                     INNER JOIN `glpi_projects`
                         ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
                     LEFT JOIN `glpi_projectstates`
                         ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
                     WHERE TRUE
+                    GROUP BY `glpi_projecttasks`.`projects_id`
                 ) AS `last_tasks`
                     ON (`last_tasks`.`project_id` = `glpi_projects`.`id`)
             ";
