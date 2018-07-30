@@ -650,6 +650,14 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
                 'massiveaction' => false,
             ];
 
+            $options[] = [
+                'id'            => 4232,
+                'table'         => PluginProjectbridgeTicket::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Durée planifiée',
+                'massiveaction' => false,
+            ];
+
             break;
 
         default:
@@ -802,16 +810,29 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
             break;
 
         case 'projecttask':
-            $select = "
-                COALESCE(
-                    CONCAT(
-                        ROUND(`ticket_actiontimes`.`actiontime_sum`, 2),
-                        'heure(s)'
-                    ),
-                    '0 heures'
-                )
-                AS `ITEM_" . $offset . "`,
-            ";
+            if ($key == 4231) {
+                $select = "
+                    COALESCE(
+                        CONCAT(
+                            ROUND(`ticket_actiontimes`.`actiontime_sum`, 2),
+                            ' heure(s)'
+                        ),
+                        '0 heures'
+                    )
+                    AS `ITEM_" . $offset . "`,
+                ";
+            } else if ($key == 4232) {
+                $select = "
+                    COALESCE(
+                        CONCAT(
+                            ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2),
+                            ' heure(s)'
+                        ),
+                        '0 heures'
+                    )
+                    AS `ITEM_" . $offset . "`,
+                ";
+            }
 
             break;
 
@@ -1031,6 +1052,8 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
             if ($searchtype == 'contains') {
                 if ($key == 4231) {
                     $where = $link . "`ticket_actiontimes`.`actiontime_sum` " . Search::makeTextSearch($val);
+                } else if ($key == 4232) {
+                    $where = $link . " ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2) " . Search::makeTextSearch($val);
                 }
             }
 
