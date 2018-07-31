@@ -666,6 +666,14 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
                 'massiveaction' => false,
             ];
 
+            $options[] = [
+                'id'            => 4234,
+                'table'         => PluginProjectbridgeTicket::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Statut du projet',
+                'massiveaction' => false,
+            ];
+
             break;
 
         default:
@@ -861,6 +869,26 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
+            } else if ($key == 4234) {
+                // project status
+
+                $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
+
+                $select = "
+                    (CASE WHEN `glpi_projecttasks`.`projects_id` IS NOT NULL
+                    THEN
+                        CONCAT(
+                            '<a href=\"" . $project_link . "',
+                            `glpi_projecttasks`.`projects_id`,
+                            '\">',
+                            COALESCE(`states`.`name`, '" . NOT_AVAILABLE . "'),
+                            '</a>'
+                        )
+                    ELSE
+                        NULL
+                    END)
+                    AS `ITEM_" . $offset . "`,
+                ";
             }
 
             break;
@@ -962,6 +990,10 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                             `glpi_projecttasks`.`projects_id`
                     ) AS `last_tasks`
                         ON (`last_tasks`.`id` = `glpi_projecttasks`.`id`)
+                    LEFT JOIN `glpi_projects` AS `projects`
+                        ON (`projects`.`id` = `glpi_projecttasks`.`projects_id`)
+                    LEFT JOIN `glpi_projectstates` AS `states`
+                        ON (`states`.`id` = `projects`.`projectstates_id`)
                 ";
             } else {
                 $left_join = "
@@ -1137,6 +1169,22 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
 
                     if (empty($where_parts)) {
                         $where_parts[] = "TRUE";
+                    }
+
+                    $where = $link . "(" . implode(' OR ', $where_parts) . ")";
+                } else if ($key == 4234) {
+                    $where_parts = [
+                        "(
+                            `glpi_projecttasks`.`projects_id` IS NOT NULL
+                            AND `states`.`name` " . Search::makeTextSearch($val) . "
+                        )",
+                    ];
+
+                    if (stripos(NOT_AVAILABLE, $val) !== false) {
+                        $where_parts[] = "(
+                            `glpi_projecttasks`.`projects_id` IS NOT NULL
+                            AND `states`.`name` IS NULL
+                        )";
                     }
 
                     $where = $link . "(" . implode(' OR ', $where_parts) . ")";
