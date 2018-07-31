@@ -577,7 +577,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
                 'id'            => 4202,
                 'table'         => PluginProjectbridgeTicket::$table_name,
                 'field'         => 'project_id',
-                'name'          => 'Temps non affecté à une tâche',
+                'name'          => 'Temps non affecté à une tâche (heures)',
                 'massiveaction' => false,
             ];
             break;
@@ -646,7 +646,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
                 'id'            => 4231,
                 'table'         => PluginProjectbridgeTicket::$table_name,
                 'field'         => 'project_id',
-                'name'          => 'Durée effective',
+                'name'          => 'Durée effective (heures)',
                 'massiveaction' => false,
             ];
 
@@ -654,7 +654,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
                 'id'            => 4232,
                 'table'         => PluginProjectbridgeTicket::$table_name,
                 'field'         => 'project_id',
-                'name'          => 'Durée planifiée',
+                'name'          => 'Durée planifiée (heures)',
                 'massiveaction' => false,
             ];
 
@@ -706,6 +706,10 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     (CASE
                         WHEN `" . PluginProjectbridgeEntity::$table_name . "`.`contract_id` IS NOT NULL
                             THEN CONCAT(
+                                '<!--',
+                                `glpi_contracts`.`name`,
+                                '-->',
+
                                 '<a href=\"" . $contract_link . "',
                                 `" . PluginProjectbridgeEntity::$table_name . "`.`contract_id`,
                                 '\">',
@@ -720,11 +724,8 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
             } else if ($key == 4202) {
                 $select = "
                     COALESCE(
-                        CONCAT(
-                            ROUND(`unlinked_ticket_actiontimes`.`actiontime_sum`, 2),
-                            ' heure(s)'
-                        ),
-                        '0 heures'
+                        ROUND(`unlinked_ticket_actiontimes`.`actiontime_sum`, 2),
+                        0
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
@@ -741,6 +742,10 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 $select = "
                     GROUP_CONCAT(
                         DISTINCT CONCAT(
+                            '<!--',
+                            `glpi_projects`.`name`,
+                            '-->',
+
                             '<a href=\"" . $project_link . "',
                             `glpi_projects`.`id`,
                             '\">',
@@ -759,6 +764,10 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 $select = "
                     GROUP_CONCAT(
                         DISTINCT CONCAT(
+                            '<!--',
+                            `glpi_projecttasks`.`name`,
+                            '-->',
+
                             '<a href=\"" . $task_link . "',
                             `glpi_projecttasks`.`id`,
                             '\">',
@@ -790,6 +799,10 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     (CASE WHEN `last_tasks`.`project_task_id` IS NOT NULL
                     THEN
                         CONCAT(
+                            '<!--',
+                            COALESCE(`last_tasks`.`project_state`, '" . NOT_AVAILABLE . "'),
+                            '-->',
+
                             '<a href=\"" . $task_link . "',
                             `last_tasks`.`project_task_id`,
                             '\">',
@@ -810,6 +823,10 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     (CASE WHEN `last_tasks`.`project_name` IS NOT NULL
                     THEN
                         CONCAT(
+                            '<!--',
+                            COALESCE(`last_tasks`.`project_name`, '" . NOT_AVAILABLE . "'),
+                            '-->',
+
                             '<a href=\"" . $project_link . "',
                             `last_tasks`.`project_id`,
                             '\">',
@@ -831,11 +848,8 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 
                 $select = "
                     COALESCE(
-                        CONCAT(
-                            ROUND(`ticket_actiontimes`.`actiontime_sum`, 2),
-                            ' heure(s)'
-                        ),
-                        '0 heures'
+                        ROUND(`ticket_actiontimes`.`actiontime_sum`, 2),
+                        0
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
@@ -844,11 +858,8 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 
                 $select = "
                     COALESCE(
-                        CONCAT(
-                            ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2),
-                            ' heure(s)'
-                        ),
-                        '0 heures'
+                        ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2),
+                        0
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
@@ -878,6 +889,10 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     (CASE WHEN `glpi_projecttasks`.`projects_id` IS NOT NULL
                     THEN
                         CONCAT(
+                            '<!--',
+                            COALESCE(`states`.`name`, '" . NOT_AVAILABLE . "'),
+                            '-->',
+
                             '<a href=\"" . $project_link . "',
                             `glpi_projecttasks`.`projects_id`,
                             '\">',
