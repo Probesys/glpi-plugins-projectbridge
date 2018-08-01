@@ -620,6 +620,15 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
                 'name'          => 'Statut de tâche',
                 'massiveaction' => false,
             ];
+
+            $options[] = [
+                'id'            => 4214,
+                'table'         => PluginProjectbridgeTicket::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Lié à une tâche ?',
+                'massiveaction' => false,
+            ];
+
             break;
 
         case 'Contract':
@@ -792,6 +801,18 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 
                 $select = "
                     GROUP_CONCAT(DISTINCT `glpi_projectstates`.`name` SEPARATOR '$$##$$')
+                    AS `ITEM_" . $offset . "`,
+                ";
+            } else if ($key == 4214) {
+                // is the ticket linked to a task?
+
+                $select = "
+                    (CASE WHEN `glpi_projecttasks_tickets`.`tickets_id` = `glpi_tickets`.`id`
+                    THEN
+                        'Oui'
+                    ELSE
+                        'Non'
+                    END)
                     AS `ITEM_" . $offset . "`,
                 ";
             }
@@ -1121,6 +1142,27 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                 } else if ($key == 4213) {
                     // project task status
                     $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
+                } else if ($key == 4214) {
+                    // linked to a task?
+
+                    $searching_yes = (stripos('Oui', $val) !== false);
+                    $searching_no = (stripos('Non', $val) !== false);
+
+                    $where_parts = [];
+
+                    if ($searching_yes) {
+                        $where_parts[] = "( `glpi_projecttasks_tickets`.`tickets_id` = `glpi_tickets`.`id` )";
+                    }
+
+                    if ($searching_no) {
+                        $where_parts[] = "( `glpi_projecttasks_tickets`.`tickets_id` IS NULL )";
+                    }
+
+                    if (empty($where_parts)) {
+                        $where_parts[] = "TRUE";
+                    }
+
+                    $where = $link . "(" . implode(' OR ', $where_parts) . ")";
                 }
             }
 
