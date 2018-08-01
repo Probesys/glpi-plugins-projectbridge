@@ -521,7 +521,7 @@ function plugin_projectbridge_ticketask_update(TicketTask $ticket_task)
 }
 
 /**
- * Hook called after showing a ticket tab
+ * Hook called after showing a tab
  *
  * @param  array $tab_data
  * @return void
@@ -532,16 +532,25 @@ function plugin_projectbridge_post_show_tab(array $tab_data)
         !empty($tab_data['item'])
         && is_object($tab_data['item'])
         && !empty($tab_data['options']['itemtype'])
-        && (
+    ) {
+        if (
             $tab_data['options']['itemtype'] == 'Projecttask_Ticket'
             || $tab_data['options']['itemtype'] == 'ProjectTask_Ticket'
             // naming is not uniform: https://github.com/glpi-project/glpi/issues/4177
-        )
-    ) {
-        if ($tab_data['item'] instanceof Ticket) {
-            PluginProjectbridgeTicket::postShow($tab_data['item']);
-        } else if ($tab_data['item'] instanceof ProjectTask) {
-            PluginProjectbridgeTicket::postShowTask($tab_data['item']);
+        ) {
+            if ($tab_data['item'] instanceof Ticket) {
+                // add a line to allow linking ticket to a project task
+                PluginProjectbridgeTicket::postShow($tab_data['item']);
+            } else if ($tab_data['item'] instanceof ProjectTask) {
+                // add data to the list of tickets linked to a project task
+                PluginProjectbridgeTicket::postShowTask($tab_data['item']);
+            }
+        } else if (
+            $tab_data['options']['itemtype'] == 'ProjectTask'
+            && $tab_data['item'] instanceof Project
+        ) {
+            // add a link to the linked contract after showing the list of tasks in a project
+            PluginProjectbridgeContract::postShowProject($tab_data['item']);
         }
     }
 }
