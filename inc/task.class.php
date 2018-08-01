@@ -412,7 +412,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                 $html_parts[] = '<p>' . "\n";
                 $html_parts[] = 'Bonjour.';
                 $html_parts[] = '<br />';
-                $html_parts[] = 'La tâche ouverte du projet "<a href="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=' . $this->_task->getId() . '">"' . $project->fields['name'] . '</a> vient d\'être fermée.';
+                $html_parts[] = 'La tâche ouverte du projet <a href="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=' . $this->_task->getId() . '">' . $project->fields['name'] . '</a> vient d\'être fermée.';
                 $html_parts[] = '<br />';
                 $html_parts[] = '<br />';
                 $html_parts[] = 'Motif(s) :';
