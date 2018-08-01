@@ -983,7 +983,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $contract = new Contract();
 
                     if ($contract->getFromDB($contract_bridge_data['contract_id'])) {
-                        $html_parts[] = '<a href="' . $contract_url . $contract->getId() . '">';
+                        $html_parts[] = '<a href="' . $contract_url . $contract->getId() . '" target="_blank">';
                         $html_parts[] = 'Contrat "' . $contract->fields['name'] . '"';
                         $html_parts[] = '</a>';
                     } else {
