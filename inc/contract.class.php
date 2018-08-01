@@ -974,6 +974,7 @@ class PluginProjectbridgeContract extends CommonDBTM
             $contract_bridges = $bridge_contract->find("TRUE AND project_id = " . $project_id);
 
             $html_parts = [];
+            $html_parts[] = '<div class="spaced">' . "\n";
 
             if (!empty($contract_bridges)) {
                 global $CFG_GLPI;
@@ -993,6 +994,8 @@ class PluginProjectbridgeContract extends CommonDBTM
             } else {
                 $html_parts[] = 'Pas de contrat lié';
             }
+
+            $html_parts[] = '</div>' . "\n";
 
             echo implode(' ', $html_parts);
         }
