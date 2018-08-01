@@ -808,44 +808,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = $entity->fields['name'];
                 $html_parts[] = '</a>';
                 $html_parts[] = '<br />' . "\n";
-
-                if (
-                    $contract_data['overconsumption']
-                    || $contract_data['end_date_reached']
-                ) {
-                    $html_parts[] = '<strong>Motif du renouvellement</strong> : ';
-
-                    if (
-                        $contract_data['overconsumption']
-                        && $contract_data['end_date_reached']
-                    ) {
-                        $html_parts[] = 'Quota atteint + contrat bientôt expiré';
-                    } else if ($contract_data['overconsumption']) {
-                        $html_parts[] = 'Quota atteint';
-                    } else if ($contract_data['end_date_reached']) {
-                        $html_parts[] = 'Contrat bientôt expiré';
-                    }
-                    $html_parts[] = '<br />' . "\n";
-                }
-
-                if ($contract_data['planned_duration']) {
-                    $html_parts[] = '<strong>Quota consommé</strong> : ';
-                    $html_parts[] = round($contract_data['consumption'], 2) . ' / ' . round($contract_data['planned_duration'], 2) . ' heures';
-                    $html_parts[] = '<br />' . "\n";
-                }
-
-                if ($contract_data['plan_end_date']) {
-                    $html_parts[] = '<strong>Date d\'expiration</strong> : ';
-                    $html_parts[] = $contract_data['plan_end_date'];
-                    $html_parts[] = '<br />' . "\n";
-                }
-
-                $html_parts[] = '<a href="' . $CFG_GLPI['url_base'] . '/front/contract.form.php?id=' . $contract_id . '">';
-                $html_parts[] = 'Fiche du contrat';
-                $html_parts[] = '</a>';
-
-                $html_parts[] = '<br />';
-                $html_parts[] = '<br />';
+                $html_parts[] = '<br />' . "\n";
 
                 $html_parts[] = '</li>' . "\n";
             }
@@ -870,7 +833,6 @@ class PluginProjectbridgeContract extends CommonDBTM
     /**
      * Get the contracts to renew
      *
-     * @todo Send only if project is not closed and task is closed
      * @return array
      */
     public static function getContractsToRenew()
@@ -895,63 +857,22 @@ class PluginProjectbridgeContract extends CommonDBTM
             while ($row = $DB->fetch_assoc($result)) {
                 $contract = new Contract();
                 $contract->getFromDB($row['id']);
+
                 $bridge_contract = new PluginProjectbridgeContract($contract);
                 $project_id = $bridge_contract->getProjectId();
 
+                $project = new Project();
+                $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
+
                 if (
-                    $project_id
-                    && PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists')
+                    $project->getFromDB($project_id)
+                    && $project->fields['projectstates_id'] != $state_closed_value
+                    && !PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', false)
+                    && PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', true)
                 ) {
-                    $overconsumption = false;
-                    $nb_hours = $bridge_contract->getNbHours();
-                    $planned_duration = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_duration');
-                    $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption');
-
-                    if (
-                        $nb_hours
-                        && $planned_duration
-                        && $consumption >= $planned_duration
-                    ) {
-                        $overconsumption = true;
-                    }
-
-                    $end_date_reached = false;
-                    $plan_end_date = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'plan_end_date');
-                    $end_date_delta = 0;
-
-                    if (!empty($plan_end_date)) {
-                        $datediff = strtotime($plan_end_date) - time();
-                        $date_delta = $datediff / (60 * 60 * 24);
-                        $end_date_delta = floor($date_delta);
-
-                        if (
-                            $end_date_delta <= 1
-                            || (
-                                $date_delta > -1
-                                && $date_delta <= 0
-                            )
-                        ) {
-                            $end_date_reached = true;
-                        }
-                    }
-
-                    if (
-                        $overconsumption
-                        || $end_date_reached
-                    ) {
-                        $contracts[$contract->getId()] = [
-                            'overconsumption' => $overconsumption,
-                            'nb_hours' => ($nb_hours) ? $nb_hours : 0,
-                            'consumption' => $consumption,
-                            'planned_duration' => $planned_duration,
-
-                            'end_date_reached' => $end_date_reached,
-                            'plan_end_date' => $plan_end_date,
-                            'end_date_delta' => $end_date_delta,
-
-                            'contract' => $contract,
-                        ];
-                    }
+                    $contracts[$contract->getId()] = [
+                        'contract' => $contract,
+                    ];
                 }
             }
         }
