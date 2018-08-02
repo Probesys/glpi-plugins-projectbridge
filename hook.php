@@ -694,6 +694,22 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
 
             break;
 
+        case 'Project':
+            $options[] = [
+                'id'            => 4230,
+                'name'          => 'ProjectBridge',
+            ];
+
+            $options[] = [
+                'id'            => 4231,
+                'table'         => PluginProjectbridgeContract::$table_name,
+                'field'         => 'project_id',
+                'name'          => 'Nombre de tâches',
+                'massiveaction' => false,
+            ];
+
+            break;
+
         default:
             // nothing to do
     }
@@ -938,6 +954,20 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 
             break;
 
+        case 'Project':
+            if ($key == 4231) {
+                $select = "
+                    (
+                        COALESCE(
+                            `task_counter`.`nb_tasks`,
+                            0
+                        )
+                    ) AS `ITEM_" . $offset . "`,
+                ";
+            }
+
+            break;
+
         default:
            // nothing to do
     }
@@ -1056,45 +1086,62 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
             break;
 
         case PluginProjectbridgeContract::$table_name:
-            $left_join = "
-                LEFT JOIN `" . $new_table . "`
-                    ON (`" . $new_table . "`.`contract_id` = `" . $ref_table . "`.`id`)
-                LEFT JOIN `glpi_projects`
-                    ON (`" . $new_table . "`.`project_id` = `glpi_projects`.`id`)
-                LEFT JOIN (
-                    SELECT
-                        `glpi_projecttasks`.`projects_id` AS `project_id`,
-                        `glpi_projecttasks`.`id` AS `project_task_id`,
-                        `glpi_projectstates`.`name` AS `project_state`,
-                        `glpi_projects`.`name` AS `project_name`
-                    FROM
-                        `glpi_projecttasks`
-                    INNER JOIN (
-                        /*
-                          Get last task for each project
-                         */
+            if ($itemtype == 'Project') {
+                $left_join = "
+                    LEFT JOIN (
                         SELECT
                             `glpi_projecttasks`.`projects_id`,
-                            MAX(`glpi_projecttasks`.`plan_end_date`) AS `plan_end_date`
+                            COUNT(1) AS `nb_tasks`
                         FROM
                             `glpi_projecttasks`
                         WHERE TRUE
                         GROUP BY
                             `glpi_projecttasks`.`projects_id`
-                    ) AS `max_end_dates`
-                        ON (
-                            `max_end_dates`.`projects_id` = `glpi_projecttasks`.`projects_id`
-                            AND `max_end_dates`.`plan_end_date` = `glpi_projecttasks`.`plan_end_date`
-                        )
-                    INNER JOIN `glpi_projects`
-                        ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
-                    LEFT JOIN `glpi_projectstates`
-                        ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
-                    WHERE TRUE
-                    GROUP BY `glpi_projecttasks`.`projects_id`
-                ) AS `last_tasks`
-                    ON (`last_tasks`.`project_id` = `glpi_projects`.`id`)
-            ";
+                    ) AS `task_counter`
+                        ON (`task_counter`.`projects_id` = `glpi_projects`.`id`)
+                ";
+            } else {
+                $left_join = "
+                    LEFT JOIN `" . $new_table . "`
+                        ON (`" . $new_table . "`.`contract_id` = `" . $ref_table . "`.`id`)
+                    LEFT JOIN `glpi_projects`
+                        ON (`" . $new_table . "`.`project_id` = `glpi_projects`.`id`)
+                    LEFT JOIN (
+                        SELECT
+                            `glpi_projecttasks`.`projects_id` AS `project_id`,
+                            `glpi_projecttasks`.`id` AS `project_task_id`,
+                            `glpi_projectstates`.`name` AS `project_state`,
+                            `glpi_projects`.`name` AS `project_name`
+                        FROM
+                            `glpi_projecttasks`
+                        INNER JOIN (
+                            /*
+                              Get last task for each project
+                             */
+                            SELECT
+                                `glpi_projecttasks`.`projects_id`,
+                                MAX(`glpi_projecttasks`.`plan_end_date`) AS `plan_end_date`
+                            FROM
+                                `glpi_projecttasks`
+                            WHERE TRUE
+                            GROUP BY
+                                `glpi_projecttasks`.`projects_id`
+                        ) AS `max_end_dates`
+                            ON (
+                                `max_end_dates`.`projects_id` = `glpi_projecttasks`.`projects_id`
+                                AND `max_end_dates`.`plan_end_date` = `glpi_projecttasks`.`plan_end_date`
+                            )
+                        INNER JOIN `glpi_projects`
+                            ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
+                        LEFT JOIN `glpi_projectstates`
+                            ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
+                        WHERE TRUE
+                        GROUP BY `glpi_projecttasks`.`projects_id`
+                    ) AS `last_tasks`
+                        ON (`last_tasks`.`project_id` = `glpi_projects`.`id`)
+                ";
+            }
+
             break;
 
         default:
@@ -1185,7 +1232,7 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     }
 
                     $where = $link . "(" . implode(' OR ', $where_parts) . ")";
-                } elseif ($key == 4221) {
+                } else if ($key == 4221) {
                     // project task status
 
                     $where_parts = [
@@ -1254,6 +1301,21 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     }
 
                     $where = $link . "(" . implode(' OR ', $where_parts) . ")";
+                }
+            }
+
+            break;
+
+        case 'Project':
+            if ($searchtype == 'contains') {
+                if ($key == 4231) {
+                    // number of projects
+
+                    if ($val == 0) {
+                        $where = $link . "`task_counter`.`nb_tasks` IS NULL";
+                    } else {
+                        $where = $link . "`task_counter`.`nb_tasks` " . Search::makeTextSearch($val);
+                    }
                 }
             }
 
