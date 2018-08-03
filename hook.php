@@ -551,6 +551,9 @@ function plugin_projectbridge_post_show_tab(array $tab_data)
         ) {
             // add a link to the linked contract after showing the list of tasks in a project
             PluginProjectbridgeContract::postShowProject($tab_data['item']);
+
+            // customize the duration columns
+            PluginProjectbridgeTask::customizeDurationColumns($tab_data['item']);
         }
     }
 }

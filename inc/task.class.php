@@ -507,4 +507,100 @@ class PluginProjectbridgeTask extends CommonDBTM
             }
         }
     }
+
+    /**
+     * Customize the duration columns in a list of project tasks
+     *
+     * @param  Project $project
+     * @return void
+     */
+    public static function customizeDurationColumns(Project $project)
+    {
+        $task = new ProjectTask();
+        $tasks = $task->find("TRUE AND projects_id = " . $project->getId());
+
+        if (!empty($tasks)) {
+            $duration_data = [];
+
+            foreach ($tasks as $task_data) {
+                $duration_data[$task_data['id']] = [
+                    'planned_duration' => $task_data['planned_duration'],
+                    'effective_duration' => ProjectTask::getTotalEffectiveDuration($task_data['id']),
+                ];
+            }
+
+            if (!empty($duration_data)) {
+                $js_block = '
+                    var
+                        duration_data = ' . json_encode($duration_data) . ',
+                        table_rows = $(".glpi_tabs table tr:not(:last)")
+                    ;
+
+                    if (table_rows.length > 1) {
+                        var
+                            header_row = $(table_rows.get(0)),
+                            header_cells = $("th", header_row),
+                            task_rows = table_rows.not(header_row),
+                            cells_map = {},
+                            cell_obj,
+                            cell_text
+                        ;
+
+                        header_cells.each(function(idx, elm) {
+                            cell_obj = $(elm);
+                            cell_text = cell_obj.text();
+
+                            if (
+                                cell_text == "Tâches de projet"
+                                || cell_text == "Durée planifiée"
+                                || cell_text == "Durée effective"
+                            ) {
+                                cells_map[cell_text] = idx + 1;
+                            }
+                        });
+
+                        var
+                            task_row,
+                            task_link,
+                            task_id,
+                            planned_duration_cell,
+                            effective_duration_cell
+                        ;
+
+                        task_rows.each(function() {
+                            task_row = $(this);
+                            task_link = $("td:first a", task_row).attr("href");
+                            task_id = undefined;
+
+                            if (task_link) {
+                                task_id = parseInt(task_link.replace("projecttask.form.php?id=", ""));
+
+                                if (task_id == 0) {
+                                    task_id = undefined;
+                                }
+                            }
+
+                            if (
+                                task_id !== undefined
+                                && duration_data[task_id] !== undefined
+                            ) {
+                                planned_duration_cell = $("td:nth-child(" + cells_map["Durée planifiée"] + ")", task_row);
+                                effective_duration_cell = $("td:nth-child(" + cells_map["Durée effective"] + ")", task_row);
+
+                                if (planned_duration_cell.length) {
+                                    planned_duration_cell.text((duration_data[task_id].planned_duration / 3600) + " heure(s)");
+                                }
+
+                                if (effective_duration_cell.length) {
+                                    effective_duration_cell.text((duration_data[task_id].effective_duration / 3600) + " heure(s)");
+                                }
+                            }
+                        });
+                    }
+                ';
+
+                echo Html::scriptBlock($js_block);
+            }
+        }
+    }
 }
