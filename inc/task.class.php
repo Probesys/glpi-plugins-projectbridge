@@ -35,6 +35,21 @@ class PluginProjectbridgeTask extends CommonDBTM
     }
 
     /**
+     * Add menu content
+     *
+     * @return array
+     */
+    public static function getMenuContent()
+    {
+        $menu = parent::getMenuContent();
+
+        $menu['title'] = 'Tâches de projet ProjectBridge';
+        $menu['page'] = '/plugins/projectbridge/front/projecttask.php';
+
+        return $menu;
+    }
+
+    /**
      * Give cron information
      *
      * @param $name string Cron name

@@ -46,6 +46,11 @@ function plugin_init_projectbridge()
     ];
 
     $PLUGIN_HOOKS['use_massive_action'][PluginProjectbridgeConfig::NAMESPACE] = 1;
+
+    $PLUGIN_HOOKS['helpdesk_menu_entry'][PluginProjectbridgeConfig::NAMESPACE] = true;
+    $PLUGIN_HOOKS['menu_toadd'][PluginProjectbridgeConfig::NAMESPACE] = [
+        'tools' => 'PluginProjectbridgeTask',
+    ];
 }
 
 /**
