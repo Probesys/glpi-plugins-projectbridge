@@ -523,9 +523,11 @@ class PluginProjectbridgeTask extends CommonDBTM
             $duration_data = [];
 
             foreach ($tasks as $task_data) {
+                $effective_duration = ProjectTask::getTotalEffectiveDuration($task_data['id']);
+
                 $duration_data[$task_data['id']] = [
-                    'planned_duration' => $task_data['planned_duration'],
-                    'effective_duration' => ProjectTask::getTotalEffectiveDuration($task_data['id']),
+                    'planned_duration' => round($task_data['planned_duration'] / 3600 * 100) / 100,
+                    'effective_duration' => round($effective_duration / 3600 * 100) / 100,
                 ];
             }
 
@@ -588,11 +590,11 @@ class PluginProjectbridgeTask extends CommonDBTM
                                 effective_duration_cell = $("td:nth-child(" + cells_map["Durée effective"] + ")", task_row);
 
                                 if (planned_duration_cell.length) {
-                                    planned_duration_cell.text((duration_data[task_id].planned_duration / 3600) + " heure(s)");
+                                    planned_duration_cell.text(duration_data[task_id].planned_duration + " heure(s)");
                                 }
 
                                 if (effective_duration_cell.length) {
-                                    effective_duration_cell.text((duration_data[task_id].effective_duration / 3600) + " heure(s)");
+                                    effective_duration_cell.text(duration_data[task_id].effective_duration + " heure(s)");
                                 }
                             }
                         });

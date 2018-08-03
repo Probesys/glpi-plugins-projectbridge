@@ -21,7 +21,7 @@ if (
         $actiontime = (int) $ticket_data['actiontime'];
 
         if (!empty($actiontime)) {
-            $actiontime = $actiontime / 3600;
+            $actiontime = round($actiontime / 3600 * 100) / 100;
         }
 
         $tickets_actiontime[$ticket_data['id']] = $actiontime;
