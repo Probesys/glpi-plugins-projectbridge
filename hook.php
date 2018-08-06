@@ -759,10 +759,26 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     AS `ITEM_" . $offset . "`,
                 ";
             } else if ($key == 4202) {
+                // url to ticket search for tickets in the entity that are not linked to a task
+                $ticket_search_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/ticket.php?is_deleted=0&criteria[0][field]=4214&criteria[0][searchtype]=contains&criteria[0][value]=Non&criteria[1][link]=AND&criteria[1][field]=80&criteria[1][searchtype]=equals&criteria[1][value]=';
+
                 $select = "
-                    COALESCE(
-                        ROUND(`unlinked_ticket_actiontimes`.`actiontime_sum`, 2),
-                        0
+                    CONCAT(
+                        '<!--',
+                        COALESCE(
+                            ROUND(`unlinked_ticket_actiontimes`.`actiontime_sum`, 2),
+                            0
+                        ),
+                        '-->',
+
+                        '<a href=\"" . $ticket_search_link . "',
+                        `glpi_entities`.`id`,
+                        '\">',
+                        COALESCE(
+                            ROUND(`unlinked_ticket_actiontimes`.`actiontime_sum`, 2),
+                            0
+                        ),
+                        '</a>'
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
