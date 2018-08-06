@@ -123,7 +123,8 @@ class PluginProjectbridgeTicket extends CommonDBTM
         $html_parts[] = Html::scriptBlock('$(document).ready(function() {
             var
                 projectbridge_config = $("#projectbridge_config"),
-                table = $("#ui-tabs-8 .tab_cadre_fixehov tr:last")
+                tab = $("#ui-tabs-8"),
+                table = $(".tab_cadre_fixehov tr:last", tab)
             ;
 
             if (table.length == 0) {
@@ -139,6 +140,9 @@ class PluginProjectbridgeTicket extends CommonDBTM
             });
             $("#projectbridge_config .select2-container").show();
             $("#projectbridge_config").before("<tr><td colspan=\'10\'>&nbsp;</td></tr>");
+
+            // remove the GLPI "add to project" default
+            $("form[id^=projecttaskticket_form]", tab).remove();
         });');
 
         echo implode('', $html_parts);
