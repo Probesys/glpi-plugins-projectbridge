@@ -806,7 +806,6 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $entity->getFromDB($contract_data['contract']->fields['entities_id']);
                 $html_parts[] = '<strong>Entité</strong> : ';
                 $html_parts[] = $entity->fields['name'];
-                $html_parts[] = '</a>';
                 $html_parts[] = '<br />' . "\n";
                 $html_parts[] = '<br />' . "\n";
 
