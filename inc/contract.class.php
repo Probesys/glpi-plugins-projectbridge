@@ -807,8 +807,31 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '<strong>Entité</strong> : ';
                 $html_parts[] = $entity->fields['name'];
                 $html_parts[] = '<br />' . "\n";
-                $html_parts[] = '<br />' . "\n";
 
+                $bridge_contract = new PluginProjectbridgeContract($contract_data['contract']);
+                $project_id = $bridge_contract->getProjectId();
+
+                if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', true)) {
+                    $plan_end_date = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'plan_end_date', true);
+                    $html_parts[] = '<strong>';
+                    $html_parts[] = 'Date de fin prévue';
+                    $html_parts[] = '</strong> : ';
+                    $html_parts[] = date('d-m-Y', strtotime($plan_end_date));
+                    $html_parts[] = '<br />' . "\n";
+
+                    $html_parts[] = '<strong>';
+                    $html_parts[] = 'Durée effective';
+                    $html_parts[] = '</strong> : ';
+                    $html_parts[] = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption', true);
+                    $html_parts[] = ' | ';
+                    $html_parts[] = '<strong>';
+                    $html_parts[] = 'Durée planifiée : ';
+                    $html_parts[] = '</strong> : ';
+                    $html_parts[] = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_duration', true);
+                    $html_parts[] = '<br />' . "\n";
+                }
+
+                $html_parts[] = '<br />' . "\n";
                 $html_parts[] = '</li>' . "\n";
             }
 
