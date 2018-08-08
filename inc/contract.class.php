@@ -819,15 +819,18 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $html_parts[] = date('d-m-Y', strtotime($plan_end_date));
                     $html_parts[] = '<br />' . "\n";
 
+                    $consumption = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption', true);
                     $html_parts[] = '<strong>';
                     $html_parts[] = 'Durée effective';
                     $html_parts[] = '</strong> : ';
-                    $html_parts[] = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'consumption', true);
+                    $html_parts[] = round($consumption, 2);
                     $html_parts[] = ' | ';
+
+                    $task_duration = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_duration', true);
                     $html_parts[] = '<strong>';
-                    $html_parts[] = 'Durée planifiée : ';
+                    $html_parts[] = 'Durée planifiée';
                     $html_parts[] = '</strong> : ';
-                    $html_parts[] = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_duration', true);
+                    $html_parts[] = round($task_duration, 2);
                     $html_parts[] = '<br />' . "\n";
                 }
 
