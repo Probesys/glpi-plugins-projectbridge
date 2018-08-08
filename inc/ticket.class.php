@@ -143,6 +143,12 @@ class PluginProjectbridgeTicket extends CommonDBTM
 
             // remove the GLPI "add to project" default
             $("form[id^=projecttaskticket_form]", tab).remove();
+
+            projectbridge_config = $("#projectbridge_config");
+
+            if (!projectbridge_config.parent().is("table, tbody")) {
+                projectbridge_config.wrap("<table class=\"tab_cadre_fixehov\"></table>");
+            }
         });');
 
         echo implode('', $html_parts);
