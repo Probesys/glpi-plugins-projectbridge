@@ -538,7 +538,13 @@ class PluginProjectbridgeTask extends CommonDBTM
      */
     public static function updateProgressPercent($ticket_id, $timediff = 0)
     {
+        static $task_list;
         $nb_successes = 0;
+
+        if ($task_list === null) {
+            $task_list = [];
+        }
+
         $task_link = new ProjectTask_Ticket();
         $task_links = $task_link->find("
             TRUE
@@ -547,9 +553,14 @@ class PluginProjectbridgeTask extends CommonDBTM
 
         if (!empty($task_links)) {
             foreach ($task_links as $task_link) {
-                $task = new ProjectTask();
+                if (!isset($task_list[$task_link['projecttasks_id']])) {
+                    $task_list[$task_link['projecttasks_id']] = new ProjectTask();
+                    $task_list[$task_link['projecttasks_id']]->getFromDB($task_link['projecttasks_id']);
+                }
 
-                if ($task->getFromDB($task_link['projecttasks_id'])) {
+                $task = $task_list[$task_link['projecttasks_id']];
+
+                if ($task->getId()) {
                     $total_actiontime = ProjectTask_Ticket::getTicketsTotalActionTime($task->getId());
 
                     $target = $total_actiontime + $timediff;
