@@ -249,10 +249,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
             if (
                 $search_closed
-                && (
-                    $consumption_ratio >= 1
-                    || $end_date_reached
-                )
+                && PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', true)
             ) {
                 $html_parts[] = '&nbsp;';
                 $html_parts[] = '-';
