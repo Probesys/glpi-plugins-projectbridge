@@ -64,6 +64,11 @@ class PluginProjectbridgeTask extends CommonDBTM
                 ];
 
                 break;
+
+            case 'UpdateProgressPercent':
+                return [
+                    'description' => 'Mise à jour des compteurs de pourcentage effectué dans les tâches de projet',
+                ];
         }
 
         return [];
@@ -484,14 +489,56 @@ class PluginProjectbridgeTask extends CommonDBTM
     }
 
     /**
+     * Cron action to process tasks (close if expired or quota reached)
+     *
+     * @param CronTask|null $cron_task for log, if NULL display (default NULL)
+     * @return integer 1 if an action was done, 0 if not
+     */
+    public static function cronUpdateProgressPercent($cron_task = null)
+    {
+        if (class_exists('PluginProjectbridgeConfig')) {
+            $plugin = new Plugin();
+
+            if (!$plugin->isActivated(PluginProjectbridgeConfig::NAMESPACE)) {
+                echo 'Plugin n\'est pas actif' . "<br />\n";
+                return 0;
+            }
+        } else {
+            echo 'Plugin n\'est pas installé' . "<br />\n";
+            return 0;
+        }
+
+        $nb_successes = 0;
+
+        $ticket_task = new TicketTask();
+        $ticket_tasks = $ticket_task->find("TRUE AND actiontime > 0");
+
+        echo 'Trouvé ' . count($ticket_tasks) . ' tâches avec du temps' . "<br />\n";
+
+        foreach ($ticket_tasks as $ticket_task_data) {
+            echo 'Re-calcul pour la tâche liée au ticket ' . $ticket_task_data['tickets_id'] . "<br />\n";
+
+            // use the existing time to force an update of the percent_done in the tasks linked to the tickets
+            $nb_successes += PluginProjectbridgeTask::updateProgressPercent($ticket_task_data['tickets_id']);
+        }
+
+        $cron_task->addVolume($nb_successes);
+
+        echo 'Fini' . "<br />\n";
+
+        return ($nb_successes > 0) ? 1 : 0;
+    }
+
+    /**
      * Update the progress percentage of tasks linked to a ticket
      *
      * @param  integer $ticket_id
      * @param  integer $timediff
-     * @return void
+     * @return integer
      */
     public static function updateProgressPercent($ticket_id, $timediff = 0)
     {
+        $nb_successes = 0;
         $task_link = new ProjectTask_Ticket();
         $task_links = $task_link->find("
             TRUE
@@ -506,7 +553,13 @@ class PluginProjectbridgeTask extends CommonDBTM
                     $total_actiontime = ProjectTask_Ticket::getTicketsTotalActionTime($task->getId());
 
                     $target = $total_actiontime + $timediff;
-                    $target_percent = round(($target / $task->fields['planned_duration']) * 100);
+                    $planned_duration = $task->fields['planned_duration'];
+
+                    if (empty($planned_duration)) {
+                        $planned_duration = 1;
+                    }
+
+                    $target_percent = round(($target / $planned_duration) * 100);
 
                     if ($target_percent > 100) {
                         $target_percent = 100;
@@ -514,13 +567,19 @@ class PluginProjectbridgeTask extends CommonDBTM
                         $target_percent = 0;
                     }
 
-                    $task->update([
+                    $success = $task->update([
                         'id' => $task->getId(),
                         'percent_done' => $target_percent,
                     ]);
+
+                    if ($success) {
+                        $nb_successes++;
+                    }
                 }
             }
         }
+
+        return $nb_successes;
     }
 
     /**

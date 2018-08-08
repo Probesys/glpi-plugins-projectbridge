@@ -95,6 +95,9 @@ function plugin_projectbridge_install()
     // cron to process tasks (expired, quota reached, ...)
     CronTask::Register('PluginProjectbridgeTask', 'ProcessTasks', DAY_TIMESTAMP);
 
+    // cron to update the percent_done counter in tasks
+    CronTask::Register('PluginProjectbridgeTask', 'UpdateProgressPercent', DAY_TIMESTAMP);
+
     return true;
 }
 
