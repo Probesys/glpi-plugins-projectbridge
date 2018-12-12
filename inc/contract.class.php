@@ -255,7 +255,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '-';
                 $html_parts[] = '&nbsp;';
 
-                $html_parts[] = '<input type="submit" value="Renouveller le contrat" class="submit projectbridge-renewal-trigger" />' . "\n";
+                $html_parts[] = '<input type="submit" value="Renouveler le contrat" class="submit projectbridge-renewal-trigger" />' . "\n";
 
                 if (true) {
                     $renewal_data = $bridge_contract->getRenewalData();
@@ -599,7 +599,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
 
         if (empty($state_in_progress_value)) {
-            Session::addMessageAfterRedirect('La correspondance pour le statut "En cours" n\'a pas été définie. Le contrat n\'a pas pu être renouvellé.', false, ERROR);
+            Session::addMessageAfterRedirect('La correspondance pour le statut "En cours" n\'a pas été définie. Le contrat n\'a pas pu être renouvelé.', false, ERROR);
             return false;
         }
 
@@ -742,7 +742,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         switch ($name) {
             case 'AlertContractsToRenew':
                 return [
-                    'description' => 'Alerte des contrats à renouveller',
+                    'description' => 'Alerte des contrats à renouveler',
                 ];
 
                 break;
@@ -777,13 +777,13 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         if (count($recipients)) {
             $contracts = PluginProjectbridgeContract::getContractsToRenew();
-            echo 'Trouvé ' . count($contracts) . ' contrats à renouveller' . "<br />\n";
+            echo 'Trouvé ' . count($contracts) . ' contrats à renouveler' . "<br />\n";
 
-            $subject = 'Contrats : ' . count($contracts) . ' à renouveller';
+            $subject = 'Contrats : ' . count($contracts) . ' à renouveler';
 
             $html_parts = [];
             $html_parts[] = '<p>' . "\n";
-            $html_parts[] = 'Il y a ' . count($contracts) . ' contrats à renouveller :';
+            $html_parts[] = 'Il y a ' . count($contracts) . ' contrats à renouveler :';
             $html_parts[] = '</p>' . "\n";
 
             $html_parts[] = '<ol>' . "\n";
