@@ -632,6 +632,10 @@ class PluginProjectbridgeContract extends CommonDBTM
         // create the new project's task
         $project_task = new ProjectTask();
         $task_id = $project_task->add($project_task_data);
+	if ($task_id) {
+	      Event::log($task_id, "projectbridge", 4, "projectbridge",
+              sprintf(__('%1$s adds the item %2$s'), $_SESSION["glpiname"], $name));
+        }
 
         if (
             $task_id
