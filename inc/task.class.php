@@ -409,7 +409,7 @@ class PluginProjectbridgeTask extends CommonDBTM
 
       if ($nb_successes > 0) {
          $recipients = PluginProjectbridgeConfig::getRecipients();
-         echo __('find') . count($recipients) .' '. _('person(s) to alert') . "<br />\n";
+         echo __('find') . count($recipients) .' '. __('person(s) to alert') . "<br />\n";
 
          if (count($recipients)) {
              global $CFG_GLPI;
