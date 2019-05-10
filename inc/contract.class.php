@@ -72,7 +72,7 @@ class PluginProjectbridgeContract extends CommonDBTM
        $html_parts[] = '<tr id="projectbridge_config" class="tab_bg_1">' . "\n";
 
        $html_parts[] = '<td>';
-       $html_parts[] = __('linking Project');
+       $html_parts[] = __('linking Project','projectbridge');
        $html_parts[] = '</td>' . "\n";
 
        $html_parts[] = '<td colspan="2">' . "\n";
@@ -179,7 +179,7 @@ class PluginProjectbridgeContract extends CommonDBTM
            && isset($project_list[$project_id])
        ) {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left:5px;" target="_blank">';
-            $html_parts[] = __('Access linked contract');
+            $html_parts[] = __('Access linked contract', 'projectbridge');
             $html_parts[] = '</a>' . "\n";
 
             $html_parts[] = PluginProjectbridgeContract::_getPostShowHoursHtml($bridge_contract->getNbHours());
@@ -292,7 +292,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                   $html_parts[] = '<tr>' . "\n";
 
                   $html_parts[] = '<td>';
-                  $html_parts[] = __('Number of hours');
+                  $html_parts[] = __('Number of hours', 'projectbridge');
                   $html_parts[] = '</td>' . "\n";
 
                   $html_parts[] = '<td>';

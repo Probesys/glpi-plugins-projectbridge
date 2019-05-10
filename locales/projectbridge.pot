@@ -1,13 +1,13 @@
-# Project Bridge POT file
-# Copyright (C) 2019 Probesys
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the ProjectBridge package.
-# Probesys <contact@probesys.com>, 2019
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid   ""
 msgstr  "Project-Id-Version: ProjectBridge 2.0\n"
         "Report-Msgid-Bugs-To: contact@probesys.com\n"
-        "POT-Creation-Date: 2019-05-10 14:22+0200\n"
+        "POT-Creation-Date: 2019-05-10 14:47+0200\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,8 @@ msgid   "Select tickets in the entity (not deleted and unrelated to a project "
         "task) that you want to link to the new task"
 msgstr  ""
 
-#: ajax/get_renewal_tickets.php:68 inc/contract.class.php:787
+#: ajax/get_renewal_tickets.php:68 front/config.form.php:300
+#: inc/contract.class.php:787
 msgid   "Name"
 msgstr  ""
 
@@ -43,6 +44,10 @@ msgstr  ""
 
 #: ajax/get_renewal_tickets.php:131
 msgid   "Link tickets to renewal"
+msgstr  ""
+
+#: front/config.form.php:47 front/config.form.php:51
+msgid   "ProjectBridge Configuration"
 msgstr  ""
 
 #: front/config.form.php:83
@@ -91,10 +96,6 @@ msgstr  ""
 
 #: front/config.form.php:288
 msgid   "People receiving alerts"
-msgstr  ""
-
-#: front/config.form.php:300
-msgid   "Nom"
 msgstr  ""
 
 #: front/config.form.php:304

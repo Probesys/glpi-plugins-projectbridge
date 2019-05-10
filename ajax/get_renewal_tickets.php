@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
        echo '</h2>' . "\n";
 
        echo '<p>';
-       echo __('Select tickets in the entity (not deleted and unrelated to a project task) that you want to link to the new task').'.';
+       echo __('Select tickets in the entity (not deleted and unrelated to a project task) that you want to link to the new task','projectbridge').'.';
        echo '</p>' . "\n";
 
        echo '<table class="tab_cadrehov">' . "\n";
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
          echo '<tr class="tab_bg_1">' . "\n";
 
          echo '<td colspan="5" style="text-align: center">';
-         echo '<input type="submit" name="update" value="'.__('Link tickets to renewal').'" class="submit" />';
+         echo '<input type="submit" name="update" value="'.__('Link tickets to renewal','projectbridge').'" class="submit" />';
          echo '</td>' . "\n";
 
          echo '</tr>' . "\n";

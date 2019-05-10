@@ -60,7 +60,7 @@ class PluginProjectbridgeEntity extends CommonDBTM
        $html_parts[] = '<tr id="projectbridge_config" class="tab_bg_1">' . "\n";
 
        $html_parts[] = '<td>';
-       $html_parts[] = __('Default contract');
+       $html_parts[] = __('Default contract','projectbridge');
        $html_parts[] = '</td>' . "\n";
 
        $html_parts[] = '<td colspan="2">' . "\n";
@@ -70,15 +70,15 @@ class PluginProjectbridgeEntity extends CommonDBTM
 
        if (!empty($contract_id)) {
            $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/contract.form.php?id=' . $contract_id . '" style="margin-left: 5px;" target="_blank">';
-           $html_parts[] = __('Default contract access');
+           $html_parts[] = __('Default contract access','projectbridge');
            $html_parts[] = '</a>' . "\n";
          } else {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/setup.templates.php?itemtype=Contract&add=1" style="margin-left: 5px;" target="_blank">';
-            $html_parts[] = __('Create a new contract').' ?';
+            $html_parts[] = __('Create a new contract','projectbridge').' ?';
             $html_parts[] = '</a>' . "\n";
 
             $html_parts[] = '<small>';
-            $html_parts[] = __('Remember to refresh this page after creating the contract');
+            $html_parts[] = __('Remember to refresh this page after creating the contract','projectbridge');
             $html_parts[] = '</small>' . "\n";
          }
 

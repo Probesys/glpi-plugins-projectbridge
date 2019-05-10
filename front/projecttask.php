@@ -4,7 +4,7 @@ include('../../../inc/includes.php');
 
 Session::checkLoginUser();
 
-Html::header(__('Project Tasks'), $_SERVER['PHP_SELF'], 'tools', 'projecttask');
+Html::header(__('Project Tasks','projectbridge'), $_SERVER['PHP_SELF'], 'tools', 'projecttask');
 
 // force GLPI to point to this page
 global $CFG_GLPI;
