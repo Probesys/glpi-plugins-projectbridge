@@ -770,11 +770,11 @@ class PluginProjectbridgeContract extends CommonDBTM
          $contracts = PluginProjectbridgeContract::getContractsToRenew();
          echo __('Finded').' ' . count($contracts) .' '. __('contract(s) to renew') . "<br />\n";
 
-         $subject = __('Contract(s)').' : ' . count($contracts) .' '. _('to renew');
+         $subject = __('Contract(s)').' : ' . count($contracts) .' '. __('to renew');
 
          $html_parts = [];
          $html_parts[] = '<p>' . "\n";
-         $html_parts[] = _('there is(are)').' ' . count($contracts) .' '. __('contract(s) to renew'). ' :';
+         $html_parts[] = __('there is(are)').' ' . count($contracts) .' '. __('contract(s) to renew'). ' :';
          $html_parts[] = '</p>' . "\n";
 
          $html_parts[] = '<ol>' . "\n";

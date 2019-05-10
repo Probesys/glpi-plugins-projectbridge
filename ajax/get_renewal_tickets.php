@@ -65,19 +65,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
           echo '</th>' . "\n";
 
           echo '<th>';
-          echo _('Name');
+          echo __('Name');
           echo '</th>' . "\n";
 
           echo '<th>';
-          echo _('Time');
+          echo __('Time');
           echo '</th>' . "\n";
 
           echo '<th>';
-          echo _('Open Date');
+          echo __('Open Date');
           echo '</th>' . "\n";
 
           echo '<th>';
-          echo _('Close Date');
+          echo __('Close Date');
           echo '</th>' . "\n";
 
           echo '</tr>' . "\n";
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
          echo '<tr class="tab_bg_1">' . "\n";
 
          echo '<td colspan="5" style="text-align: center">';
-         echo _('no ticket found');
+         echo __('no ticket found');
          echo '</td>' . "\n";
 
          echo '</tr>' . "\n";
