@@ -4,391 +4,394 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
-msgid   ""
-msgstr  "Project-Id-Version: ProjectBridge 2.0\n"
-        "Report-Msgid-Bugs-To: contact@probesys.com\n"
-        "POT-Creation-Date: 2019-05-10 14:47+0200\n"
-        "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-        "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-        "Language-Team: LANGUAGE <LL@li.org>\n"
-        "Language: \n"
-        "MIME-Version: 1.0\n"
-        "Content-Type: text/plain; charset=CHARSET\n"
-        "Content-Transfer-Encoding: 8bit\n"
+msgid ""
+msgstr ""
+"Project-Id-Version: ProjectBridge 2.0\n"
+"Report-Msgid-Bugs-To: contact@probesys.com\n"
+"POT-Creation-Date: 2019-05-10 15:32+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: ajax/get_renewal_tickets.php:55
-msgid   "Select tickets in the entity (not deleted and unrelated to a project "
-        "task) that you want to link to the new task"
-msgstr  ""
+msgid ""
+"Select tickets in the entity (not deleted and unrelated to a project task) "
+"that you want to link to the new task"
+msgstr ""
 
 #: ajax/get_renewal_tickets.php:68 front/config.form.php:300
 #: inc/contract.class.php:787
-msgid   "Name"
-msgstr  ""
+msgid "Name"
+msgstr ""
 
 #: ajax/get_renewal_tickets.php:72
-msgid   "Time"
-msgstr  ""
+msgid "Time"
+msgstr ""
 
 #: ajax/get_renewal_tickets.php:76
-msgid   "Open Date"
-msgstr  ""
+msgid "Open Date"
+msgstr ""
 
 #: ajax/get_renewal_tickets.php:80
-msgid   "Close Date"
-msgstr  ""
+msgid "Close Date"
+msgstr ""
 
 #: ajax/get_renewal_tickets.php:121
-msgid   "no ticket found"
-msgstr  ""
+msgid "no ticket found"
+msgstr ""
 
 #: ajax/get_renewal_tickets.php:131
-msgid   "Link tickets to renewal"
-msgstr  ""
+msgid "Link tickets to renewal"
+msgstr ""
 
 #: front/config.form.php:47 front/config.form.php:51
-msgid   "ProjectBridge Configuration"
-msgstr  ""
+msgid "ProjectBridge Configuration"
+msgstr ""
 
 #: front/config.form.php:83
-msgid   "Status Configuration"
-msgstr  ""
+msgid "Status Configuration"
+msgstr ""
 
 #: front/config.form.php:87
-msgid   "Please match the status names and their values in GLPI."
-msgstr  ""
+msgid "Please match the status names and their values in GLPI."
+msgstr ""
 
 #: front/config.form.php:99
-msgid   "Status name"
-msgstr  ""
+msgid "Status name"
+msgstr ""
 
 #: front/config.form.php:103
-msgid   "Status type"
-msgstr  ""
+msgid "Status type"
+msgstr ""
 
 #: front/config.form.php:107
-msgid   "Corresponding status"
-msgstr  ""
+msgid "Corresponding status"
+msgstr ""
 
 #: front/config.form.php:187
-msgid   "In progress"
-msgstr  ""
+msgid "In progress"
+msgstr ""
 
 #: front/config.form.php:191 front/config.form.php:211
-msgid   "Task"
-msgstr  ""
+msgid "Task"
+msgstr ""
 
 #: front/config.form.php:207
-msgid   "Close"
-msgstr  ""
+msgid "Close"
+msgstr ""
 
 #: front/config.form.php:227
-msgid   "Renewal"
-msgstr  ""
+msgid "Renewal"
+msgstr ""
 
 #: front/config.form.php:231
-msgid   "Ticket"
-msgstr  ""
+msgid "Ticket"
+msgstr ""
 
 #: front/config.form.php:245
-msgid   "Save"
-msgstr  ""
+msgid "Save"
+msgstr ""
 
 #: front/config.form.php:288
-msgid   "People receiving alerts"
-msgstr  ""
+msgid "People receiving alerts"
+msgstr ""
 
 #: front/config.form.php:304
-msgid   "Action"
-msgstr  ""
+msgid "Action"
+msgstr ""
 
 #: front/config.form.php:330
-msgid   "Delete"
-msgstr  ""
+msgid "Delete"
+msgstr ""
 
 #: front/config.form.php:340
-msgid   "Nobody receive alerts"
-msgstr  ""
+msgid "Nobody receive alerts"
+msgstr ""
 
 #: front/config.form.php:360
-msgid   "Add"
-msgstr  ""
+msgid "Add"
+msgstr ""
 
 #: front/config.form.php:377
-msgid   "Please activate the plugin or get the right of access"
-msgstr  ""
+msgid "Please activate the plugin or get the right of access"
+msgstr ""
 
 #: front/projecttask.php:7
-msgid   "Project Tasks"
-msgstr  ""
+msgid "Project Tasks"
+msgstr ""
 
 #: inc/contract.class.php:75
-msgid   "linking Project"
-msgstr  ""
+msgid "linking Project"
+msgstr ""
 
 #: inc/contract.class.php:129
-msgid   "Create the project"
-msgstr  ""
+msgid "Create the project"
+msgstr ""
 
 #: inc/contract.class.php:182
-msgid   "Access linked contract"
-msgstr  ""
+msgid "Access linked contract"
+msgstr ""
 
 #: inc/contract.class.php:207
-msgid   "Comsuption"
-msgstr  ""
+msgid "Comsuption"
+msgstr ""
 
 #: inc/contract.class.php:208
-msgid   "hours"
-msgstr  ""
+msgid "hours"
+msgstr ""
 
 #: inc/contract.class.php:229
-msgid   "Expired in less than 24h"
-msgstr  ""
+msgid "Expired in less than 24h"
+msgstr ""
 
 #: inc/contract.class.php:231
-msgid   "Expired in"
-msgstr  ""
+msgid "Expired in"
+msgstr ""
 
 #: inc/contract.class.php:231 inc/contract.class.php:238
-msgid   "days"
-msgstr  ""
+msgid "days"
+msgstr ""
 
 #: inc/contract.class.php:236
-msgid   "Expired today"
-msgstr  ""
+msgid "Expired today"
+msgstr ""
 
 #: inc/contract.class.php:238
-msgid   "Expired since"
-msgstr  ""
+msgid "Expired since"
+msgstr ""
 
 #: inc/contract.class.php:250
-msgid   "Renew the contract"
-msgstr  ""
+msgid "Renew the contract"
+msgstr ""
 
 #: inc/contract.class.php:260
-msgid   "Start date"
-msgstr  ""
+msgid "Start date"
+msgstr ""
 
 #: inc/contract.class.php:277
-msgid   "End date"
-msgstr  ""
+msgid "End date"
+msgstr ""
 
 #: inc/contract.class.php:295 inc/contract.class.php:453
-msgid   "Number of hours"
-msgstr  ""
+msgid "Number of hours"
+msgstr ""
 
 #: inc/contract.class.php:309
-msgid   "Confirm renewal"
-msgstr  ""
+msgid "Confirm renewal"
+msgstr ""
 
 #: inc/contract.class.php:313
-msgid   "Cancel"
-msgstr  ""
+msgid "Cancel"
+msgstr ""
 
 #: inc/contract.class.php:428
-msgid   "Create a project"
-msgstr  ""
+msgid "Create a project"
+msgstr ""
 
 #: inc/contract.class.php:432
-msgid   "Remember to refresh this page after creating the project"
-msgstr  ""
+msgid "Remember to refresh this page after creating the project"
+msgstr ""
 
 #: inc/contract.class.php:482 inc/task.class.php:97
-msgid   "Please define the correspondence of the \"Closed\" status."
-msgstr  ""
+msgid "Please define the correspondence of the \"Closed\" status."
+msgstr ""
 
 #: inc/contract.class.php:589
-msgid   "The match for the status \"In progress\" has not been defined. The "
-        "contract could not be renewed."
-msgstr  ""
+msgid ""
+"The match for the status \"In progress\" has not been defined. The contract "
+"could not be renewed."
+msgstr ""
 
 #: inc/contract.class.php:629
 #, php-format
-msgid   "%1$s adds the item %2$s"
-msgstr  ""
+msgid "%1$s adds the item %2$s"
+msgstr ""
 
 #: inc/contract.class.php:737
-msgid   "Contract Alert to renew"
-msgstr  ""
+msgid "Contract Alert to renew"
+msgstr ""
 
 #: inc/contract.class.php:757 inc/task.class.php:84 inc/task.class.php:492
-msgid   "Plugin is not actif"
-msgstr  ""
+msgid "Plugin is not actif"
+msgstr ""
 
 #: inc/contract.class.php:761 inc/task.class.php:88 inc/task.class.php:496
-msgid   "Plugin is not installed"
-msgstr  ""
+msgid "Plugin is not installed"
+msgstr ""
 
 #: inc/contract.class.php:767 inc/contract.class.php:771
-msgid   "Finded"
-msgstr  ""
+msgid "Finded"
+msgstr ""
 
 #: inc/contract.class.php:767 inc/task.class.php:412
-msgid   "person(s) to alert"
-msgstr  ""
+msgid "person(s) to alert"
+msgstr ""
 
 #: inc/contract.class.php:771 inc/contract.class.php:777
-msgid   "contract(s) to renew"
-msgstr  ""
+msgid "contract(s) to renew"
+msgstr ""
 
 #: inc/contract.class.php:773
-msgid   "Contract(s)"
-msgstr  ""
+msgid "Contract(s)"
+msgstr ""
 
 #: inc/contract.class.php:773
-msgid   "to renew"
-msgstr  ""
+msgid "to renew"
+msgstr ""
 
 #: inc/contract.class.php:777
-msgid   "there is(are)"
-msgstr  ""
+msgid "there is(are)"
+msgstr ""
 
 #: inc/contract.class.php:795
-msgid   "Entity"
-msgstr  ""
+msgid "Entity"
+msgstr ""
 
 #: inc/contract.class.php:805
-msgid   "Expected end date"
-msgstr  ""
+msgid "Expected end date"
+msgstr ""
 
 #: inc/contract.class.php:812
-msgid   "Effective Duration"
-msgstr  ""
+msgid "Effective Duration"
+msgstr ""
 
 #: inc/contract.class.php:819
-msgid   "Planified duration"
-msgstr  ""
+msgid "Planified duration"
+msgstr ""
 
 #: inc/contract.class.php:841 inc/task.class.php:516
-msgid   "Finish"
-msgstr  ""
+msgid "Finish"
+msgstr ""
 
 #: inc/contract.class.php:919 inc/contract.class.php:922
-msgid   "Contract"
-msgstr  ""
+msgid "Contract"
+msgstr ""
 
 #: inc/contract.class.php:922
-msgid   "Link to contract nonexistent"
-msgstr  ""
+msgid "Link to contract nonexistent"
+msgstr ""
 
 #: inc/contract.class.php:926
-msgid   "No linked contract"
-msgstr  ""
+msgid "No linked contract"
+msgstr ""
 
 #: inc/entity.class.php:63
-msgid   "Default contract"
-msgstr  ""
+msgid "Default contract"
+msgstr ""
 
 #: inc/entity.class.php:73
-msgid   "Default contract access"
-msgstr  ""
+msgid "Default contract access"
+msgstr ""
 
 #: inc/entity.class.php:77
-msgid   "Create a new contract"
-msgstr  ""
+msgid "Create a new contract"
+msgstr ""
 
 #: inc/entity.class.php:81
-msgid   "Remember to refresh this page after creating the contract"
-msgstr  ""
+msgid "Remember to refresh this page after creating the contract"
+msgstr ""
 
 #: inc/task.class.php:43
-msgid   "ProjectBridge project tasks"
-msgstr  ""
+msgid "ProjectBridge project tasks"
+msgstr ""
 
 #: inc/task.class.php:59
-msgid   "Project task treatment"
-msgstr  ""
+msgid "Project task treatment"
+msgstr ""
 
 #: inc/task.class.php:66
-msgid   "Update percentage counters performed in project tasks"
-msgstr  ""
+msgid "Update percentage counters performed in project tasks"
+msgstr ""
 
 #: inc/task.class.php:104
-msgid   "Please define the correspondence of the \"Renewal\" status."
-msgstr  ""
+msgid "Please define the correspondence of the \"Renewal\" status."
+msgstr ""
 
 #: inc/task.class.php:220
-msgid   "This ticket comes from an automatic copy of the ticket"
-msgstr  ""
+msgid "This ticket comes from an automatic copy of the ticket"
+msgstr ""
 
 #: inc/task.class.php:220
-msgid   "following the overtaking of hours or the expiry of the maintenance "
-        "contract"
-msgstr  ""
+msgid ""
+"following the overtaking of hours or the expiry of the maintenance contract"
+msgstr ""
 
 #: inc/task.class.php:412 inc/task.class.php:505
-msgid   "find"
-msgstr  ""
+msgid "find"
+msgstr ""
 
 #: inc/task.class.php:420
-msgid   "project Task"
-msgstr  ""
+msgid "project Task"
+msgstr ""
 
 #: inc/task.class.php:420
-msgid   "closed"
-msgstr  ""
+msgid "closed"
+msgstr ""
 
 #: inc/task.class.php:424
-msgid   "Hello"
-msgstr  ""
+msgid "Hello"
+msgstr ""
 
 #: inc/task.class.php:426
-msgid   "The open task of the project"
-msgstr  ""
+msgid "The open task of the project"
+msgstr ""
 
 #: inc/task.class.php:426
-msgid   "just closed"
-msgstr  ""
+msgid "just closed"
+msgstr ""
 
 #: inc/task.class.php:429
-msgid   "Reason"
-msgstr  ""
+msgid "Reason"
+msgstr ""
 
 #: inc/task.class.php:431
-msgid   "Expired"
-msgstr  ""
+msgid "Expired"
+msgstr ""
 
 #: inc/task.class.php:431 inc/task.class.php:433
-msgid   "yes"
-msgstr  ""
+msgid "yes"
+msgstr ""
 
 #: inc/task.class.php:431 inc/task.class.php:433
-msgid   "no"
-msgstr  ""
+msgid "no"
+msgstr ""
 
 #: inc/task.class.php:433
-msgid   "Overtaking"
-msgstr  ""
+msgid "Overtaking"
+msgstr ""
 
 #: inc/task.class.php:458
-msgid   "Adjustment ticket"
-msgstr  ""
+msgid "Adjustment ticket"
+msgstr ""
 
 #: inc/task.class.php:459
-msgid   "Time Adjustment ticket"
-msgstr  ""
+msgid "Time Adjustment ticket"
+msgstr ""
 
 #: inc/task.class.php:471
-msgid   "Adjustment task"
-msgstr  ""
+msgid "Adjustment task"
+msgstr ""
 
 #: inc/task.class.php:505
-msgid   "tasks with time"
-msgstr  ""
+msgid "tasks with time"
+msgstr ""
 
 #: inc/task.class.php:508
-msgid   "re-calculuation for ticket task"
-msgstr  ""
+msgid "re-calculuation for ticket task"
+msgstr ""
 
 #: inc/ticket.class.php:49
-msgid   "Related project "
-msgstr  ""
+msgid "Related project "
+msgstr ""
 
 #: inc/ticket.class.php:107
-msgid   "Make the connection"
-msgstr  ""
+msgid "Make the connection"
+msgstr ""
 
 #: inc/ticket.class.php:319
-msgid   "Link(s) with project task(s) deleted"
-msgstr  ""
+msgid "Link(s) with project task(s) deleted"
+msgstr ""

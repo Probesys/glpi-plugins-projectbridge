@@ -46,7 +46,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
        $html_parts[] = '<tr id="projectbridge_config">' . "\n";
 
        $html_parts[] = '<th>';
-       $html_parts[] = __('Related project','projectbridge');
+       $html_parts[] = __('Related project', 'projectbridge');
        $html_parts[] = '</th>' . "\n";
 
       if (true) {
@@ -104,7 +104,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
                 $html_parts[] = '</a>' . "\n";
             }
 
-            $html_parts[] = '<input type="submit" name="update" value="'.__('Make the connection','projectbridge').'" class="submit" style="margin-left: 10px" />' . "\n";
+            $html_parts[] = '<input type="submit" name="update" value="'.__('Make the connection', 'projectbridge').'" class="submit" style="margin-left: 10px" />' . "\n";
             $html_parts[] = '<input type="hidden" name="id" value="' . $ticket->getId() . '" />' . "\n";
 
             $html_parts[] = Html::closeForm(false);
@@ -316,7 +316,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
             ";
 
          $DB->query($delete_links_query);
-         Log::history($ticket_id, 'Ticket', [0, '', __('Link(s) with project task(s) deleted','projectbridge')], 0, Log::HISTORY_LOG_SIMPLE_MESSAGE);
+         Log::history($ticket_id, 'Ticket', [0, '', __('Link(s) with project task(s) deleted', 'projectbridge')], 0, Log::HISTORY_LOG_SIMPLE_MESSAGE);
       }
 
          // todo: use a native method

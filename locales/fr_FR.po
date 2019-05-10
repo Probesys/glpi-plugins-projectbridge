@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: ProjectBridge 2.0\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
 "POT-Creation-Date: 2019-05-10 14:22+0200\n"
-"PO-Revision-Date: 2019-05-10 15:23+0200\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2019-05-10 16:10+0200\n"
+"Language-Team: probesys\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.2.1\n"
-"Last-Translator: \n"
+"Last-Translator: probeSys <contact@probesys.com>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Language: fr\n"
+"Language: fr_FR\n"
 
 #: ajax/get_renewal_tickets.php:55
 msgid ""
@@ -89,11 +89,11 @@ msgstr "Renouveller"
 
 #: front/config.form.php:231
 msgid "Ticket"
-msgstr ""
+msgstr "Ticket"
 
 #: front/config.form.php:245
 msgid "Save"
-msgstr ""
+msgstr "Sauvegarder"
 
 #: front/config.form.php:288
 msgid "People receiving alerts"
@@ -105,11 +105,11 @@ msgstr ""
 
 #: front/config.form.php:304
 msgid "Action"
-msgstr ""
+msgstr "Action"
 
 #: front/config.form.php:330
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #: front/config.form.php:340
 msgid "Nobody receive alerts"
@@ -189,7 +189,7 @@ msgstr "Confirmer le renouvellement"
 
 #: inc/contract.class.php:313
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #: inc/contract.class.php:428
 msgid "Create a project"
@@ -255,7 +255,7 @@ msgstr "il y a"
 
 #: inc/contract.class.php:795
 msgid "Entity"
-msgstr ""
+msgstr "Entité"
 
 #: inc/contract.class.php:805
 msgid "Expected end date"
@@ -275,7 +275,7 @@ msgstr "Terminé"
 
 #: inc/contract.class.php:919 inc/contract.class.php:922
 msgid "Contract"
-msgstr ""
+msgstr "Contrat"
 
 #: inc/contract.class.php:922
 msgid "Link to contract nonexistent"
@@ -395,7 +395,7 @@ msgstr "re-calcul pour la tâche de ticket"
 
 #: inc/ticket.class.php:49
 msgid "Related project "
-msgstr "Projet lié"
+msgstr "Projet lié "
 
 #: inc/ticket.class.php:107
 msgid "Make the connection"

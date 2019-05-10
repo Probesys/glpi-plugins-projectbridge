@@ -72,7 +72,7 @@ class PluginProjectbridgeContract extends CommonDBTM
        $html_parts[] = '<tr id="projectbridge_config" class="tab_bg_1">' . "\n";
 
        $html_parts[] = '<td>';
-       $html_parts[] = __('linking Project','projectbridge');
+       $html_parts[] = __('linking Project', 'projectbridge');
        $html_parts[] = '</td>' . "\n";
 
        $html_parts[] = '<td colspan="2">' . "\n";

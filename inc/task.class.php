@@ -217,7 +217,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                      $ticket_fields = array_diff_key($ticket_fields, $ticket_fields_to_ignore);
                      $ticket_fields['name'] = str_replace("'", "\'", $ticket_fields['name']);
                      $ticket_fields['name'] = str_replace('"', '\"', $ticket_fields['name']);
-                     $additional_content = '('.__('This ticket comes from an automatic copy of the ticket','projectbridge').' ' . $old_ticket_id .' '. __('following the overtaking of hours or the expiry of the maintenance contract','projectbridge').')';
+                     $additional_content = '('.__('This ticket comes from an automatic copy of the ticket', 'projectbridge').' ' . $old_ticket_id .' '. __('following the overtaking of hours or the expiry of the maintenance contract', 'projectbridge').')';
                      $ticket_fields['content'] = $additional_content . $ticket_fields['content'];
                      $ticket_fields['content'] = str_replace("'", "\'", $ticket_fields['content']);
                      $ticket_fields['content'] = str_replace('"', '\"', $ticket_fields['content']);
@@ -409,7 +409,7 @@ class PluginProjectbridgeTask extends CommonDBTM
 
       if ($nb_successes > 0) {
          $recipients = PluginProjectbridgeConfig::getRecipients();
-         echo __('find','projectbridge') . count($recipients) .' '. __('person(s) to alert','projectbridge') . "<br />\n";
+         echo __('find', 'projectbridge') . count($recipients) .' '. __('person(s) to alert', 'projectbridge') . "<br />\n";
 
          if (count($recipients)) {
              global $CFG_GLPI;
@@ -423,10 +423,10 @@ class PluginProjectbridgeTask extends CommonDBTM
              $html_parts[] = '<p>' . "\n";
              $html_parts[] = __('Hello');
              $html_parts[] = '<br />';
-             $html_parts[] = __('The open task of the project','projectbridge').' <a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/project.form.php?id=' . $this->_task->getId() . '">' . $project->fields['name'] . '</a> '.__('just closed','projectbridge');
+             $html_parts[] = __('The open task of the project', 'projectbridge').' <a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/project.form.php?id=' . $this->_task->getId() . '">' . $project->fields['name'] . '</a> '.__('just closed', 'projectbridge');
              $html_parts[] = '<br />';
              $html_parts[] = '<br />';
-             $html_parts[] = __('Reason','projectbridge').'(s) :';
+             $html_parts[] = __('Reason', 'projectbridge').'(s) :';
              $html_parts[] = '<br />';
              $html_parts[] = __('Expired').' : ' . ($expired ? __('yes') : __('no'));
              $html_parts[] = '<br />';
@@ -455,8 +455,8 @@ class PluginProjectbridgeTask extends CommonDBTM
 
        $ticket_fields = [
            'entities_id' => $entities_id,
-           'name' => __('Adjustment ticket','projectbridge'),
-           'content' => __('Time Adjustment ticket','projectbridge'),
+           'name' => __('Adjustment ticket', 'projectbridge'),
+           'content' => __('Time Adjustment ticket', 'projectbridge'),
            'actiontime' => 0,
            'requesttypes_id' => $ticket_request_type,
            'status' => Ticket::CLOSED,
@@ -468,7 +468,7 @@ class PluginProjectbridgeTask extends CommonDBTM
            $ticket_task_data = [
                'actiontime' => $timediff,
                'tickets_id' => $ticket->getId(),
-               'content' => __('Adjustment task','projectbridge'),
+               'content' => __('Adjustment task', 'projectbridge'),
            ];
 
            $ticket_task = new TicketTask();
@@ -502,10 +502,10 @@ class PluginProjectbridgeTask extends CommonDBTM
          $ticket_task = new TicketTask();
          $ticket_tasks = $ticket_task->find("TRUE AND actiontime > 0");
 
-         echo __('find').' ' . count($ticket_tasks) . ' '.__('tasks with time','projectbridge') . "<br />\n";
+         echo __('find').' ' . count($ticket_tasks) . ' '.__('tasks with time', 'projectbridge') . "<br />\n";
 
       foreach ($ticket_tasks as $ticket_task_data) {
-         echo __('re-calculuation for ticket task','projectbridge').' ' . $ticket_task_data['tickets_id'] . "<br />\n";
+         echo __('re-calculuation for ticket task', 'projectbridge').' ' . $ticket_task_data['tickets_id'] . "<br />\n";
 
          // use the existing time to force an update of the percent_done in the tasks linked to the tickets
          $nb_successes += PluginProjectbridgeTask::updateProgressPercent($ticket_task_data['tickets_id']);

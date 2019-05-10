@@ -44,11 +44,11 @@ if (class_exists('PluginProjectbridgeConfig')) {
 
 global $CFG_GLPI;
 
-Html::header(__('ProjectBridge Configuration','projectbridge'), $_SERVER['PHP_SELF'], 'config', 'plugins');
+Html::header(__('ProjectBridge Configuration', 'projectbridge'), $_SERVER['PHP_SELF'], 'config', 'plugins');
 echo '<div align="center">' . "\n";
 
 echo '<h1>';
-echo __('ProjectBridge Configuration','projectbridge');
+echo __('ProjectBridge Configuration', 'projectbridge');
 echo '</h1>' . "\n";
 
 echo '<hr />' . "\n";
@@ -73,18 +73,18 @@ if ($can_update) {
     echo '</style>' . "\n";
 
     echo '<a href="' . rtrim($CFG_GLPI['root_doc'], '/') . '/plugins/projectbridge/front/projecttask.php">';
-    echo 'Tâches de projet';
+    echo __('Project Tasks', 'projectbridge');
     echo '</a>';
 
     if (true) {
         // status config
 
         echo '<h2>';
-        echo __('Status Configuration','projectbridge');
+        echo __('Status Configuration', 'projectbridge');
         echo '</h2>' . "\n";
 
         echo '<p>';
-        echo __('Please match the status names and their values in GLPI','projectbridge').'.';
+        echo __('Please match the status names and their values in GLPI', 'projectbridge').'.';
         echo '</p>' . "\n";
 
         echo '<form method="post" action="">' . "\n";
@@ -96,15 +96,15 @@ if ($can_update) {
            echo '<tr>' . "\n";
 
            echo '<th>';
-           echo __('Status name','projectbridge');
+           echo __('Status name', 'projectbridge');
            echo '</th>' . "\n";
 
            echo '<th>';
-           echo __('Status type','projectbridge');
+           echo __('Status type', 'projectbridge');
            echo '</th>' . "\n";
 
            echo '<th>';
-           echo __('Corresponding status','projectbridge');
+           echo __('Corresponding status', 'projectbridge');
            echo '</th>' . "\n";
 
            echo '</tr>' . "\n";
@@ -224,7 +224,7 @@ if ($can_update) {
             echo '<tr>' . "\n";
 
             echo '<td>';
-            echo __('Renewal','projectbridge');
+            echo __('Renewal', 'projectbridge');
             echo '</td>' . "\n";
 
             echo '<td>';
@@ -285,7 +285,7 @@ if ($can_update) {
          }
 
           echo '<h2>';
-          echo __('People receiving alerts','projectbridge');
+          echo __('People receiving alerts', 'projectbridge');
           echo '</h2>' . "\n";
 
           echo '<form method="post" action="">' . "\n";
@@ -337,7 +337,7 @@ if ($can_update) {
                 echo '<tr>' . "\n";
 
                 echo '<td colspan="2" style="text-align: center">';
-                echo __('Nobody receive alerts','projectbridge');
+                echo __('Nobody receive alerts', 'projectbridge');
                 echo '</td>' . "\n";
 
                 echo '</tr>' . "\n";
@@ -374,7 +374,7 @@ if ($can_update) {
     echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/warning.png" alt="warning" />';
     echo '<br/><br/>';
     echo '<b>';
-    echo __('Please activate the plugin or get the right of access','projectbridge').'.';
+    echo __('Please activate the plugin or get the right of access', 'projectbridge').'.';
     echo '</b>';
 }
 
