@@ -7,7 +7,7 @@
  */
 function plugin_projectbridge_install()
 {
-    global $DB;    
+    global $DB;
 
     if (!$DB->tableExists(PluginProjectbridgeEntity::$table_name)) {
         $create_table_query = "
@@ -186,7 +186,7 @@ function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false)
 
         if ($contract_id === null) {
             return $bridge_entity->add($post_data);
-        } else if ($selected_contract_id != $contract_id) {
+        } elseif ($selected_contract_id != $contract_id) {
             $post_data['id'] = $bridge_entity->getId();
             return $bridge_entity->update($post_data);
         }
@@ -306,7 +306,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
             && $contract->fields['date_creation'] != 'NULL'
         ) {
             $date_creation = $contract->fields['date_creation'];
-        } else if (
+        } elseif (
             !empty($contract->fields['date'])
             && $contract->fields['date'] != 'NULL'
         ) {
@@ -544,11 +544,11 @@ function plugin_projectbridge_post_show_tab(array $tab_data)
             if ($tab_data['item'] instanceof Ticket) {
                 // add a line to allow linking ticket to a project task
                 PluginProjectbridgeTicket::postShow($tab_data['item']);
-            } else if ($tab_data['item'] instanceof ProjectTask) {
+            } elseif ($tab_data['item'] instanceof ProjectTask) {
                 // add data to the list of tickets linked to a project task
                 PluginProjectbridgeTicket::postShowTask($tab_data['item']);
             }
-        } else if (
+        } elseif (
             $tab_data['options']['itemtype'] == 'ProjectTask'
             && $tab_data['item'] instanceof Project
         ) {
@@ -761,7 +761,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4202) {
+            } elseif ($key == 4202) {
                 // url to ticket search for tickets in the entity that are not linked to a task
                 $ticket_search_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/ticket.php?is_deleted=0&criteria[0][field]=4214&criteria[0][searchtype]=contains&criteria[0][value]=Non&criteria[1][link]=AND&criteria[1][field]=80&criteria[1][searchtype]=equals&criteria[1][value]=';
 
@@ -812,7 +812,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4212) {
+            } elseif ($key == 4212) {
                 // project task
 
                 $task_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/projecttask.form.php?id=';
@@ -834,14 +834,14 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4213) {
+            } elseif ($key == 4213) {
                 // project task status
 
                 $select = "
                     GROUP_CONCAT(DISTINCT `glpi_projectstates`.`name` SEPARATOR '$$##$$')
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4214) {
+            } elseif ($key == 4214) {
                 // is the ticket linked to a task?
 
                 $select = "
@@ -882,7 +882,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4221) {
+            } elseif ($key == 4221) {
                 // project's name
 
                 $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
@@ -921,7 +921,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4232) {
+            } elseif ($key == 4232) {
                 // planned duration
 
                 $select = "
@@ -931,7 +931,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4233) {
+            } elseif ($key == 4233) {
                 // last task in the project?
 
                 $select = "
@@ -948,7 +948,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4234) {
+            } elseif ($key == 4234) {
                 // project status
 
                 $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
@@ -1041,7 +1041,7 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                     ) AS `unlinked_ticket_actiontimes`
                         ON (`unlinked_ticket_actiontimes`.`entities_id` = `" . $ref_table . "`.`id`)
                 ";
-            } else if ($itemtype == 'projecttask') {
+            } elseif ($itemtype == 'projecttask') {
                 $left_join = "
                     LEFT JOIN (
                         SELECT
@@ -1205,13 +1205,13 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                 if ($key == 4211) {
                     // project name
                     $where = $link . "`glpi_projects`.`name` " . Search::makeTextSearch($val);
-                } else if ($key == 4212) {
+                } elseif ($key == 4212) {
                     // project task
                     $where = $link . "`glpi_projecttasks`.`name` " . Search::makeTextSearch($val);
-                } else if ($key == 4213) {
+                } elseif ($key == 4213) {
                     // project task status
                     $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
-                } else if ($key == 4214) {
+                } elseif ($key == 4214) {
                     // linked to a task?
 
                     $searching_yes = (stripos('Oui', $val) !== false);
@@ -1254,7 +1254,7 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     }
 
                     $where = $link . "(" . implode(' OR ', $where_parts) . ")";
-                } else if ($key == 4221) {
+                } elseif ($key == 4221) {
                     // project task status
 
                     $where_parts = [
@@ -1278,9 +1278,9 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
             if ($searchtype == 'contains') {
                 if ($key == 4231) {
                     $where = $link . "`ticket_actiontimes`.`actiontime_sum` " . Search::makeTextSearch($val);
-                } else if ($key == 4232) {
+                } elseif ($key == 4232) {
                     $where = $link . " ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2) " . Search::makeTextSearch($val);
-                } else if ($key == 4233) {
+                } elseif ($key == 4233) {
                     $searching_yes = (stripos('Oui', $val) !== false);
                     $searching_no = (stripos('Non', $val) !== false);
                     $searching_not_available = (stripos(NOT_AVAILABLE, $val) !== false);
@@ -1307,7 +1307,7 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     }
 
                     $where = $link . "(" . implode(' OR ', $where_parts) . ")";
-                } else if ($key == 4234) {
+                } elseif ($key == 4234) {
                     $where_parts = [
                         "(
                             `glpi_projecttasks`.`projects_id` IS NOT NULL

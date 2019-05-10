@@ -20,10 +20,10 @@ class PluginProjectbridgeConfig extends CommonDBTM
             $recipients = [];
 
             foreach ($DB->request([
-                'SELECT' => ['id','user_id'], 
+                'SELECT' => ['id','user_id'],
                 'FROM' => PluginProjectbridgeConfig::$table_name,
-                'ORDER' => ['id ASC']    
-                ]) as $row ) {                
+                'ORDER' => ['id ASC']
+                ]) as $row) {
                 $user_id = (int) $row['user_id'];
                 $user = new User();
                 $user->getFromDB($user_id);
@@ -39,9 +39,7 @@ class PluginProjectbridgeConfig extends CommonDBTM
                         ];
                     }
                 }
-                
             }
-
         }
 
         return $recipients;

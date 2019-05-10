@@ -574,7 +574,7 @@ class PluginProjectbridgeTask extends CommonDBTM
 
                     if ($target_percent > 100) {
                         $target_percent = 100;
-                    } else if ($target_percent < 0) {
+                    } elseif ($target_percent < 0) {
                         $target_percent = 0;
                     }
 

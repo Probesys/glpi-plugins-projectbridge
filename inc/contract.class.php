@@ -32,7 +32,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     public function getProjectId()
     {
         if ($this->_project_id === null) {
-            $this->_project_id = 0;            
+            $this->_project_id = 0;
             $result = $this->getFromDBByCrit(['contract_id' => $this->_contract->getId()]);
 
             if ($result) {
@@ -50,7 +50,7 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
     public function getNbHours()
     {
-        if ($this->_nb_hours === null) {            
+        if ($this->_nb_hours === null) {
             $result = $this->getFromDBByCrit(['contract_id' => $this->_contract->getId()]);
 
             if ($result) {
@@ -235,7 +235,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 if ($end_date_delta == 0) {
                     $end_date_reached = true;
                     $html_parts[] = __('Expired in less than 24h');
-                } else if ($end_date_delta > 0) {
+                } elseif ($end_date_delta > 0) {
                     $html_parts[] = __('Expired in').' ' . $end_date_delta . ' '.__('days');
                 } else {
                     $end_date_reached = true;
@@ -498,7 +498,7 @@ class PluginProjectbridgeContract extends CommonDBTM
             $projectstate_filter_operator = '!=';
             if ($search_closed) {
                 $projectstate_filter_operator = '=';
-            } 
+            }
 
             $project_tasks[$project_id][$search_closed] = new ProjectTask();
 
@@ -575,6 +575,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $return = $project_tasks[$project_id][$search_closed]->fields['planned_duration'] / 3600;
                 }
 
+                // no break
             default:
                 // nothing to do
         }
@@ -633,9 +634,14 @@ class PluginProjectbridgeContract extends CommonDBTM
         $project_task = new ProjectTask();
         $task_id = $project_task->add($project_task_data);
 
-	if ($task_id) {
-	      Event::log($task_id, "projectbridge", 4, "projectbridge",
-              sprintf(__('%1$s adds the item %2$s'), $_SESSION["glpiname"], $name));
+        if ($task_id) {
+            Event::log(
+              $task_id,
+              "projectbridge",
+              4,
+              "projectbridge",
+              sprintf(__('%1$s adds the item %2$s'), $_SESSION["glpiname"], $name)
+          );
         }
 
         if (

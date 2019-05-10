@@ -130,7 +130,7 @@ if ($can_update) {
                 if ($state_in_progress_value === null) {
                     $state->add($state_data);
                 } else {
-                    $state = new PluginProjectbridgeState();                    
+                    $state = new PluginProjectbridgeState();
                     $state->getFromDBByCrit(['status' => 'in_progress']);
                     $state_data['id'] = $state->fields['id'];
                     $state->update($state_data);
@@ -149,7 +149,7 @@ if ($can_update) {
                 if ($state_closed_value === null) {
                     $state->add($state_data);
                 } else {
-                    $state = new PluginProjectbridgeState();                    
+                    $state = new PluginProjectbridgeState();
                     $state->getFromDBByCrit(['status' => 'closed']);
                     $state_data['id'] = $state->fields['id'];
                     $state->update($state_data);
@@ -168,14 +168,12 @@ if ($can_update) {
                 if ($state_renewal_value === null) {
                     $state->add($state_data);
                 } else {
-                    $state = new PluginProjectbridgeState();                    
+                    $state = new PluginProjectbridgeState();
                     $state->getFromDBByCrit(['status' => 'renewal']);
                     $state_data['id'] = $state->fields['id'];
                     $state->update($state_data);
                 }
             }
-
-
         }
 
         $state_dropdown_conf = [
@@ -278,7 +276,7 @@ if ($can_update) {
                     unset($recipients[$row_id]);
                 }
             }
-        } else if (
+        } elseif (
             !empty($post_data['projectbridge_add_recipient'])
             && !empty($post_data['projectbridge_add_recipient_submit'])
             && !isset($post_data[(int) $post_data['projectbridge_add_recipient']])

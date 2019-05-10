@@ -25,7 +25,7 @@ class PluginProjectbridgeEntity extends CommonDBTM
      */
     public function getContractId()
     {
-        if ($this->_contract_id === null) {            
+        if ($this->_contract_id === null) {
             $result = $this->getFromDBByCrit(['entity_id' => $this->_entity->getId()]);
 
             if ($result) {
