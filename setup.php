@@ -1,7 +1,8 @@
 <?php
 
 define('PROJECTBRIDGE_VERSION', '1.2.3');
-define('MIN_GLPI_VERSION', '9.4');
+define('MIN_GLPI_VERSION', '9.3');
+define('MAX_GLPI_VERSION', '9.4');
 
 if (!class_exists('PluginProjectbridgeConfig')) {
     require_once(__DIR__.'/inc/config.class.php');
@@ -21,8 +22,12 @@ function plugin_version_projectbridge() {
         'homepage'       => 'https://github.com/Probesys/glpi-plugins-projectbridge',
         'requirements'   => [
          'glpi'   => [
-            'min' => MIN_GLPI_VERSION
-         ]
+            'min' => MIN_GLPI_VERSION,
+            'max' => MAX_GLPI_VERSION,
+         ],
+         'php'    => [
+            'min' => '7.0'
+         ] 
         ]
     ];
 }
