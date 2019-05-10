@@ -297,7 +297,7 @@ if ($can_update) {
             echo '<tr>' . "\n";
 
             echo '<th style="min-width: 200px">';
-            echo __('Nom');
+            echo __('Name');
             echo '</th>' . "\n";
 
             echo '<th>';
