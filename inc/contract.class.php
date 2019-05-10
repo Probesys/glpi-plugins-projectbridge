@@ -204,7 +204,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                   $consumption_ratio = $consumption / $planned_duration;
             }
 
-             $html_parts[] = __('Comsuption').' : ';
+             $html_parts[] = __('Comsuption', 'projectbridge').' : ';
              $html_parts[] = round($consumption, 2) . '/' . round($planned_duration, 2) . ' '.__('hours');
              $html_parts[] = '&nbsp;';
              $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
@@ -450,7 +450,7 @@ class PluginProjectbridgeContract extends CommonDBTM
        $html_parts[] = '<br />';
        $html_parts[] = '<br />';
 
-       $html_parts[] = __('Number of hours').' :';
+       $html_parts[] = __('Number of hours', 'projectbridge').' :';
        $html_parts[] = '&nbsp;';
        $html_parts[] = '<input type="number" min="0" max="99999" step="1" name="projectbridge_project_hours" value="' . $nb_hours . '" style="width: 50px" />';
 

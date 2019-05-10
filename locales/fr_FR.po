@@ -56,8 +56,7 @@ msgstr "Configuration des statuts"
 
 #: front/config.form.php:87
 msgid "Please match the status names and their values in GLPI."
-msgstr ""
-"Veuillez faire correspondre les noms de statut et leurs valeurs dans GLPI."
+msgstr "Veuillez faire correspondre les noms de statut et leurs valeurs dans GLPI."
 
 #: front/config.form.php:99
 msgid "Status name"
