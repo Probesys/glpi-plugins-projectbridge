@@ -3,8 +3,7 @@
 class PluginProjectbridgeConfig extends CommonDBTM
 {
     const NAMESPACE = 'projectbridge';
-    const MIN_GLPI_VERSION = '9.2';
-
+    
     public static $table_name = 'glpi_plugin_projectbridge_configs';
 
     /**
@@ -20,41 +19,29 @@ class PluginProjectbridgeConfig extends CommonDBTM
         if ($recipients === null) {
             $recipients = [];
 
-            // todo: use PluginProjectbridgeConfig::find()
-            $get_all_recipients_query = "
-                SELECT
-                    id,
-                    user_id
-                FROM
-                    " . PluginProjectbridgeConfig::$table_name . "
-                ORDER BY
-                    id ASC
-            ";
+            foreach ($DB->request([
+                'SELECT' => ['id','user_id'], 
+                'FROM' => PluginProjectbridgeConfig::$table_name,
+                'ORDER' => ['id ASC']    
+                ]) as $row ) {                
+                $user_id = (int) $row['user_id'];
+                $user = new User();
+                $user->getFromDB($user_id);
 
-            $result = $DB->query($get_all_recipients_query);
+                if ($user->getId()) {
+                    $default_email = $user->getDefaultEmail();
 
-            if (
-                $result
-                && $DB->numrows($result)
-            ) {
-                while ($row = $DB->fetch_assoc($result)) {
-                    $user_id = (int) $row['user_id'];
-                    $user = new User();
-                    $user->getFromDB($user_id);
-
-                    if ($user->getId()) {
-                        $default_email = $user->getDefaultEmail();
-
-                        if (!empty($default_email)) {
-                            $recipients[(int) $row['id']] = [
-                                'user_id' => $user_id,
-                                'name' => $user->fields['name'],
-                                'email' => $user->getDefaultEmail(),
-                            ];
-                        }
+                    if (!empty($default_email)) {
+                        $recipients[(int) $row['id']] = [
+                            'user_id' => $user_id,
+                            'name' => $user->fields['name'],
+                            'email' => $user->getDefaultEmail(),
+                        ];
                     }
                 }
+                
             }
+
         }
 
         return $recipients;

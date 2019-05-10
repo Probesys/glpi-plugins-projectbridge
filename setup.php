@@ -1,7 +1,10 @@
 <?php
 
+define('PROJECTBRIDGE_VERSION', '1.2.3');
+define('MIN_GLPI_VERSION', '9.4');
+
 if (!class_exists('PluginProjectbridgeConfig')) {
-    require_once(GLPI_ROOT . '/plugins/projectbridge/inc/config.class.php');
+    require_once(__DIR__.'/inc/config.class.php');
 }
 
 /**
@@ -12,11 +15,16 @@ if (!class_exists('PluginProjectbridgeConfig')) {
 function plugin_version_projectbridge()
 {
     return [
-        'name' => 'ProjectBridge',
-        'version' => '1.2.2',
-        'author' => 'Pierre de Vésian - <a href="http://www.probesys.com">Probesys</a>',
-        'license' => 'GPLv2+',
-        'minGlpiVersion' => PluginProjectbridgeConfig::MIN_GLPI_VERSION,
+        'name' => 'Projectbridge',
+        'version' => PROJECTBRIDGE_VERSION,
+        'author' => '<a href="http://www.probesys.com">Probesys</a>',
+        'license' => 'GLPv3',
+        'homepage'       => 'https://github.com/Probesys/glpi-plugins-projectbridge',
+        'requirements'   => [
+         'glpi'   => [
+            'min' => MIN_GLPI_VERSION
+         ]
+      ]
     ];
 }
 
@@ -28,6 +36,7 @@ function plugin_version_projectbridge()
 function plugin_init_projectbridge()
 {
     global $PLUGIN_HOOKS;
+    
 
     $PLUGIN_HOOKS['csrf_compliant'][PluginProjectbridgeConfig::NAMESPACE] = true;
     $PLUGIN_HOOKS['config_page'][PluginProjectbridgeConfig::NAMESPACE] = 'front/config.form.php';
@@ -63,8 +72,8 @@ function plugin_projectbridge_check_prerequisites()
     $prerequisites_check_ok = false;
 
     try {
-        if (version_compare(GLPI_VERSION, PluginProjectbridgeConfig::MIN_GLPI_VERSION, '<')) {
-            throw new Exception('This plugin requires GLPI >= ' . PluginProjectbridgeConfig::MIN_GLPI_VERSION);
+        if (version_compare(GLPI_VERSION, MIN_GLPI_VERSION, '<')) {
+            throw new Exception('This plugin requires GLPI >= ' . MIN_GLPI_VERSION);
         }
 
         $prerequisites_check_ok = true;

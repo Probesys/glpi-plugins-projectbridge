@@ -21,8 +21,8 @@ class PluginProjectbridgeState extends CommonDBTM
         $project_state_id = null;
 
         if (in_array($status, $allowed_states)) {
-            $state = new PluginProjectbridgeState();
-            $state->getFromDBByQuery("WHERE TRUE AND status = '" . $status . "'");
+            $state = new PluginProjectbridgeState();            
+            $state->getFromDBByCrit(['status' => $status]);
 
             if (isset($state->fields['projectstates_id'])) {
                 $project_state_id = $state->fields['projectstates_id'];

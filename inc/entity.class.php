@@ -25,8 +25,8 @@ class PluginProjectbridgeEntity extends CommonDBTM
      */
     public function getContractId()
     {
-        if ($this->_contract_id === null) {
-            $result = $this->getFromDBByQuery("WHERE entity_id = " . $this->_entity->getId());
+        if ($this->_contract_id === null) {            
+            $result = $this->getFromDBByCrit(['entity_id' => $this->_entity->getId()]);
 
             if ($result) {
                 $this->_contract_id = (int) $this->fields['contract_id'];
@@ -59,11 +59,11 @@ class PluginProjectbridgeEntity extends CommonDBTM
 
         $html_parts = [];
         $html_parts[] = '<div style="display: none;">' . "\n";
-        $html_parts[] = '<table>' . "\n";
-        $html_parts[] = '<tr id="projectbridge_config">' . "\n";
+        $html_parts[] = '<table class="tab_cadre_fixe">' . "\n";
+        $html_parts[] = '<tr id="projectbridge_config" class="tab_bg_1">' . "\n";
 
         $html_parts[] = '<td>';
-        $html_parts[] = 'Contrat par défaut';
+        $html_parts[] = __('Default contract');
         $html_parts[] = '</td>' . "\n";
 
         $html_parts[] = '<td colspan="2">' . "\n";
@@ -73,11 +73,11 @@ class PluginProjectbridgeEntity extends CommonDBTM
 
         if (!empty($contract_id)) {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/contract.form.php?id=' . $contract_id . '" style="margin-left: 5px;" target="_blank">';
-            $html_parts[] = 'Accéder au contrat par défaut';
+            $html_parts[] = __('Default contract access');
             $html_parts[] = '</a>' . "\n";
         } else {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/setup.templates.php?itemtype=Contract&add=1" style="margin-left: 5px;" target="_blank">';
-            $html_parts[] = 'Créer un contrat ?';
+            $html_parts[] = __('Create a new contract').' ?';
             $html_parts[] = '</a>' . "\n";
 
             $html_parts[] = '<small>';
@@ -103,6 +103,7 @@ class PluginProjectbridgeEntity extends CommonDBTM
 
             $("#projectbridge_config .select2-container").remove();
             $("#projectbridge_config select").select2({
+                width: \'\',
                 dropdownAutoWidth: true
             });
             $("#projectbridge_config .select2-container").show();

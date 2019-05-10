@@ -7,9 +7,9 @@
  */
 function plugin_projectbridge_install()
 {
-    global $DB;
+    global $DB;    
 
-    if (!TableExists(PluginProjectbridgeEntity::$table_name)) {
+    if (!$DB->tableExists(PluginProjectbridgeEntity::$table_name)) {
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeEntity::$table_name . "`
             (
@@ -25,7 +25,7 @@ function plugin_projectbridge_install()
         $DB->query($create_table_query) or die($DB->error());
     }
 
-    if (!TableExists(PluginProjectbridgeContract::$table_name)) {
+    if (!$DB->tableExists(PluginProjectbridgeContract::$table_name)) {
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeContract::$table_name . "`
             (
@@ -42,7 +42,7 @@ function plugin_projectbridge_install()
         $DB->query($create_table_query) or die($DB->error());
     }
 
-    if (!TableExists(PluginProjectbridgeTicket::$table_name)) {
+    if (!$DB->tableExists(PluginProjectbridgeTicket::$table_name)) {
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeTicket::$table_name . "`
             (
@@ -58,7 +58,7 @@ function plugin_projectbridge_install()
         $DB->query($create_table_query) or die($DB->error());
     }
 
-    if (!TableExists(PluginProjectbridgeConfig::$table_name)) {
+    if (!$DB->tableExists(PluginProjectbridgeConfig::$table_name)) {
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeConfig::$table_name . "`
             (
@@ -73,7 +73,7 @@ function plugin_projectbridge_install()
         $DB->query($create_table_query) or die($DB->error());
     }
 
-    if (!TableExists(PluginProjectbridgeState::$table_name)) {
+    if (!$DB->tableExists(PluginProjectbridgeState::$table_name)) {
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeState::$table_name . "`
             (

@@ -25,8 +25,8 @@ class PluginProjectbridgeTicket extends CommonDBTM
      */
     public function getProjectId()
     {
-        if ($this->_project_id === null) {
-            $result = $this->getFromDBByQuery("WHERE ticket_id = " . $this->_ticket->getId());
+        if ($this->_project_id === null) {            
+            $result = $this->getFromDBByCrit(['ticket_id' => $this->_ticket->getId()]);
 
             if ($result) {
                 $this->_project_id = (int) $this->fields['project_id'];

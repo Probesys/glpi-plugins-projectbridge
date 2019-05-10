@@ -43,7 +43,7 @@ class PluginProjectbridgeTask extends CommonDBTM
     {
         $menu = parent::getMenuContent();
 
-        $menu['title'] = 'Tâches de projet ProjectBridge';
+        $menu['title'] = __('ProjectBridge project tasks');
         $menu['page'] = '/plugins/projectbridge/front/projecttask.php';
 
         return $menu;
@@ -60,14 +60,14 @@ class PluginProjectbridgeTask extends CommonDBTM
         switch ($name) {
             case 'ProcessTasks':
                 return [
-                    'description' => 'Traitement des tâches de projet',
+                    'description' => __('Project task treatment'),
                 ];
 
                 break;
 
             case 'UpdateProgressPercent':
                 return [
-                    'description' => 'Mise à jour des compteurs de pourcentage effectué dans les tâches de projet',
+                    'description' => __('Update percentage counters performed in project tasks'),
                 ];
         }
 
@@ -86,11 +86,11 @@ class PluginProjectbridgeTask extends CommonDBTM
             $plugin = new Plugin();
 
             if (!$plugin->isActivated(PluginProjectbridgeConfig::NAMESPACE)) {
-                echo 'Plugin n\'est pas actif' . "<br />\n";
+                echo __('Plugin is not actif'). "<br />\n";
                 return 0;
             }
         } else {
-            echo 'Plugin n\'est pas installé' . "<br />\n";
+            echo __('Plugin is not installed') . "<br />\n";
             return 0;
         }
 
@@ -99,14 +99,14 @@ class PluginProjectbridgeTask extends CommonDBTM
         $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
 
         if (empty($state_closed_value)) {
-            echo 'Veuillez définir la correspondance du statut "Clos".' . "<br />\n";
+            echo __('Please define the correspondence of the "Closed" status.') . "<br />\n";
             return 0;
         }
 
         $ticket_request_type = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
 
         if (empty($ticket_request_type)) {
-            echo 'Veuillez définir la correspondance du statut de ticket "Renouvellement".' . "<br />\n";
+            echo __('Please define the correspondence of the "Renewal" status.') . "<br />\n";
             return 0;
         }
 

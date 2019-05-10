@@ -130,8 +130,8 @@ if ($can_update) {
                 if ($state_in_progress_value === null) {
                     $state->add($state_data);
                 } else {
-                    $state = new PluginProjectbridgeState();
-                    $state->getFromDBByQuery("WHERE TRUE AND status = 'in_progress'");
+                    $state = new PluginProjectbridgeState();                    
+                    $state->getFromDBByCrit(['status' => 'in_progress']);
                     $state_data['id'] = $state->fields['id'];
                     $state->update($state_data);
                 }
@@ -149,8 +149,8 @@ if ($can_update) {
                 if ($state_closed_value === null) {
                     $state->add($state_data);
                 } else {
-                    $state = new PluginProjectbridgeState();
-                    $state->getFromDBByQuery("WHERE TRUE AND status = 'closed'");
+                    $state = new PluginProjectbridgeState();                    
+                    $state->getFromDBByCrit(['status' => 'closed']);
                     $state_data['id'] = $state->fields['id'];
                     $state->update($state_data);
                 }
@@ -168,8 +168,8 @@ if ($can_update) {
                 if ($state_renewal_value === null) {
                     $state->add($state_data);
                 } else {
-                    $state = new PluginProjectbridgeState();
-                    $state->getFromDBByQuery("WHERE TRUE AND status = 'renewal'");
+                    $state = new PluginProjectbridgeState();                    
+                    $state->getFromDBByCrit(['status' => 'renewal']);
                     $state_data['id'] = $state->fields['id'];
                     $state->update($state_data);
                 }
@@ -247,7 +247,7 @@ if ($can_update) {
             echo '<tr style="text-align: center">' . "\n";
 
             echo '<td colspan="3">';
-            echo '<input type="submit" class="submit" name="projectbridge_save_states" value="Enregistrer" />';
+            echo '<input type="submit" class="submit" name="projectbridge_save_states" value="'.__('Save').'" />';
             echo '</td>' . "\n";
 
             echo '</tr>' . "\n";
