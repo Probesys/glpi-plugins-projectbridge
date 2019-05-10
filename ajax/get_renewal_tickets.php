@@ -7,8 +7,7 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-if (
-    $_SERVER['REQUEST_METHOD'] == 'POST'
+if ($_SERVER['REQUEST_METHOD'] == 'POST'
     && !empty($_POST['task_id'])
     && !empty($_POST['contract_id'])
 ) {
@@ -26,117 +25,117 @@ if (
 
     $unlinked_tickets = [];
 
-    if (!empty($all_tickets)) {
-        $task_ticket = new ProjectTask_Ticket();
-        $linked_tickets = $task_ticket->find("
+   if (!empty($all_tickets)) {
+       $task_ticket = new ProjectTask_Ticket();
+       $linked_tickets = $task_ticket->find("
             TRUE
             AND tickets_id IN (" . implode(', ', array_keys($all_tickets)) . ")
         ");
 
-        $unlinked_tickets = $all_tickets;
+       $unlinked_tickets = $all_tickets;
 
-        foreach ($linked_tickets as $ticket_link_data) {
-            unset($unlinked_tickets[$ticket_link_data['tickets_id']]);
-        }
-    }
+      foreach ($linked_tickets as $ticket_link_data) {
+         unset($unlinked_tickets[$ticket_link_data['tickets_id']]);
+      }
+   }
 
-    if (true) {
-        global $CFG_GLPI;
+   if (true) {
+       global $CFG_GLPI;
 
-        echo '<form method="post" action="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php">' . "\n";
+       echo '<form method="post" action="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php">' . "\n";
 
-        echo '<input type="hidden" name="entities_id" value="' . $task->fields['entities_id'] . '" />' . "\n";
-        echo '<input type="hidden" name="id" value="' . $contract_id . '" />' . "\n";
+       echo '<input type="hidden" name="entities_id" value="' . $task->fields['entities_id'] . '" />' . "\n";
+       echo '<input type="hidden" name="id" value="' . $contract_id . '" />' . "\n";
 
-        echo '<h2 style="text-align: center">';
-        echo 'Tickets';
-        echo '</h2>' . "\n";
+       echo '<h2 style="text-align: center">';
+       echo 'Tickets';
+       echo '</h2>' . "\n";
 
-        echo '<p>';
-        echo 'Sélectionnez les tickets dans l\'entité (non supprimés et sans lien avec une tâche de projet) que vous voulez lier à la nouvelle tâche.';
-        echo '</p>' . "\n";
+       echo '<p>';
+       echo 'Sélectionnez les tickets dans l\'entité (non supprimés et sans lien avec une tâche de projet) que vous voulez lier à la nouvelle tâche.';
+       echo '</p>' . "\n";
 
-        echo '<table class="tab_cadrehov">' . "\n";
+       echo '<table class="tab_cadrehov">' . "\n";
 
-        if (true) {
-            echo '<tr class="tab_bg_2">' . "\n";
+      if (true) {
+          echo '<tr class="tab_bg_2">' . "\n";
 
-            echo '<th>';
-            echo '&nbsp;';
-            echo '</th>' . "\n";
+          echo '<th>';
+          echo '&nbsp;';
+          echo '</th>' . "\n";
 
-            echo '<th>';
-            echo 'Nom';
-            echo '</th>' . "\n";
+          echo '<th>';
+          echo 'Nom';
+          echo '</th>' . "\n";
 
-            echo '<th>';
-            echo 'Temps';
-            echo '</th>' . "\n";
+          echo '<th>';
+          echo 'Temps';
+          echo '</th>' . "\n";
 
-            echo '<th>';
-            echo 'Date d\'ouverture';
-            echo '</th>' . "\n";
+          echo '<th>';
+          echo 'Date d\'ouverture';
+          echo '</th>' . "\n";
 
-            echo '<th>';
-            echo 'Date de fermeture';
-            echo '</th>' . "\n";
+          echo '<th>';
+          echo 'Date de fermeture';
+          echo '</th>' . "\n";
 
-            echo '</tr>' . "\n";
-        }
+          echo '</tr>' . "\n";
+      }
 
-        foreach ($unlinked_tickets as $ticket_data) {
-            echo '<tr class="tab_bg_1">' . "\n";
+      foreach ($unlinked_tickets as $ticket_data) {
+         echo '<tr class="tab_bg_1">' . "\n";
 
-            echo '<td>';
-            echo Html::getCheckbox([
-                'name' => 'ticket_ids[' . $ticket_data['id'] . ']',
-            ]);
+         echo '<td>';
+         echo Html::getCheckbox([
+             'name' => 'ticket_ids[' . $ticket_data['id'] . ']',
+         ]);
 
-            echo '</td>' . "\n";
+          echo '</td>' . "\n";
 
-            echo '<td>';
-            echo '<a href="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/ticket.form.php?id=' . $ticket_data['id'] . '" target="_blank">';
-            echo $ticket_data['name'] . ' (' . $ticket_data['id'] . ')';
-            echo '</a>';
-            echo '</td>' . "\n";
+          echo '<td>';
+          echo '<a href="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/ticket.form.php?id=' . $ticket_data['id'] . '" target="_blank">';
+          echo $ticket_data['name'] . ' (' . $ticket_data['id'] . ')';
+          echo '</a>';
+          echo '</td>' . "\n";
 
-            echo '<td>';
-            echo round($ticket_data['actiontime'] / 3600, 2) . ' heure(s)';
-            echo '</td>' . "\n";
+          echo '<td>';
+          echo round($ticket_data['actiontime'] / 3600, 2) . ' heure(s)';
+          echo '</td>' . "\n";
 
-            echo '<td>';
-            echo $ticket_data['date'];
-            echo '</td>' . "\n";
+          echo '<td>';
+          echo $ticket_data['date'];
+          echo '</td>' . "\n";
 
-            echo '<td>';
-            echo $ticket_data['closedate'];
-            echo '</td>' . "\n";
+          echo '<td>';
+          echo $ticket_data['closedate'];
+          echo '</td>' . "\n";
 
-            echo '</tr>' . "\n";
-        }
+          echo '</tr>' . "\n";
+      }
 
-        if (empty($unlinked_tickets)) {
-            echo '<tr class="tab_bg_1">' . "\n";
+      if (empty($unlinked_tickets)) {
+         echo '<tr class="tab_bg_1">' . "\n";
 
-            echo '<td colspan="5" style="text-align: center">';
-            echo 'Aucun ticket trouvé';
-            echo '</td>' . "\n";
+         echo '<td colspan="5" style="text-align: center">';
+         echo 'Aucun ticket trouvé';
+         echo '</td>' . "\n";
 
-            echo '</tr>' . "\n";
-        }
+         echo '</tr>' . "\n";
+      }
 
-        if (true) {
-            echo '<tr class="tab_bg_1">' . "\n";
+      if (true) {
+         echo '<tr class="tab_bg_1">' . "\n";
 
-            echo '<td colspan="5" style="text-align: center">';
-            echo '<input type="submit" name="update" value="Lier les tickets au renouvellement" class="submit" />';
-            echo '</td>' . "\n";
+         echo '<td colspan="5" style="text-align: center">';
+         echo '<input type="submit" name="update" value="Lier les tickets au renouvellement" class="submit" />';
+         echo '</td>' . "\n";
 
-            echo '</tr>' . "\n";
-        }
+         echo '</tr>' . "\n";
+      }
 
-        echo '</table>' . "\n";
+         echo '</table>' . "\n";
 
-        Html::closeForm();
-    }
+         Html::closeForm();
+   }
 }

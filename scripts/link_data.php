@@ -74,34 +74,33 @@ foreach (array_keys($all_contracts) as $contract_id) {
     $end_date_datetime = new DateTime($end_date);
     $today_datetime = new DateTime("now");
 
-    if (
-    $end_date_datetime >= $today_datetime
+   if ($end_date_datetime >= $today_datetime
     && isset($nb_hours_per_contract_type[$contract->fields['contracttypes_id']])
     && !in_array($contract->fields['name'], $project_names)
-  ) {
-        // contracts that where in progress less than 3 months ago AND
-        // contracts with matching support hours AND
-        // no existing project by that name
+   ) {
+       // contracts that where in progress less than 3 months ago AND
+       // contracts with matching support hours AND
+       // no existing project by that name
 
-        $contract->input = [
+       $contract->input = [
       'projectbridge_project_hours' => $nb_hours_per_contract_type[$contract->fields['contracttypes_id']],
       'name' => $contract->fields['name'],
-    ];
+       ];
 
-        if (plugin_projectbridge_contract_add($contract, true) === true) {
-            echo 'Linked contract #' . $contract_id . ' "' . $contract->fields['name'] . '"' . "\n";
-            $success_contract_ids[] = $contract_id;
+       if (plugin_projectbridge_contract_add($contract, true) === true) {
+           echo 'Linked contract #' . $contract_id . ' "' . $contract->fields['name'] . '"' . "\n";
+           $success_contract_ids[] = $contract_id;
 
-            if (!in_array($contract->fields['entities_id'], $entities_ids)) {
-                $entities_ids[] = (int) $contract->fields['entities_id'];
+          if (!in_array($contract->fields['entities_id'], $entities_ids)) {
+              $entities_ids[] = (int) $contract->fields['entities_id'];
             }
-        } else {
+         } else {
             echo 'FAILED linking contract #' . $contract_id . ' "' . $contract->fields['name'] . '"' . "\n";
             $nb_fails++;
-        }
-    } else {
-        $nb_ignored++;
-    }
+         }
+   } else {
+       $nb_ignored++;
+   }
 }
 
 $nb_entities_too_many_contracts = 0;
@@ -110,37 +109,37 @@ $nb_entities_fails = 0;
 
 // entities
 if (!empty($entities_ids)) {
-    foreach ($entities_ids as $entity_id) {
-        $contract = new Contract();
-        $contracts = $contract->find("
+   foreach ($entities_ids as $entity_id) {
+       $contract = new Contract();
+       $contracts = $contract->find("
       TRUE
       AND entities_id = " . $entity_id . "
       AND is_deleted = 0
     ");
 
-        $nb_contracts = count($contracts);
+       $nb_contracts = count($contracts);
 
-        if ($nb_contracts == 1) {
-            $entity = new Entity();
-            $entity->getFromDB($entity_id);
-            $contract_id = key($contracts);
+      if ($nb_contracts == 1) {
+         $entity = new Entity();
+         $entity->getFromDB($entity_id);
+         $contract_id = key($contracts);
 
-            $entity->input = [
-        'projectbridge_contract_id' => $contract_id,
-      ];
+         $entity->input = [
+         'projectbridge_contract_id' => $contract_id,
+         ];
 
-            if (plugin_projectbridge_pre_entity_update($entity, true)) {
-                echo 'Linked entity #' . $entity_id . ' with default contract' . "\n";
-                $nb_entities_success++;
-            } else {
-                echo 'FAILED linking entity #' . $entity_id . ' to contract #' . $contract_id . "\n";
-                $nb_entities_fails++;
-            }
-        } elseif ($nb_contracts > 1) {
-            echo 'FAILED linking entity #' . $entity_id . ': too many contracts' . "\n";
-            $nb_entities_too_many_contracts++;
-        }
-    }
+         if (plugin_projectbridge_pre_entity_update($entity, true)) {
+             echo 'Linked entity #' . $entity_id . ' with default contract' . "\n";
+             $nb_entities_success++;
+         } else {
+             echo 'FAILED linking entity #' . $entity_id . ' to contract #' . $contract_id . "\n";
+             $nb_entities_fails++;
+         }
+      } else if ($nb_contracts > 1) {
+          echo 'FAILED linking entity #' . $entity_id . ': too many contracts' . "\n";
+          $nb_entities_too_many_contracts++;
+      }
+   }
 }
 
 echo '--------' . "\n";

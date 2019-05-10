@@ -2,28 +2,26 @@
 
 include('../../../inc/includes.php');
 
-function getPostDataFromField($post_field)
-{
+function getPostDataFromField($post_field) {
     $value = null;
 
-    if (isset($_POST[$post_field])) {
-        if (!is_array($_POST[$post_field])) {
-            $_POST[$post_field] = trim($_POST[$post_field]);
-        }
+   if (isset($_POST[$post_field])) {
+      if (!is_array($_POST[$post_field])) {
+          $_POST[$post_field] = trim($_POST[$post_field]);
+      }
 
-        $value = $_POST[$post_field];
-    }
+         $value = $_POST[$post_field];
+   }
 
     return $value;
 }
 
-function getPostDataFromFields(array $post_fields)
-{
+function getPostDataFromFields(array $post_fields) {
     $post_data = [];
 
-    foreach ($post_fields as $post_field) {
-        $post_data[$post_field] = getPostDataFromField($post_field);
-    }
+   foreach ($post_fields as $post_field) {
+       $post_data[$post_field] = getPostDataFromField($post_field);
+   }
 
     return $post_data;
 }
@@ -33,16 +31,15 @@ $can_update = false;
 if (class_exists('PluginProjectbridgeConfig')) {
     $plugin = new Plugin();
 
-    if ($plugin->isActivated(PluginProjectbridgeConfig::NAMESPACE)) {
-        $config = new Config();
+   if ($plugin->isActivated(PluginProjectbridgeConfig::NAMESPACE)) {
+       $config = new Config();
 
-        if (
-            $config->canView()
-            && $config->canUpdate()
-        ) {
-            $can_update = true;
-        }
-    }
+      if ($config->canView()
+           && $config->canUpdate()
+       ) {
+          $can_update = true;
+      }
+   }
 }
 
 global $CFG_GLPI;
@@ -93,31 +90,31 @@ if ($can_update) {
         echo '<form method="post" action="">' . "\n";
         echo '<table>' . "\n";
 
-        if (true) {
-            echo '<thead>' . "\n";
+       if (true) {
+           echo '<thead>' . "\n";
 
-            echo '<tr>' . "\n";
+           echo '<tr>' . "\n";
 
-            echo '<th>';
-            echo 'Nom du statut';
-            echo '</th>' . "\n";
+           echo '<th>';
+           echo 'Nom du statut';
+           echo '</th>' . "\n";
 
-            echo '<th>';
-            echo 'Type de statut';
-            echo '</th>' . "\n";
+           echo '<th>';
+           echo 'Type de statut';
+           echo '</th>' . "\n";
 
-            echo '<th>';
-            echo 'Statut correspondant';
-            echo '</th>' . "\n";
+           echo '<th>';
+           echo 'Statut correspondant';
+           echo '</th>' . "\n";
 
-            echo '</tr>' . "\n";
+           echo '</tr>' . "\n";
 
-            echo '</thead>' . "\n";
-        }
+           echo '</thead>' . "\n";
+         }
 
-        echo '<tbody>' . "\n";
+         echo '<tbody>' . "\n";
 
-        if (!empty($post_data['projectbridge_save_states'])) {
+         if (!empty($post_data['projectbridge_save_states'])) {
             $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
 
             if ($post_data['projectbridge_state_in_progress'] !== $state_in_progress_value) {
@@ -129,12 +126,12 @@ if ($can_update) {
 
                 if ($state_in_progress_value === null) {
                     $state->add($state_data);
-                } else {
-                    $state = new PluginProjectbridgeState();
-                    $state->getFromDBByCrit(['status' => 'in_progress']);
-                    $state_data['id'] = $state->fields['id'];
-                    $state->update($state_data);
-                }
+                  } else {
+                      $state = new PluginProjectbridgeState();
+                      $state->getFromDBByCrit(['status' => 'in_progress']);
+                      $state_data['id'] = $state->fields['id'];
+                      $state->update($state_data);
+                  }
             }
 
             $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
@@ -148,12 +145,12 @@ if ($can_update) {
 
                 if ($state_closed_value === null) {
                     $state->add($state_data);
-                } else {
-                    $state = new PluginProjectbridgeState();
-                    $state->getFromDBByCrit(['status' => 'closed']);
-                    $state_data['id'] = $state->fields['id'];
-                    $state->update($state_data);
-                }
+                  } else {
+                      $state = new PluginProjectbridgeState();
+                      $state->getFromDBByCrit(['status' => 'closed']);
+                      $state_data['id'] = $state->fields['id'];
+                      $state->update($state_data);
+                  }
             }
 
             $state_renewal_value = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
@@ -167,21 +164,21 @@ if ($can_update) {
 
                 if ($state_renewal_value === null) {
                     $state->add($state_data);
-                } else {
-                    $state = new PluginProjectbridgeState();
-                    $state->getFromDBByCrit(['status' => 'renewal']);
-                    $state_data['id'] = $state->fields['id'];
-                    $state->update($state_data);
-                }
+                  } else {
+                      $state = new PluginProjectbridgeState();
+                      $state->getFromDBByCrit(['status' => 'renewal']);
+                      $state_data['id'] = $state->fields['id'];
+                      $state->update($state_data);
+                  }
             }
-        }
+         }
 
-        $state_dropdown_conf = [
+         $state_dropdown_conf = [
             'addicon' => false,
             'comments' => false,
-        ];
+         ];
 
-        if (true) {
+         if (true) {
             $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
 
             echo '<tr>' . "\n";
@@ -199,9 +196,9 @@ if ($can_update) {
             echo '</td>' . "\n";
 
             echo '</tr>' . "\n";
-        }
+         }
 
-        if (true) {
+         if (true) {
             $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
 
             echo '<tr>' . "\n";
@@ -219,9 +216,9 @@ if ($can_update) {
             echo '</td>' . "\n";
 
             echo '</tr>' . "\n";
-        }
+         }
 
-        if (true) {
+         if (true) {
             $state_renewal_value = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
 
             echo '<tr>' . "\n";
@@ -239,9 +236,9 @@ if ($can_update) {
             echo '</td>' . "\n";
 
             echo '</tr>' . "\n";
-        }
+         }
 
-        if (true) {
+         if (true) {
             echo '<tr style="text-align: center">' . "\n";
 
             echo '<td colspan="3">';
@@ -249,54 +246,52 @@ if ($can_update) {
             echo '</td>' . "\n";
 
             echo '</tr>' . "\n";
-        }
+         }
 
-        echo '</tbody>' . "\n";
-        echo '</table>' . "\n";
-        Html::closeForm();
+         echo '</tbody>' . "\n";
+         echo '</table>' . "\n";
+         Html::closeForm();
 
-        echo '<hr />' . "\n";
-    }
+         echo '<hr />' . "\n";
+      }
 
-    if (true) {
-        // recipients config
+      if (true) {
+          // recipients config
 
-        $recipients = PluginProjectbridgeConfig::getRecipients();
+          $recipients = PluginProjectbridgeConfig::getRecipients();
 
-        if (
-            !empty($post_data['projectbridge_delete_recipient'])
+         if (!empty($post_data['projectbridge_delete_recipient'])
             && is_array($post_data['projectbridge_delete_recipient'])
-        ) {
-            $row_id = key($post_data['projectbridge_delete_recipient']);
+          ) {
+             $row_id = key($post_data['projectbridge_delete_recipient']);
 
             if (isset($recipients[$row_id])) {
                 $config = new PluginProjectbridgeConfig();
 
-                if ($config->delete(['id' => $row_id])) {
-                    unset($recipients[$row_id]);
-                }
+               if ($config->delete(['id' => $row_id])) {
+                  unset($recipients[$row_id]);
+               }
             }
-        } elseif (
-            !empty($post_data['projectbridge_add_recipient'])
+         } else if (!empty($post_data['projectbridge_add_recipient'])
             && !empty($post_data['projectbridge_add_recipient_submit'])
             && !isset($post_data[(int) $post_data['projectbridge_add_recipient']])
-        ) {
-            $recipient_user_id = (int) $post_data['projectbridge_add_recipient'];
-            $config = new PluginProjectbridgeConfig();
+          ) {
+             $recipient_user_id = (int) $post_data['projectbridge_add_recipient'];
+             $config = new PluginProjectbridgeConfig();
 
             if ($config->add(['user_id' => $recipient_user_id])) {
                 $recipients = PluginProjectbridgeConfig::getRecipients();
             }
-        }
+         }
 
-        echo '<h2>';
-        echo 'Personnes recevant les alertes';
-        echo '</h2>' . "\n";
+          echo '<h2>';
+          echo 'Personnes recevant les alertes';
+          echo '</h2>' . "\n";
 
-        echo '<form method="post" action="">' . "\n";
-        echo '<table>' . "\n";
+          echo '<form method="post" action="">' . "\n";
+          echo '<table>' . "\n";
 
-        if (true) {
+         if (true) {
             echo '<thead>' . "\n";
 
             echo '<tr>' . "\n";
@@ -312,9 +307,9 @@ if ($can_update) {
             echo '</tr>' . "\n";
 
             echo '</thead>' . "\n";
-        }
+         }
 
-        if (true) {
+         if (true) {
             global $CFG_GLPI;
 
             echo '<tbody>' . "\n";
@@ -369,11 +364,11 @@ if ($can_update) {
             }
 
             echo '</tbody>' . "\n";
-        }
+         }
 
-        echo '</table>' . "\n";
-        Html::closeForm();
-    }
+          echo '</table>' . "\n";
+          Html::closeForm();
+      }
 } else {
     echo '<br/><br/>';
     echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/warning.png" alt="warning" />';

@@ -7,8 +7,7 @@ Html::header_nocache();
 
 Session::checkLoginUser();
 
-if (
-    $_SERVER['REQUEST_METHOD'] == 'POST'
+if ($_SERVER['REQUEST_METHOD'] == 'POST'
     && !empty($_POST['ticket_ids'])
     && is_array($_POST['ticket_ids'])
 ) {
@@ -17,15 +16,15 @@ if (
 
     $tickets_actiontime = [];
 
-    foreach ($tickets as $ticket_data) {
-        $actiontime = (int) $ticket_data['actiontime'];
+   foreach ($tickets as $ticket_data) {
+       $actiontime = (int) $ticket_data['actiontime'];
 
-        if (!empty($actiontime)) {
-            $actiontime = round($actiontime / 3600 * 100) / 100;
-        }
+      if (!empty($actiontime)) {
+          $actiontime = round($actiontime / 3600 * 100) / 100;
+      }
 
-        $tickets_actiontime[$ticket_data['id']] = $actiontime;
-    }
+         $tickets_actiontime[$ticket_data['id']] = $actiontime;
+   }
 
     echo json_encode($tickets_actiontime);
 }
