@@ -425,7 +425,7 @@ class PluginProjectbridgeContract extends CommonDBTM
          }
          } else {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/setup.templates.php?itemtype=Project&add=1" style="margin-left: 5px;" target="_blank">';
-            $html_parts[] = 'Créer un projet ?';
+            $html_parts[] = __('Create a project').' ?';
             $html_parts[] = '</a>' . "\n";
 
             $html_parts[] = '<small>';
@@ -764,17 +764,17 @@ class PluginProjectbridgeContract extends CommonDBTM
 
          $nb_successes = 0;
          $recipients = PluginProjectbridgeConfig::getRecipients();
-         echo __('Finded').' ' . count($recipients) . ' personne(s) à alerter' . "<br />\n";
+         echo __('Finded').' ' . count($recipients) .' '. __('person(s) to alert') . "<br />\n";
 
       if (count($recipients)) {
          $contracts = PluginProjectbridgeContract::getContractsToRenew();
-         echo __('Finded').' ' . count($contracts) . ' contrats à renouveler' . "<br />\n";
+         echo __('Finded').' ' . count($contracts) .' '. __('contract(s) to renew') . "<br />\n";
 
-         $subject = 'Contrats : ' . count($contracts) . ' à renouveler';
+         $subject = __('Contract(s)').' : ' . count($contracts) .' '. _('to renew');
 
          $html_parts = [];
          $html_parts[] = '<p>' . "\n";
-         $html_parts[] = 'Il y a ' . count($contracts) . ' contrats à renouveler :';
+         $html_parts[] = _('there is(are)').' ' . count($contracts) .' '. __('contract(s) to renew'). ' :';
          $html_parts[] = '</p>' . "\n";
 
          $html_parts[] = '<ol>' . "\n";

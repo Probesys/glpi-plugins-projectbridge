@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
        echo '</h2>' . "\n";
 
        echo '<p>';
-       echo 'Sélectionnez les tickets dans l\'entité (non supprimés et sans lien avec une tâche de projet) que vous voulez lier à la nouvelle tâche.';
+       echo __('Select tickets in the entity (not deleted and unrelated to a project task) that you want to link to the new task').'.';
        echo '</p>' . "\n";
 
        echo '<table class="tab_cadrehov">' . "\n";
@@ -65,19 +65,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
           echo '</th>' . "\n";
 
           echo '<th>';
-          echo 'Nom';
+          echo _('Name');
           echo '</th>' . "\n";
 
           echo '<th>';
-          echo 'Temps';
+          echo _('Time');
           echo '</th>' . "\n";
 
           echo '<th>';
-          echo 'Date d\'ouverture';
+          echo _('Open Date');
           echo '</th>' . "\n";
 
           echo '<th>';
-          echo 'Date de fermeture';
+          echo _('Close Date');
           echo '</th>' . "\n";
 
           echo '</tr>' . "\n";
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
          echo '<tr class="tab_bg_1">' . "\n";
 
          echo '<td colspan="5" style="text-align: center">';
-         echo 'Aucun ticket trouvé';
+         echo _('no ticket found');
          echo '</td>' . "\n";
 
          echo '</tr>' . "\n";
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
          echo '<tr class="tab_bg_1">' . "\n";
 
          echo '<td colspan="5" style="text-align: center">';
-         echo '<input type="submit" name="update" value="Lier les tickets au renouvellement" class="submit" />';
+         echo '<input type="submit" name="update" value="'.__('Link tickets to renewal').'" class="submit" />';
          echo '</td>' . "\n";
 
          echo '</tr>' . "\n";

@@ -78,7 +78,7 @@ class PluginProjectbridgeEntity extends CommonDBTM
             $html_parts[] = '</a>' . "\n";
 
             $html_parts[] = '<small>';
-            $html_parts[] = 'Pensez à rafraîchir cette page après avoir créé le contrat';
+            $html_parts[] = __('Remember to refresh this page after creating the contract');
             $html_parts[] = '</small>' . "\n";
          }
 

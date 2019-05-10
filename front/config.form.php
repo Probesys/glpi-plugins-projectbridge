@@ -80,11 +80,11 @@ if ($can_update) {
         // status config
 
         echo '<h2>';
-        echo 'Configuration des statuts';
+        echo __('Status Configuration');
         echo '</h2>' . "\n";
 
         echo '<p>';
-        echo 'Veuillez faire la correspondance entre les noms de statut et leurs valeurs dans GLPI.';
+        echo __('Please match the status names and their values in GLPI'.'.');
         echo '</p>' . "\n";
 
         echo '<form method="post" action="">' . "\n";
@@ -96,15 +96,15 @@ if ($can_update) {
            echo '<tr>' . "\n";
 
            echo '<th>';
-           echo 'Nom du statut';
+           echo __('Status name');
            echo '</th>' . "\n";
 
            echo '<th>';
-           echo 'Type de statut';
+           echo __('Status type');
            echo '</th>' . "\n";
 
            echo '<th>';
-           echo 'Statut correspondant';
+           echo __('Corresponding status');
            echo '</th>' . "\n";
 
            echo '</tr>' . "\n";
@@ -184,11 +184,11 @@ if ($can_update) {
             echo '<tr>' . "\n";
 
             echo '<td>';
-            echo 'En cours';
+            echo __('In progress');
             echo '</td>' . "\n";
 
             echo '<td>';
-            echo 'Tâche';
+            echo __('Task');
             echo '</td>' . "\n";
 
             echo '<td>';
@@ -204,11 +204,11 @@ if ($can_update) {
             echo '<tr>' . "\n";
 
             echo '<td>';
-            echo 'Clos';
+            echo __('Close');
             echo '</td>' . "\n";
 
             echo '<td>';
-            echo 'Tâche';
+            echo __('Task');
             echo '</td>' . "\n";
 
             echo '<td>';
@@ -224,11 +224,11 @@ if ($can_update) {
             echo '<tr>' . "\n";
 
             echo '<td>';
-            echo 'Renouvellement';
+            echo __('Renewal');
             echo '</td>' . "\n";
 
             echo '<td>';
-            echo 'Ticket';
+            echo __('Ticket');
             echo '</td>' . "\n";
 
             echo '<td>';
@@ -285,7 +285,7 @@ if ($can_update) {
          }
 
           echo '<h2>';
-          echo 'Personnes recevant les alertes';
+          echo __('People receiving alerts');
           echo '</h2>' . "\n";
 
           echo '<form method="post" action="">' . "\n";
@@ -297,11 +297,11 @@ if ($can_update) {
             echo '<tr>' . "\n";
 
             echo '<th style="min-width: 200px">';
-            echo 'Nom';
+            echo __('Nom');
             echo '</th>' . "\n";
 
             echo '<th>';
-            echo 'Action';
+            echo __('Action');
             echo '</th>' . "\n";
 
             echo '</tr>' . "\n";
@@ -327,7 +327,7 @@ if ($can_update) {
                 echo '</td>' . "\n";
 
                 echo '<td>';
-                echo '<input type="submit" class="submit" name="projectbridge_delete_recipient[' . $row_id . ']" value="Supprimer" />';
+                echo '<input type="submit" class="submit" name="projectbridge_delete_recipient[' . $row_id . ']" value="'.__('Delete').'" />';
                 echo '</td>' . "\n";
 
                 echo '</tr>' . "\n";
@@ -337,7 +337,7 @@ if ($can_update) {
                 echo '<tr>' . "\n";
 
                 echo '<td colspan="2" style="text-align: center">';
-                echo 'Personne ne reçoit les alertes';
+                echo __('Nobody receive alerts');
                 echo '</td>' . "\n";
 
                 echo '</tr>' . "\n";
@@ -357,7 +357,7 @@ if ($can_update) {
                 echo '</td>' . "\n";
 
                 echo '<td>';
-                echo '<input type="submit" class="submit" name="projectbridge_add_recipient_submit" value="Ajouter" />';
+                echo '<input type="submit" class="submit" name="projectbridge_add_recipient_submit" value="'.__('Add').'" />';
                 echo '</td>' . "\n";
 
                 echo '</tr>' . "\n";
@@ -374,7 +374,7 @@ if ($can_update) {
     echo '<img src="' . $CFG_GLPI['root_doc'] . '/pics/warning.png" alt="warning" />';
     echo '<br/><br/>';
     echo '<b>';
-    echo 'Veuillez activer le plugin ou obtenir le droit d\'accès.';
+    echo __('Please activate the plugin or get the right of access').'.';
     echo '</b>';
 }
 
