@@ -467,11 +467,13 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
    public static function getProjectTaskDataByProjectId($project_id, $data_field, $search_closed = false) {
       static $project_tasks;
-
+      global $DB;
       if ($project_tasks === null) {
           $project_tasks = [];
       }
-
+      $projectTaskFinded = false;
+      $projectTaskId = null;
+      $projectTaskObject = null; 
       if (!isset($project_tasks[$project_id][$search_closed])) {
          $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
 
@@ -491,66 +493,80 @@ class PluginProjectbridgeContract extends CommonDBTM
 
          $project_tasks[$project_id][$search_closed] = new ProjectTask();
 
-         $project_tasks[$project_id][$search_closed]->getFromDBByRequest([
+         /*$projectTaskFinded = $project_tasks[$project_id][$search_closed]->getFromDBByRequest([
              'WHERE'  => [
                 'projects_id'  => $project_id,
-                'projectstates_id'  => [$projectstate_filter_operator => $state_closed_value]
+                'projectstates_id'  => [$projectstate_filter_operator, $state_closed_value]
              ],
              'ORDER'  => 'plan_end_date DESC',
              'LIMIT'  => 1
-          ]);
+          ]);*/
+         $where = 'projects_id='.$project_id.' AND projectstates_id'.$projectstate_filter_operator.$state_closed_value;         
+         $where = [ 'projects_id'  => $project_id,
+                    'projectstates_id'  => [$projectstate_filter_operator, $state_closed_value]
+                 ];
+         $order = 'plan_end_date DESC';
+         $limit = 1;
+         $projectTaskFinded = $project_tasks[$project_id][$search_closed]->find($where, $order, $limit);
+         if(count($projectTaskFinded)){             
+             $projectTaskId = $projectTaskFinded[1]['id'];
+             $projectTaskObject = $project_tasks[$project_id][$search_closed]->getFromDB($projectTaskId);             
+         }
       }
-
-         $return = null;
-
+      
+      $return = null;
+         
       switch ($data_field) {
          case 'exists':
-            if ($project_tasks[$project_id][$search_closed]->getId() > 0) {
+            /*if ($project_tasks[$project_id][!$search_closed?'0':$search_closed]->getId() > 0) {
                 $return = true;
             } else {
                 $return = false;
-            }
+            }*/
+            $return = $projectTaskId?true:false;
 
-             break;
+            break;
 
          case 'task_id':
-             $return = $project_tasks[$project_id][$search_closed]->getId();
-             break;
+            $return = $project_tasks[$project_id][$search_closed]->getField('id');
+            //$return = $projectTaskId;
+            break;
 
          case 'task':
             if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed)) {
-                $return = $project_tasks[$project_id][$search_closed];
+                //$return = $project_tasks[$project_id][$search_closed];
+                $return = $projectTaskObject;
             }
 
-             break;
+            break;
 
          case 'consumption':
-             $return = 0;
+            $return = 0;
 
             if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed)) {
-                $action_time = ProjectTask_Ticket::getTicketsTotalActionTime($project_tasks[$project_id][$search_closed]->getId());
-
+                $action_time = ProjectTask_Ticket::getTicketsTotalActionTime($project_tasks[$project_id][$search_closed]->getField('id'));
+                
                if ($action_time > 0) {
                      $return = $action_time / 3600;
                }
             }
 
-             break;
+            break;
 
          case 'plan_start_date':
             if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed)
-                 && !empty($project_tasks[$project_id][$search_closed]->fields['plan_start_date'])
+                 && !empty($project_tasks[$project_id][$search_closed]->getField('plan_start_date'))
              ) {
-                $return = $project_tasks[$project_id][$search_closed]->fields['plan_start_date'];
+                $return = $project_tasks[$project_id][$search_closed]->getField('plan_start_date');
             }
 
              break;
 
          case 'plan_end_date':
             if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed)
-                 && !empty($project_tasks[$project_id][$search_closed]->fields['plan_end_date'])
+                 && !empty($project_tasks[$project_id][$search_closed]->getField('plan_end_date'))
              ) {
-                $return = $project_tasks[$project_id][$search_closed]->fields['plan_end_date'];
+                $return = $project_tasks[$project_id][$search_closed]->getField('plan_end_date');
             }
 
              break;
@@ -559,7 +575,7 @@ class PluginProjectbridgeContract extends CommonDBTM
              $return = 0;
 
             if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed)) {
-                $return = $project_tasks[$project_id][$search_closed]->fields['planned_duration'] / 3600;
+                $return = $project_tasks[$project_id][$search_closed]->getField('planned_duration') / 3600;
             }
 
              // no break
