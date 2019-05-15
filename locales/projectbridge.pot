@@ -133,7 +133,7 @@ msgid "Create the project"
 msgstr ""
 
 #: inc/contract.class.php:182
-msgid "Access linked contract"
+msgid "Access to linked project"
 msgstr ""
 
 #: inc/contract.class.php:207
@@ -268,7 +268,7 @@ msgid "Finish"
 msgstr ""
 
 #: inc/contract.class.php:919 inc/contract.class.php:922
-msgid "Contract"
+msgid "Access to linked contract"
 msgstr ""
 
 #: inc/contract.class.php:922

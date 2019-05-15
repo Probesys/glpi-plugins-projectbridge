@@ -179,7 +179,7 @@ class PluginProjectbridgeContract extends CommonDBTM
            && isset($project_list[$project_id])
        ) {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left:5px;" target="_blank">';
-            $html_parts[] = __('Access linked contract', 'projectbridge');
+            $html_parts[] = __('Access to linked project', 'projectbridge');
             $html_parts[] = '</a>' . "\n";
 
             $html_parts[] = PluginProjectbridgeContract::_getPostShowHoursHtml($bridge_contract->getNbHours());
@@ -925,10 +925,10 @@ class PluginProjectbridgeContract extends CommonDBTM
 
                if ($contract->getFromDB($contract_bridge_data['contract_id'])) {
                   $html_parts[] = '<a href="' . $contract_url . $contract->getId() . '" target="_blank">';
-                  $html_parts[] = __('Contract').' "' . $contract->fields['name'] . '"';
+                  $html_parts[] = __('Access to linked contract').' "' . $contract->fields['name'] . '"';
                   $html_parts[] = '</a>';
                } else {
-                   $html_parts[] = __('Link to contract nonexistent') . ' : '.__('Contract').' n°' . $contract->getId();
+                   $html_parts[] = __('Link to contract nonexistent') . ' : '.__('Access to linked  contract').' n°' . $contract->getId();
                }
             }
          } else {

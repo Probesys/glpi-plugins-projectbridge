@@ -135,8 +135,8 @@ msgid "Create the project"
 msgstr "Créer un projet"
 
 #: inc/contract.class.php:182
-msgid "Access linked contract"
-msgstr "Accéder au contrat lié"
+msgid "Access to linked project"
+msgstr "Accéder au projet lié"
 
 #: inc/contract.class.php:207
 msgid "Comsuption"
@@ -273,8 +273,8 @@ msgid "Finish"
 msgstr "Terminé"
 
 #: inc/contract.class.php:919 inc/contract.class.php:922
-msgid "Contract"
-msgstr "Contrat"
+msgid "Access to linked contract"
+msgstr "Accéder au contrat lié"
 
 #: inc/contract.class.php:922
 msgid "Link to contract nonexistent"
@@ -398,7 +398,7 @@ msgstr "Projet lié "
 
 #: inc/ticket.class.php:107
 msgid "Make the connection"
-msgstr "Construire la connection"
+msgstr "Construire la connexion"
 
 #: inc/ticket.class.php:319
 msgid "Link(s) with project task(s) deleted"
