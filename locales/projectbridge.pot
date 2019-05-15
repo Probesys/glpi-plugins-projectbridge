@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: ProjectBridge 2.0\n"
         "Report-Msgid-Bugs-To: contact@probesys.com\n"
-        "POT-Creation-Date: 2019-05-15 10:49+0200\n"
+        "POT-Creation-Date: 2019-05-15 16:24+0200\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,27 +31,6 @@ msgstr  ""
 #: ajax/get_renewal_tickets.php:55
 msgid   "Select tickets in the entity (not deleted and unrelated to a project "
         "task) that you want to link to the new task"
-msgstr  ""
-
-#: ajax/get_renewal_tickets.php:68 front/config.form.php:300
-#: inc/contract.class.php:796
-msgid   "Name"
-msgstr  ""
-
-#: ajax/get_renewal_tickets.php:72
-msgid   "Time"
-msgstr  ""
-
-#: ajax/get_renewal_tickets.php:76
-msgid   "Open Date"
-msgstr  ""
-
-#: ajax/get_renewal_tickets.php:80
-msgid   "Close Date"
-msgstr  ""
-
-#: ajax/get_renewal_tickets.php:121
-msgid   "no ticket found"
 msgstr  ""
 
 #: ajax/get_renewal_tickets.php:131
@@ -90,44 +69,16 @@ msgstr  ""
 msgid   "In progress"
 msgstr  ""
 
-#: front/config.form.php:191 front/config.form.php:211
-msgid   "Task"
-msgstr  ""
-
-#: front/config.form.php:207
-msgid   "Close"
-msgstr  ""
-
 #: front/config.form.php:227
 msgid   "Renewal"
-msgstr  ""
-
-#: front/config.form.php:231
-msgid   "Ticket"
-msgstr  ""
-
-#: front/config.form.php:245
-msgid   "Save"
 msgstr  ""
 
 #: front/config.form.php:288
 msgid   "People receiving alerts"
 msgstr  ""
 
-#: front/config.form.php:304
-msgid   "Action"
-msgstr  ""
-
-#: front/config.form.php:330
-msgid   "Delete"
-msgstr  ""
-
 #: front/config.form.php:340
 msgid   "Nobody receive alerts"
-msgstr  ""
-
-#: front/config.form.php:360
-msgid   "Add"
 msgstr  ""
 
 #: front/config.form.php:377
@@ -138,8 +89,8 @@ msgstr  ""
 msgid   "linking Project"
 msgstr  ""
 
-#: inc/contract.class.php:129
-msgid   "Create the project"
+#: inc/contract.class.php:129 inc/contract.class.php:428
+msgid   "Create project"
 msgstr  ""
 
 #: inc/contract.class.php:182
@@ -150,20 +101,12 @@ msgstr  ""
 msgid   "Comsuption"
 msgstr  ""
 
-#: inc/contract.class.php:208
-msgid   "hours"
-msgstr  ""
-
 #: inc/contract.class.php:229
 msgid   "Expired in less than 24h"
 msgstr  ""
 
 #: inc/contract.class.php:231
 msgid   "Expired in"
-msgstr  ""
-
-#: inc/contract.class.php:231 inc/contract.class.php:238
-msgid   "days"
 msgstr  ""
 
 #: inc/contract.class.php:236
@@ -178,28 +121,12 @@ msgstr  ""
 msgid   "Renew the contract"
 msgstr  ""
 
-#: inc/contract.class.php:260
-msgid   "Start date"
-msgstr  ""
-
-#: inc/contract.class.php:277
-msgid   "End date"
-msgstr  ""
-
 #: inc/contract.class.php:295 inc/contract.class.php:453
 msgid   "Number of hours"
 msgstr  ""
 
 #: inc/contract.class.php:309
 msgid   "Confirm renewal"
-msgstr  ""
-
-#: inc/contract.class.php:313
-msgid   "Cancel"
-msgstr  ""
-
-#: inc/contract.class.php:428
-msgid   "Create a project"
 msgstr  ""
 
 #: inc/contract.class.php:432
@@ -210,85 +137,44 @@ msgstr  ""
 msgid   "Please define the correspondence of the \"Closed\" status."
 msgstr  ""
 
-#: inc/contract.class.php:598
+#: inc/contract.class.php:593
 msgid   "The match for the status \"In progress\" has not been defined. The "
         "contract could not be renewed."
 msgstr  ""
 
-#: inc/contract.class.php:638
-#, php-format
-msgid   "%1$s adds the item %2$s"
-msgstr  ""
-
-#: inc/contract.class.php:746
+#: inc/contract.class.php:741
 msgid   "Contract Alert to renew"
 msgstr  ""
 
-#: inc/contract.class.php:766 inc/task.class.php:84 inc/task.class.php:492
-msgid   "Plugin is not actif"
-msgstr  ""
-
-#: inc/contract.class.php:770 inc/task.class.php:88 inc/task.class.php:496
+#: inc/contract.class.php:765 inc/task.class.php:88
 msgid   "Plugin is not installed"
 msgstr  ""
 
-#: inc/contract.class.php:776 inc/contract.class.php:780
-msgid   "Finded"
-msgstr  ""
-
-#: inc/contract.class.php:776 inc/task.class.php:412
+#: inc/contract.class.php:771 inc/task.class.php:412
 msgid   "person(s) to alert"
 msgstr  ""
 
-#: inc/contract.class.php:780 inc/contract.class.php:786
+#: inc/contract.class.php:775 inc/contract.class.php:781
 msgid   "contract(s) to renew"
 msgstr  ""
 
-#: inc/contract.class.php:782
-msgid   "Contract(s)"
+#: inc/contract.class.php:777
+msgid   "contracts to renew"
 msgstr  ""
 
-#: inc/contract.class.php:782
-msgid   "to renew"
-msgstr  ""
-
-#: inc/contract.class.php:786
-msgid   "there is(are)"
-msgstr  ""
-
-#: inc/contract.class.php:804
-msgid   "Entity"
-msgstr  ""
-
-#: inc/contract.class.php:814
+#: inc/contract.class.php:809
 msgid   "Expected end date"
 msgstr  ""
 
-#: inc/contract.class.php:821
-msgid   "Effective Duration"
-msgstr  ""
-
-#: inc/contract.class.php:828
-msgid   "Planified duration"
-msgstr  ""
-
-#: inc/contract.class.php:850 inc/task.class.php:516
-msgid   "Finish"
-msgstr  ""
-
-#: inc/contract.class.php:928
+#: inc/contract.class.php:923 inc/contract.class.php:926
 msgid   "Access to linked contract"
 msgstr  ""
 
-#: inc/contract.class.php:931
+#: inc/contract.class.php:926
 msgid   "Link to contract nonexistent"
 msgstr  ""
 
-#: inc/contract.class.php:931
-msgid   "Access to linked  contract"
-msgstr  ""
-
-#: inc/contract.class.php:935
+#: inc/contract.class.php:930
 msgid   "No linked contract"
 msgstr  ""
 
@@ -333,20 +219,8 @@ msgid   "following the overtaking of hours or the expiry of the maintenance "
         "contract"
 msgstr  ""
 
-#: inc/task.class.php:412 inc/task.class.php:505
+#: inc/task.class.php:412
 msgid   "find"
-msgstr  ""
-
-#: inc/task.class.php:420
-msgid   "project Task"
-msgstr  ""
-
-#: inc/task.class.php:420
-msgid   "closed"
-msgstr  ""
-
-#: inc/task.class.php:424
-msgid   "Hello"
 msgstr  ""
 
 #: inc/task.class.php:426
@@ -359,18 +233,6 @@ msgstr  ""
 
 #: inc/task.class.php:429
 msgid   "Reason"
-msgstr  ""
-
-#: inc/task.class.php:431
-msgid   "Expired"
-msgstr  ""
-
-#: inc/task.class.php:431 inc/task.class.php:433
-msgid   "yes"
-msgstr  ""
-
-#: inc/task.class.php:431 inc/task.class.php:433
-msgid   "no"
 msgstr  ""
 
 #: inc/task.class.php:433
@@ -405,6 +267,6 @@ msgstr  ""
 msgid   "Make the connection"
 msgstr  ""
 
-#: inc/ticket.class.php:319
+#: inc/ticket.class.php:320
 msgid   "Link(s) with project task(s) deleted"
 msgstr  ""

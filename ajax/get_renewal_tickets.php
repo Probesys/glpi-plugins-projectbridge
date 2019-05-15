@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
          echo '<tr class="tab_bg_1">' . "\n";
 
          echo '<td colspan="5" style="text-align: center">';
-         echo __('no ticket found');
+         echo __('No ticket found');
          echo '</td>' . "\n";
 
          echo '</tr>' . "\n";

@@ -40,7 +40,7 @@ class PluginProjectbridgeTask extends CommonDBTM
    public static function getMenuContent() {
        $menu = parent::getMenuContent();
 
-       $menu['title'] = __('ProjectBridge project tasks');
+       $menu['title'] = __('ProjectBridge project tasks', 'projectbridge');
        $menu['page'] = '/plugins/projectbridge/front/projecttask.php';
 
        return $menu;
@@ -56,14 +56,14 @@ class PluginProjectbridgeTask extends CommonDBTM
       switch ($name) {
          case 'ProcessTasks':
               return [
-                  'description' => __('Project task treatment'),
+                  'description' => __('Project task treatment', 'projectbridge'),
               ];
 
               break;
 
          case 'UpdateProgressPercent':
                return [
-                  'description' => __('Update percentage counters performed in project tasks'),
+                  'description' => __('Update percentage counters performed in project tasks', 'projectbridge'),
                ];
       }
 
@@ -81,11 +81,11 @@ class PluginProjectbridgeTask extends CommonDBTM
           $plugin = new Plugin();
 
          if (!$plugin->isActivated(PluginProjectbridgeConfig::NAMESPACE)) {
-            echo __('Plugin is not actif'). "<br />\n";
+            echo __('Disabled plugin'). "<br />\n";
             return 0;
          }
       } else {
-         echo __('Plugin is not installed') . "<br />\n";
+         echo __('Plugin is not installed', 'projectbridge') . "<br />\n";
          return 0;
       }
 
@@ -94,14 +94,14 @@ class PluginProjectbridgeTask extends CommonDBTM
          $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
 
       if (empty($state_closed_value)) {
-         echo __('Please define the correspondence of the "Closed" status.') . "<br />\n";
+         echo __('Please define the correspondence of the "Closed" status.', 'projectbridge') . "<br />\n";
          return 0;
       }
 
          $ticket_request_type = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
 
       if (empty($ticket_request_type)) {
-         echo __('Please define the correspondence of the "Renewal" status.') . "<br />\n";
+         echo __('Please define the correspondence of the "Renewal" status.', 'projectbridge') . "<br />\n";
          return 0;
       }
 
@@ -430,7 +430,7 @@ class PluginProjectbridgeTask extends CommonDBTM
              $html_parts[] = '<br />';
              $html_parts[] = __('Expired').' : ' . ($expired ? __('yes') : __('no'));
              $html_parts[] = '<br />';
-             $html_parts[] = __('Overtaking').' : ' . ($action_time > 0 ? __('yes') : __('no'));
+             $html_parts[] = __('Overtaking', 'projectbridge').' : ' . ($action_time > 0 ? __('yes') : __('no'));
 
              $html_parts[] = '</p>' . "\n";
 
@@ -489,7 +489,7 @@ class PluginProjectbridgeTask extends CommonDBTM
           $plugin = new Plugin();
 
          if (!$plugin->isActivated(PluginProjectbridgeConfig::NAMESPACE)) {
-            echo __('Plugin is not actif') . "<br />\n";
+            echo __('Disabled plugin') . "<br />\n";
             return 0;
          }
       } else {

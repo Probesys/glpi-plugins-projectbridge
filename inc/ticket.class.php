@@ -100,7 +100,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
 
             if (!empty($project_id)) {
                 $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left: 10px" target="_blank">';
-                $html_parts[] = 'Accéder au projet';
+                $html_parts[] = __('Access to linked project', 'projectbridge');
                 $html_parts[] = '</a>' . "\n";
             }
 
