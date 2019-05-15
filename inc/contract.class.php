@@ -493,18 +493,11 @@ class PluginProjectbridgeContract extends CommonDBTM
 
          $project_tasks[$project_id][$search_closed] = new ProjectTask();
 
-         /*$projectTaskFinded = $project_tasks[$project_id][$search_closed]->getFromDBByRequest([
-             'WHERE'  => [
-                'projects_id'  => $project_id,
-                'projectstates_id'  => [$projectstate_filter_operator, $state_closed_value]
-             ],
-             'ORDER'  => 'plan_end_date DESC',
-             'LIMIT'  => 1
-          ]);*/
          $where = 'projects_id='.$project_id.' AND projectstates_id'.$projectstate_filter_operator.$state_closed_value;         
-         $where = [ 'projects_id'  => $project_id,
-                    'projectstates_id'  => [$projectstate_filter_operator, $state_closed_value]
-                 ];
+         // TODO: works only on 9.4+
+         // $where = [ 'projects_id'  => $project_id,
+         //           'projectstates_id'  => [$projectstate_filter_operator, $state_closed_value]
+         //        ];
          $order = 'plan_end_date DESC';
          $limit = 1;
          $projectTaskFinded = $project_tasks[$project_id][$search_closed]->find($where, $order, $limit);
