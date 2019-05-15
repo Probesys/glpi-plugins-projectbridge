@@ -154,12 +154,8 @@ msgstr  ""
 msgid   "person(s) to alert"
 msgstr  ""
 
-#: inc/contract.class.php:775 inc/contract.class.php:781
+#: inc/contract.class.php:775 inc/contract.class.php:777 inc/contract.class.php:781
 msgid   "contract(s) to renew"
-msgstr  ""
-
-#: inc/contract.class.php:777
-msgid   "contracts to renew"
 msgstr  ""
 
 #: inc/contract.class.php:809

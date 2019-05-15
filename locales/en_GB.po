@@ -162,13 +162,9 @@ msgstr "Plugin is not installed"
 msgid "person(s) to alert"
 msgstr "person(s) to alert"
 
-#: inc/contract.class.php:775 inc/contract.class.php:781
+#: inc/contract.class.php:775 inc/contract.class.php:777 inc/contract.class.php:781
 msgid "contract(s) to renew"
 msgstr "contract(s) to renew"
-
-#: inc/contract.class.php:777
-msgid "contracts to renew"
-msgstr "contracts to renew"
 
 #: inc/contract.class.php:809
 msgid "Expected end date"
