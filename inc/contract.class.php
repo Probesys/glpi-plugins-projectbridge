@@ -110,7 +110,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
             $(".select2-container", projectbridge_config).remove();
             $("select", projectbridge_config).select2({
-                width: \'150px\',
+                width: \'\',
                 dropdownAutoWidth: true
             });
             $(".select2-container", projectbridge_config).show();

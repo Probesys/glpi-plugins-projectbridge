@@ -132,6 +132,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
 
             $("#projectbridge_config .select2-container").remove();
             $("#projectbridge_config select").select2({
+                width: \'\',
                 dropdownAutoWidth: true
             });
             $("#projectbridge_config .select2-container").show();
