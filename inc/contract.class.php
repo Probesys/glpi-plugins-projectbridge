@@ -510,12 +510,7 @@ class PluginProjectbridgeContract extends CommonDBTM
       $return = null;
          
       switch ($data_field) {
-         case 'exists':
-            /*if ($project_tasks[$project_id][!$search_closed?'0':$search_closed]->getId() > 0) {
-                $return = true;
-            } else {
-                $return = false;
-            }*/
+         case 'exists':            
             $return = $projectTaskId?true:false;
 
             break;
@@ -911,7 +906,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
       if (!empty($project_id)) {
           $bridge_contract = new PluginProjectbridgeContract();
-          $contract_bridges = $bridge_contract->find("TRUE AND project_id = " . $project_id);
+          $contract_bridges = $bridge_contract->find(" project_id = " . $project_id);
 
           $html_parts = [];
           $html_parts[] = '<div class="spaced">' . "\n";

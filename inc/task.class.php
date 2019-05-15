@@ -146,7 +146,7 @@ class PluginProjectbridgeTask extends CommonDBTM
 
          $cron_task->addVolume($nb_successes);
 
-         echo 'Fini' . "<br />\n";
+         echo __('Finish') . "<br />\n";
 
          return ($nb_successes > 0) ? 1 : 0;
    }

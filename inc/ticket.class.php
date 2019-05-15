@@ -104,7 +104,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
                 $html_parts[] = '</a>' . "\n";
             }
 
-            $html_parts[] = '<input type="submit" name="update" value="'.__('Make the connection', 'projectbridge').'" class="submit" style="margin-left: 10px" />' . "\n";
+            $html_parts[] = '<input type="submit" name="update" value="'.__('Make the connection', 'projectbridge').'" class="submit" style="float: right; margin-left: 10px" />' . "\n";
             $html_parts[] = '<input type="hidden" name="id" value="' . $ticket->getId() . '" />' . "\n";
 
             $html_parts[] = Html::closeForm(false);

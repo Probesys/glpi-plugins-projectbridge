@@ -1330,9 +1330,9 @@ function plugin_projectbridge_MassiveActions($type) {
 
    switch ($type) {
       case 'Ticket':
-          $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'deleteProjectLink'] = 'Supprimer le lien avec toute tâche de projet';
-          $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectLink'] = 'Lier à un projet';
-          $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectTaskLink'] = 'Forcer le lien à une tâche de projet';
+          $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'deleteProjectLink'] = __('Delete the link with any project task', 'projectbridge');
+          $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectLink'] = __('Link to a project', 'projectbridge');
+          $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectTaskLink'] = __('Force link to a project task', 'projectbridge');
            break;
 
       default:
