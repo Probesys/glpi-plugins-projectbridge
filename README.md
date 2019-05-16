@@ -3,11 +3,15 @@ GLPI ProjectBridge Plugin
 
 By Probesys: https://probesys.com
 
-Language: french
+Language: french / english ( and more if you want translate it in other languages )
 
-Works with: GLPI 9.2.1 and 9.2.3 (9.2.2 untested)
+Works with: GLPI 9.3.x and 9.4.x
 
 This plugin allows to count down time from contracts by linking tickets with project tasks and project tasks with contracts.
+
+History
+=======
+This plugin is based on the old glpi plugin "Best management". We have rewritten and rethought all the code and the features.
 
 Features
 ========
