@@ -19,7 +19,7 @@ function plugin_projectbridge_install() {
                 INDEX (`entity_id`)
             )
             COLLATE='utf8_unicode_ci'
-            ENGINE=MyISAM
+            ENGINE=InnoDB
         ";
        $DB->query($create_table_query) or die($DB->error());
    }
@@ -36,7 +36,7 @@ function plugin_projectbridge_install() {
                 INDEX (`contract_id`)
             )
             COLLATE='utf8_unicode_ci'
-            ENGINE=MyISAM
+            ENGINE=InnoDB
         ";
        $DB->query($create_table_query) or die($DB->error());
    }
@@ -52,7 +52,7 @@ function plugin_projectbridge_install() {
                 INDEX (`ticket_id`)
             )
             COLLATE='utf8_unicode_ci'
-            ENGINE=MyISAM
+            ENGINE=InnoDB
         ";
        $DB->query($create_table_query) or die($DB->error());
    }
@@ -67,7 +67,7 @@ function plugin_projectbridge_install() {
                 INDEX (`user_id`)
             )
             COLLATE='utf8_unicode_ci'
-            ENGINE=MyISAM
+            ENGINE=InnoDB
         ";
        $DB->query($create_table_query) or die($DB->error());
    }
@@ -83,7 +83,7 @@ function plugin_projectbridge_install() {
                 INDEX (`status`)
             )
             COLLATE='utf8_unicode_ci'
-            ENGINE=MyISAM
+            ENGINE=InnoDB
         ";
        $DB->query($create_table_query) or die($DB->error());
    }
