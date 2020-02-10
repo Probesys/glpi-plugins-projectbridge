@@ -123,7 +123,7 @@ class PluginProjectbridgeTask extends CommonDBTM
          }
 
          if (!empty($task_data['planned_duration'])) {
-             $action_time = ProjectTask_Ticket::getTicketsTotalActionTime($task_data['id']);
+             $action_time = PluginProjectbridgeContract::getTicketsTotalActionTime($task_data['id']);
              $timediff = $action_time - $task_data['planned_duration'];
          }
 

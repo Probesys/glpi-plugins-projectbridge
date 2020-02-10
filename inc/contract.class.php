@@ -197,7 +197,8 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $activeProjectTask = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($project_id);
                 $projectTaskID = $activeProjectTask[0]['id'];
                 
-                $consumption = ProjectTask_Ticket::getTicketsTotalActionTime($projectTaskID);
+                //$consumption = ProjectTask_Ticket::getTicketsTotalActionTime($projectTaskID);
+                $consumption = PluginProjectbridgeContract::getTicketsTotalActionTime($projectTaskID);        
                 if ($consumption) {
                     $consumption = $consumption / 3600;
                     $consumption_ratio = $consumption / $nb_hours;
@@ -205,7 +206,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 
                 $html_parts[] = __('Comsuption', 'projectbridge') . ' : ';
                 $classRation = '';
-                if ($consumption > $nb_hours) {
+                if ($consumption >= $nb_hours) {
                     $haveToBeRenewed = true;
                     $classRation = 'red';
                 }
@@ -443,6 +444,43 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         return implode('', $html_parts);
     }
+    
+    public static function getTicketsTotalActionTime($projecttasks_id) {
+      global $DB;
+      
+      $whereConditionsArray = ['projecttasks_id' => $projecttasks_id];
+      
+      $onlypublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
+      if($onlypublicTasks) {
+          $whereConditionsArray['is_private'] = 0;
+      }
+
+      $iterator = $DB->request([
+         'SELECT'       => new QueryExpression('SUM('.TicketTask::getTable().'.actiontime) AS duration'),
+         'FROM'         => ProjectTask_Ticket::getTable(),
+         'INNER JOIN'   => [
+            Ticket::getTable() => [
+               'FKEY'   => [
+                  ProjectTask_Ticket::getTable()  => 'tickets_id',
+                  Ticket::getTable()    => 'id'
+               ]
+            ],
+           TicketTask::getTable() => [
+               'FKEY'   => [                  
+                  Ticket::getTable()    => 'id',
+                  TicketTask::getTable()  => 'tickets_id'
+               ]
+            ],
+         ],
+         'WHERE' => $whereConditionsArray
+      ]);
+      
+
+      if ($row = $iterator->next()) {
+         return $row['duration'];
+      }
+      return 0;
+   }
 
     /**
      * Get HTML to manage hours
