@@ -1,6 +1,6 @@
 <?php
 
-define('PROJECTBRIDGE_VERSION', '2.0');
+define('PROJECTBRIDGE_VERSION', '2.1.1');
 define('MIN_GLPI_VERSION', '9.4');
 define('MAX_GLPI_VERSION', '9.5');
 
@@ -58,7 +58,7 @@ function plugin_init_projectbridge() {
 
     $PLUGIN_HOOKS['use_massive_action'][PluginProjectbridgeConfig::NAMESPACE] = 1;
 
-    $PLUGIN_HOOKS['helpdesk_menu_entry'][PluginProjectbridgeConfig::NAMESPACE] = true;
+    $PLUGIN_HOOKS['helpdesk_menu_entry'][PluginProjectbridgeConfig::NAMESPACE] = false;
     $PLUGIN_HOOKS['menu_toadd'][PluginProjectbridgeConfig::NAMESPACE] = [
         'tools' => 'PluginProjectbridgeTask',
     ];

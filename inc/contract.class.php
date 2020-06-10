@@ -642,7 +642,7 @@ class PluginProjectbridgeContract extends CommonDBTM
           [
                               "projects_id" => $ID,
                               "projectstates_id" => [$state_in_progress_value, $state_closed_value],
-                              'ORDER'       => ['projectstates_id','plan_start_date','real_start_date']
+                              'ORDER'       => ['plan_start_date DESC']
                               ]
       ) as $data) {
             $tasks[] = $data;
