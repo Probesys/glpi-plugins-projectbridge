@@ -636,7 +636,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     public function renewProjectTask()
     {
         $project_id = $this->getProjectId();
-
+        
         if ($project_id <= 0) {
             return;
         }
@@ -718,7 +718,7 @@ class PluginProjectbridgeContract extends CommonDBTM
      * @return array
      */
     public function getRenewalData($use_input_data = false)
-    {
+    {        
         $project_id = $this->getProjectId();
         $open_exists = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', false);
         $closed_exists = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', true);
@@ -738,7 +738,8 @@ class PluginProjectbridgeContract extends CommonDBTM
             if (empty($this->_contract->input['_projecttask_begin_date'])) {
                 $task_start_date = date('Y-m-d');
             } else {
-                $task_start_date = $this->_contract->input['_projecttask_begin_date'];
+                $task_start_date = date('Y-m-d', strtotime($this->_contract->input['_projecttask_begin_date']));
+                
                 $use_closed = true;
             }
 
@@ -777,6 +778,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         return $renewal_data;
     }
+    
 
     /**
      * Type name for cron
@@ -997,4 +999,26 @@ class PluginProjectbridgeContract extends CommonDBTM
             echo implode(' ', $html_parts);
         }
     }
+    
+    private function getDateFormat() {
+
+        switch ($_SESSION['glpidate_format']) {
+                case "0":
+                default:    
+                    $dataf = 'Y-m-d'; 
+                    break;
+                case "1": 
+                    $dataf = 'd-m-Y'; 
+                    break;
+                case "2": 
+                    $dataf = 'm-d-Y'; 
+                    break;    
+        }
+        
+        return $dataf;
+       
+    }
+    
+
+    
 }
