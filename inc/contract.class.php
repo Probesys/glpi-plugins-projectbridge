@@ -647,8 +647,10 @@ class PluginProjectbridgeContract extends CommonDBTM
             Session::addMessageAfterRedirect(__('The match for the status "In progress" has not been defined. The contract could not be renewed.', 'projectbridge'), false, ERROR);
             return false;
         }
-
+        $dateFormat = 'Y-m-d';
         $renewal_data = $this->getRenewalData($use_input_data = true);
+        //$plan_end_date = date($dateFormat.' H:i', strtotime($renewal_data['end_date']));
+        $plan_end_date = date('Y-m-d  H:i:s', strtotime($renewal_data['begin_date'] . ' + ' . $renewal_data['duration'] . ' months - 1 days'));
 
         $project_task_data = [
           // data from contract
@@ -659,7 +661,7 @@ class PluginProjectbridgeContract extends CommonDBTM
           'content' => addslashes($this->_contract->fields['comment']),
           'comment' => '',
           'plan_start_date' => date('Y-m-d H:i:s', strtotime($renewal_data['begin_date'])),
-          'plan_end_date' => date('Y-m-d H:i:s', strtotime($renewal_data['end_date'])),
+          'plan_end_date' => $plan_end_date,
           'planned_duration' => $renewal_data['nb_hours_to_use'] * 3600, // in seconds
           'projectstates_id' => $state_in_progress_value, // "in progress"
           // standard data to bootstrap task
@@ -1000,24 +1002,28 @@ class PluginProjectbridgeContract extends CommonDBTM
         }
     }
     
-    private function getDateFormat() {
-
-        switch ($_SESSION['glpidate_format']) {
-                case "0":
-                default:    
-                    $dataf = 'Y-m-d'; 
-                    break;
-                case "1": 
-                    $dataf = 'd-m-Y'; 
-                    break;
-                case "2": 
-                    $dataf = 'm-d-Y'; 
-                    break;    
-        }
-        
-        return $dataf;
-       
-    }
+    /**
+     * fonction retournant le format utilisé dans la configuration de GLPI pour les affichages de dates
+     * @return string
+     */
+//    private function getDateFormat() {
+//
+//        switch ($_SESSION['glpidate_format']) {
+//                case "0":
+//                default:    
+//                    $dataf = 'Y-m-d'; 
+//                    break;
+//                case "1": 
+//                    $dataf = 'd-m-Y'; 
+//                    break;
+//                case "2": 
+//                    $dataf = 'm-d-Y'; 
+//                    break;    
+//        }
+//        
+//        return $dataf;
+//       
+//    }
     
 
     
