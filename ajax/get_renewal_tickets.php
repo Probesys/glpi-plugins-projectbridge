@@ -13,15 +13,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
 ) {
     $contract_id = (int) $_POST['contract_id'];
     $task_id = (int) $_POST['task_id'];
+    $all_tickets = [];
+    
     $task = new ProjectTask();
-    $task->getFromDB($task_id);
+    if($task_id) {
+        $task->getFromDB($task_id);
 
-    $ticket = new Ticket();
-    $all_tickets = $ticket->find("
-        TRUE
-        AND entities_id = " . $task->fields['entities_id'] . "
-        AND is_deleted = 0
-    ");
+        $ticket = new Ticket();
+        $all_tickets = $ticket->find("
+            TRUE
+            AND entities_id = " . $task->fields['entities_id'] . "
+            AND is_deleted = 0
+        ");
+    }
 
     $unlinked_tickets = [];
 

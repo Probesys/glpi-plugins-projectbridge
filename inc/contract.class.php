@@ -509,6 +509,7 @@ class PluginProjectbridgeContract extends CommonDBTM
             $where = ['projects_id' => $project_id,
               'projectstates_id' => [$projectstate_filter_operator, $state_closed_value]
             ];
+            
             $order = 'plan_end_date DESC';
             $limit = 1;
             $projectTaskFinded = $project_tasks[$project_id][$search_closed]->find($where, $order, $limit);
@@ -554,18 +555,25 @@ class PluginProjectbridgeContract extends CommonDBTM
                 break;
 
             case 'plan_start_date':
-                if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed) && !empty($project_tasks[$project_id][$search_closed]->getField('plan_start_date'))
-                ) {
-                    $return = $project_tasks[$project_id][$search_closed]->getField('plan_start_date');
+                
+                if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed) && !empty($project_tasks[$project_id][$search_closed?'0':'1']['fields']['plan_start_date']) ) {    
+                    $return = $project_tasks[$project_id][$search_closed?'0':'1']->getField('plan_start_date');
+                }
+                
+                if ( !empty($project_tasks[$project_id][$search_closed?'1':'0']->getField('plan_start_date')) ) {    
+                    $return = $project_tasks[$project_id][$search_closed?'1':'0']->getField('plan_start_date') ;
                 }
 
                 break;
 
             case 'plan_end_date':
 
-                if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed) && !empty($project_tasks[$project_id][$search_closed]->getField('plan_end_date'))
+                if (PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', $search_closed) && !empty($project_tasks[$project_id][$search_closed?'1':'0']->getField('plan_end_date'))
                 ) {
-                    $return = $project_tasks[$project_id][$search_closed]->getField('plan_end_date');
+                    $return = $project_tasks[$project_id][$search_closed?'1':'0']->getField('plan_end_date');
+                }
+                if (!empty($project_tasks[$project_id][$search_closed?'1':'0']->getField('plan_end_date')) ) {    
+                    $return = $project_tasks[$project_id][$search_closed?'1':'0']->getField('plan_end_date');
                 }
 
                 break;
@@ -647,7 +655,7 @@ class PluginProjectbridgeContract extends CommonDBTM
             Session::addMessageAfterRedirect(__('The match for the status "In progress" has not been defined. The contract could not be renewed.', 'projectbridge'), false, ERROR);
             return false;
         }
-        $dateFormat = 'Y-m-d';
+        
         $renewal_data = $this->getRenewalData($use_input_data = true);
         //$plan_end_date = date($dateFormat.' H:i', strtotime($renewal_data['end_date']));
         $plan_end_date = date('Y-m-d  H:i:s', strtotime($renewal_data['begin_date'] . ' + ' . $renewal_data['duration'] . ' months - 1 days'));
@@ -726,8 +734,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         $closed_exists = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'exists', true);
         $use_closed = false;
 
-        if (!$use_input_data && $closed_exists && !$open_exists
-        ) {
+        if (!$use_input_data && $closed_exists && !$open_exists ) {
             $use_closed = true;
 
             $previous_task_start = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'plan_start_date', true);
@@ -737,12 +744,19 @@ class PluginProjectbridgeContract extends CommonDBTM
             $task_start_date = date('Y-m-d', strtotime($previous_task_end . ' + 1 day'));
             $task_end_date = date('Y-m-d', strtotime($task_start_date . ' + ' . $datediff . ' days'));
         } else {
-            if (empty($this->_contract->input['_projecttask_begin_date'])) {
-                $task_start_date = date('Y-m-d');
+            if($open_exists ) {
+                $previous_task_start = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'plan_start_date', false);
+                $previous_task_end = PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'plan_end_date', false);
+                $task_start_date = date('Y-m-d', strtotime($previous_task_end . ' + 1 day'));
+                $task_end_date = date('Y-m-d', strtotime($task_start_date . ' + ' . $datediff . ' days'));
             } else {
-                $task_start_date = date('Y-m-d', strtotime($this->_contract->input['_projecttask_begin_date']));
-                
-                $use_closed = true;
+                if (empty($this->_contract->input['_projecttask_begin_date'])) {
+                    $task_start_date = date('Y-m-d');
+                } else {
+                    $task_start_date = date('Y-m-d', strtotime($this->_contract->input['_projecttask_begin_date']));
+
+                    $use_closed = true;
+                }
             }
 
             if (empty($this->_contract->input['_projecttask_end_date'])) {

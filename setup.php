@@ -1,6 +1,6 @@
 <?php
 
-define('PROJECTBRIDGE_VERSION', '2.1.1');
+define('PROJECTBRIDGE_VERSION', '2.1.2');
 define('MIN_GLPI_VERSION', '9.4');
 define('MAX_GLPI_VERSION', '9.5');
 
