@@ -1,8 +1,8 @@
 <?php
 
-define('PROJECTBRIDGE_VERSION', '2.1.2');
+define('PROJECTBRIDGE_VERSION', '2.2.0');
 define('MIN_GLPI_VERSION', '9.4');
-define('MAX_GLPI_VERSION', '9.5');
+define('MAX_GLPI_VERSION', '9.6');
 
 if (!class_exists('PluginProjectbridgeConfig')) {
     require_once(__DIR__.'/inc/config.class.php');
