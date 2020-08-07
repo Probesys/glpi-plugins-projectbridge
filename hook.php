@@ -57,19 +57,51 @@ function plugin_projectbridge_install() {
         $DB->query($create_table_query) or die($DB->error());
     }
 
+    // configs datatable
     if (!$DB->tableExists(PluginProjectbridgeConfig::$table_name)) {
-        $create_table_query = "
+        $create_tableConfig_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeConfig::$table_name . "`
             (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
-                `user_id` INT(11) NOT NULL,
-                PRIMARY KEY (`id`),
-                INDEX (`user_id`)
+                `name` VARCHAR(50) NOT NULL ,
+                `value` VARCHAR(50) NOT NULL,
+                PRIMARY KEY (`id`)
             )
             COLLATE='utf8_unicode_ci'
             ENGINE=InnoDB
         ";
-        $DB->query($create_table_query) or die($DB->error());
+        $DB->query($create_tableConfig_query) or die($DB->error());
+        $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
+            (1, 'RecipientIds', '[]'),
+            (2, 'CountOnlyPublicTasks', '1');";
+        $DB->query($insert_table_query) or die($DB->error());
+    } else {
+        // test if old version of glpi_plugin_projectbridge_configs      
+        $fields = $DB->list_fields(PluginProjectbridgeConfig::$table_name);
+        if (array_key_exists('user_id', $fields)) {
+            // save old values of user_id
+            
+            $userIds = [];
+            $req = $DB->request([
+              'SELECT' => ['user_id'],
+              'FROM' => PluginProjectbridgeConfig::$table_name,
+            ]);
+            foreach ($req as $row) {
+                $userIds[] = (int) $row['user_id'];
+            }
+            // delete old table
+            $DB->queryOrDie(
+                    "DROP TABLE `" . PluginProjectbridgeConfig::$table_name . "`",
+                    $DB->error()
+            );
+            // create table with new format
+            $DB->query($create_tableConfig_query) or die($DB->error());
+            // insert values
+            $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
+            (1, 'RecipientIds', '" . json_encode(array_unique($userIds)) . "'),
+            (2, 'CountOnlyPublicTasks', '1');";
+            $DB->query($insert_table_query) or die($DB->error());
+        }
     }
 
     if (!$DB->tableExists(PluginProjectbridgeState::$table_name)) {
@@ -527,6 +559,46 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype) {
               'field' => 'contract_id',
               'name' => 'Contrat par défaut',
               'massiveaction' => false,
+            ];
+
+            $options[] = [
+              'id' => 4202,
+              'table' => PluginProjectbridgeTicket::$table_name,
+              'field' => 'project_id',
+              'name' => 'Temps non affecté à une tâche (heures)',
+              'massiveaction' => false,
+            ];
+            break;
+
+        case 'Ticket':
+            $options[] = [
+              'id' => 4210,
+              'name' => 'ProjectBridge',
+            ];
+
+            $options[] = [
+              'id' => 4211,
+              'table' => PluginProjectbridgeTicket::$table_name,
+              'field' => 'project_id',
+              'name' => 'Projet',
+              'massiveaction' => false,
+            ];
+
+            $options[] = [
+              'id' => 4212,
+              'table' => PluginProjectbridgeTicket::$table_name,
+              'field' => 'project_id',
+              'name' => 'Tâche de projet',
+              'massiveaction' => false,
+            ];
+
+            $options[] = [
+              'id' => 4213,
+              'table' => PluginProjectbridgeTicket::$table_name,
+              'field' => 'project_id',
+              'name' => 'Statut de tâche',
+              'massiveaction' => false,
+            
             ];
 
             $options[] = [
