@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ProjectBridge 2.0\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
-"POT-Creation-Date: 2019-05-15 16:24+0200\n"
-"PO-Revision-Date: 2019-05-15 17:47+0200\n"
+"POT-Creation-Date: 2020-08-13 10:04+0200\n"
+"PO-Revision-Date: 2020-08-13 10:17+0200\n"
 "Last-Translator: probeSys <contact@probesys.com>\n"
 "Language-Team: probesys\n"
 "Language: fr_FR\n"
@@ -18,31 +18,27 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: hook.php:1333
+#: hook.php:1373
 msgid "Delete the link with any project task"
 msgstr "Supprimer le lien avec toutes les tâches de projet"
 
-#: hook.php:1334
+#: hook.php:1374
 msgid "Link to a project"
 msgstr "Lier à un projet"
 
-#: hook.php:1335
+#: hook.php:1375
 msgid "Force link to a project task"
 msgstr "Forcer le lien vers la tâche de projet"
 
-#: ajax/get_renewal_tickets.php:55
-msgid ""
-"Select tickets in the entity (not deleted and unrelated to a project task) "
-"that you want to link to the new task"
-msgstr ""
-"Sélectionnez les tickets dans l'entité (non supprimés et non liés à une "
-"tâche de projet) que vous souhaitez lier à la nouvelle tâche"
+#: ajax/get_renewal_tickets.php:54
+msgid "Select tickets in the entity (not deleted and unrelated to a project task) that you want to link to the new task"
+msgstr "Sélectionnez les tickets dans l'entité (non supprimés et non liés à une tâche de projet) que vous souhaitez lier à la nouvelle tâche"
 
-#: ajax/get_renewal_tickets.php:131
+#: ajax/get_renewal_tickets.php:109
 msgid "Link tickets to renewal"
 msgstr "Lier les tickets au renouvellement"
 
-#: front/config.form.php:47 front/config.form.php:51
+#: front/config.form.php:46 front/config.form.php:50
 msgid "ProjectBridge Configuration"
 msgstr "Configuration des statuts"
 
@@ -50,44 +46,53 @@ msgstr "Configuration des statuts"
 msgid "Project Tasks"
 msgstr "Tâches de projet"
 
-#: front/config.form.php:83
+#: front/config.form.php:82
 msgid "Status Configuration"
 msgstr "Configuration des statuts"
 
-#: front/config.form.php:87
+#: front/config.form.php:86
 msgid "Please match the status names and their values in GLPI"
-msgstr ""
-"Veuillez faire correspondre les noms de statut et leurs valeurs dans GLPI"
+msgstr "Veuillez faire correspondre les noms de statut et leurs valeurs dans GLPI"
 
-#: front/config.form.php:99
+#: front/config.form.php:96
 msgid "Status name"
 msgstr "Nom du statut"
 
-#: front/config.form.php:103
+#: front/config.form.php:99
 msgid "Status type"
 msgstr "Type de statut"
 
-#: front/config.form.php:107
+#: front/config.form.php:102
 msgid "Corresponding status"
 msgstr "Statut correspondant"
 
-#: front/config.form.php:187
+#: front/config.form.php:179
 msgid "In progress"
 msgstr "En cours"
 
-#: front/config.form.php:227
+#: front/config.form.php:207
 msgid "Renewal"
 msgstr "Renouveler"
 
-#: front/config.form.php:288
+#: front/config.form.php:252
 msgid "People receiving alerts"
 msgstr "Personne recevant les alertes"
 
-#: front/config.form.php:340
+#: front/config.form.php:292
 msgid "Nobody receive alerts"
 msgstr "Personne ne reçoit les alertes"
 
-#: front/config.form.php:377
+#: front/config.form.php:323
+msgid "General config"
+msgstr "Configuration générale"
+
+#: front/config.form.php:337
+msgid "Count only public tasks in project"
+msgstr ""
+"Décompter du projet uniquement la durée des tâches de ticket\n"
+" publiques"
+
+#: front/config.form.php:352
 msgid "Please activate the plugin or get the right of access"
 msgstr "Merci d'activer le plugin ou donner les bonnes permissions"
 
@@ -95,39 +100,43 @@ msgstr "Merci d'activer le plugin ou donner les bonnes permissions"
 msgid "linking Project"
 msgstr "projet lié"
 
-#: inc/contract.class.php:129 inc/contract.class.php:428
+#: inc/contract.class.php:124 inc/contract.class.php:428
 msgid "Create project"
 msgstr "Créer le projet"
 
-#: inc/contract.class.php:182
+#: inc/contract.class.php:177 inc/ticket.class.php:103
 msgid "Access to linked project"
 msgstr "Accéder au projet lié"
 
-#: inc/contract.class.php:207
+#: inc/contract.class.php:205
+msgid "Warning ! No associate projectTask with \"In progress\" status exist"
+msgstr "Attention ! Il n'y a pas de tâche de projet avec le statut \"En cours\""
+
+#: inc/contract.class.php:216
 msgid "Comsuption"
 msgstr "Consommation"
 
-#: inc/contract.class.php:229
+#: inc/contract.class.php:251
 msgid "Expired in less than 24h"
 msgstr "Expire dans moins de 24h"
 
-#: inc/contract.class.php:231
+#: inc/contract.class.php:253
 msgid "Expired in"
 msgstr "Expire dans"
 
-#: inc/contract.class.php:236
+#: inc/contract.class.php:258
 msgid "Expired today"
 msgstr "Expire aujourd'hui"
 
-#: inc/contract.class.php:238
+#: inc/contract.class.php:260
 msgid "Expired since"
 msgstr "Expiré depuis"
 
-#: inc/contract.class.php:250
+#: inc/contract.class.php:269
 msgid "Renew the contract"
 msgstr "Renouveler le contrat"
 
-#: inc/contract.class.php:295 inc/contract.class.php:453
+#: inc/contract.class.php:300 inc/contract.class.php:491
 msgid "Number of hours"
 msgstr "Nombre d'heures"
 
@@ -139,48 +148,44 @@ msgstr "Confirmer le renouvellement"
 msgid "Remember to refresh this page after creating the project"
 msgstr "Souvenez vous de bien actualiser cette page après avoir crée le projet"
 
-#: inc/contract.class.php:484 inc/task.class.php:97
+#: inc/contract.class.php:559
 msgid "Please define the correspondence of the \"Closed\" status."
 msgstr "Merci de définir une correspondance pour le statut \"Fermé\"."
 
-#: inc/contract.class.php:593
-msgid ""
-"The match for the status \"In progress\" has not been defined. The contract "
-"could not be renewed."
-msgstr ""
-"La correspondance pour le statut \"En cours\" n'a pas été définie. Le "
-"contrat n'a pas pu être renouvelé."
+#: inc/contract.class.php:691
+msgid "The match for the status \"In progress\" has not been defined. The contract could not be renewed."
+msgstr "La correspondance pour le statut \"En cours\" n'a pas été définie. Le contrat n'a pas pu être renouvelé."
 
-#: inc/contract.class.php:741
+#: inc/contract.class.php:843
 msgid "Contract Alert to renew"
 msgstr "Alerte de contrat à renouveler"
 
-#: inc/contract.class.php:765 inc/task.class.php:88
+#: inc/contract.class.php:867 inc/task.class.php:88
 msgid "Plugin is not installed"
 msgstr "Plugin non installé"
 
-#: inc/contract.class.php:771 inc/task.class.php:412
+#: inc/contract.class.php:873 inc/task.class.php:403
 msgid "person(s) to alert"
 msgstr "personnes(s) à alerter"
 
-#: inc/contract.class.php:775 inc/contract.class.php:777
-#: inc/contract.class.php:781
+#: inc/contract.class.php:877 inc/contract.class.php:879
+#: inc/contract.class.php:883
 msgid "contract(s) to renew"
 msgstr "contrat(s) à renouveler"
 
-#: inc/contract.class.php:809
+#: inc/contract.class.php:919
 msgid "Expected end date"
 msgstr "Date de fin requise"
 
-#: inc/contract.class.php:923 inc/contract.class.php:926
+#: inc/contract.class.php:1049 inc/contract.class.php:1052
 msgid "Access to linked contract"
 msgstr "Accéder au contrat lié"
 
-#: inc/contract.class.php:926
+#: inc/contract.class.php:1052
 msgid "Link to contract nonexistent"
 msgstr "Lien vers le contrat inexistant"
 
-#: inc/contract.class.php:930
+#: inc/contract.class.php:1056
 msgid "No linked contract"
 msgstr "Pas de contrat lié"
 
@@ -210,64 +215,61 @@ msgstr "Traitement de la tâche du projet"
 
 #: inc/task.class.php:66
 msgid "Update percentage counters performed in project tasks"
-msgstr ""
-"Mettre à jour les compteurs de pourcentage exécutés dans les tâches du projet"
+msgstr "Mettre à jour les compteurs de pourcentage exécutés dans les tâches du projet"
 
 #: inc/task.class.php:104
 msgid "Please define the correspondence of the \"Renewal\" status."
 msgstr "Veuillez définir la correspondance du statut \"Renouvellement\"."
 
-#: inc/task.class.php:220
+#: inc/task.class.php:211
 msgid "This ticket comes from an automatic copy of the ticket"
 msgstr "Ce ticket provient d'une copie automatique du ticket"
 
-#: inc/task.class.php:220
-msgid ""
-"following the overtaking of hours or the expiry of the maintenance contract"
-msgstr ""
-"suite au dépassement d'heures ou à l'expiration du contrat de maintenance"
+#: inc/task.class.php:211
+msgid "following the overtaking of hours or the expiry of the maintenance contract"
+msgstr "suite au dépassement d'heures ou à l'expiration du contrat de maintenance"
 
-#: inc/task.class.php:412
+#: inc/task.class.php:403
 msgid "find"
 msgstr "trouvé"
 
-#: inc/task.class.php:426
+#: inc/task.class.php:417
 msgid "The open task of the project"
 msgstr "La tâche ouverte du projet"
 
-#: inc/task.class.php:426
+#: inc/task.class.php:417
 msgid "just closed"
 msgstr "vient de fermer"
 
-#: inc/task.class.php:429
+#: inc/task.class.php:420
 msgid "Reason"
 msgstr "Raison"
 
-#: inc/task.class.php:433
+#: inc/task.class.php:424
 msgid "Overtaking"
 msgstr "Dépassement"
 
-#: inc/task.class.php:458
+#: inc/task.class.php:449
 msgid "Adjustment ticket"
 msgstr "Ticket d'ajustement"
 
-#: inc/task.class.php:459
+#: inc/task.class.php:450
 msgid "Time Adjustment ticket"
 msgstr "Ticket de réglage du temps"
 
-#: inc/task.class.php:471
+#: inc/task.class.php:462
 msgid "Adjustment task"
 msgstr "Tâche d'ajustement"
 
-#: inc/task.class.php:505
+#: inc/task.class.php:496
 msgid "tasks with time"
 msgstr "tâches avec durée"
 
-#: inc/task.class.php:508
+#: inc/task.class.php:499
 msgid "re-calculuation for ticket task"
 msgstr "re-calcul pour la tâche de ticket"
 
-#: inc/ticket.class.php:49
+#: inc/ticket.class.php:94
 msgid "Related project"
 msgstr "Projet lié"
 
@@ -275,108 +277,6 @@ msgstr "Projet lié"
 msgid "Make the connection"
 msgstr "Construire la connexion"
 
-#: inc/ticket.class.php:320
+#: inc/ticket.class.php:319
 msgid "Link(s) with project task(s) deleted"
 msgstr "Lien (s) avec la (les) tâche (s) de projet supprimée"
-
-#~ msgid "contracts to renew"
-#~ msgstr "contrat(s) à renouveler"
-
-#~ msgid "Name"
-#~ msgstr "Nom"
-
-#~ msgid "Time"
-#~ msgstr "Durée"
-
-#~ msgid "Open Date"
-#~ msgstr "Date d'ouverture"
-
-#~ msgid "Close Date"
-#~ msgstr "Date de fermeture"
-
-#~ msgid "no ticket found"
-#~ msgstr "pas de ticket trouvé"
-
-#~ msgid "Task"
-#~ msgstr "Tâche"
-
-#~ msgid "Close"
-#~ msgstr "Femer"
-
-#~ msgid "Ticket"
-#~ msgstr "Ticket"
-
-#~ msgid "Save"
-#~ msgstr "Sauvegarder"
-
-#~ msgid "Action"
-#~ msgstr "Action"
-
-#~ msgid "Delete"
-#~ msgstr "Supprimer"
-
-#~ msgid "Add"
-#~ msgstr "Ajouter"
-
-#~ msgid "Create the project"
-#~ msgstr "Créer un projet"
-
-#~ msgid "hours"
-#~ msgstr "heures"
-
-#~ msgid "days"
-#~ msgstr "jours"
-
-#~ msgid "Start date"
-#~ msgstr "Date de début"
-
-#~ msgid "End date"
-#~ msgstr "Date de fin"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuler"
-
-#~ msgid "Plugin is not actif"
-#~ msgstr "Plugin inactif"
-
-#~ msgid "Finded"
-#~ msgstr "Trouvé"
-
-#~ msgid "Contract(s)"
-#~ msgstr "Contrat(s)"
-
-#~ msgid "to renew"
-#~ msgstr "a renouveller"
-
-#~ msgid "there is(are)"
-#~ msgstr "il y a"
-
-#~ msgid "Entity"
-#~ msgstr "Entité"
-
-#~ msgid "Effective Duration"
-#~ msgstr "Durée effective"
-
-#~ msgid "Planified duration"
-#~ msgstr "Durée planifiée"
-
-#~ msgid "Finish"
-#~ msgstr "Terminé"
-
-#~ msgid "project Task"
-#~ msgstr "tâche de projet"
-
-#~ msgid "closed"
-#~ msgstr "fermé(e)"
-
-#~ msgid "Hello"
-#~ msgstr "Bonjour"
-
-#~ msgid "Expired"
-#~ msgstr "Expiré"
-
-#~ msgid "yes"
-#~ msgstr "oui"
-
-#~ msgid "no"
-#~ msgstr "non"
