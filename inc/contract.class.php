@@ -202,7 +202,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 
                 if (!count($activeProjectTask) ) {
                     $haveToBeRenewed = true;
-                    $html_parts[] = '<span class="red">'.__('Warning ! No associate projectTask with process status exist', 'projectbridge') .' </span><br/>';
+                    $html_parts[] = '<span class="red">'.__('Warning ! No associate projectTask with "In progress" status exist', 'projectbridge') .' </span><br/>';
                       
                 }
                 
