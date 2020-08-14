@@ -137,21 +137,22 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
     private static function _getPostShowUpdateHtml(Contract $contract)
     {
-        $search_filters = [
-          'TRUE',
-          '`is_deleted` = 0',
+        $search_filters = [          
+          'is_deleted' => 0,
         ];
 
         $haveToBeRenewed = false;
         if (!empty($_SESSION['glpiactiveentities'])) {
-            $search_filters[] = "`entities_id` IN (" . implode(', ', $_SESSION['glpiactiveentities']) . ")";
+            //$search_filters[] = "`entities_id` IN (" . implode(', ', $_SESSION['glpiactiveentities']) . ")";
+            $search_filters['entities_id'] =  ['IN', implode(', ', $_SESSION['glpiactiveentities'])] ;
         }
 
         $bridge_contract = new PluginProjectbridgeContract($contract);
         $project_id = $bridge_contract->getProjectId();
 
         $project = new Project();
-        $project_results = $project->find(implode(' AND ', $search_filters));
+        //$project_results = $project->find(implode(' AND ', $search_filters));
+        $project_results = $project->find($search_filters);
         $project_list = [
           null => Dropdown::EMPTY_VALUE,
         ];
@@ -198,12 +199,13 @@ class PluginProjectbridgeContract extends CommonDBTM
                 
                 // get all activ projectTask
                 $activeProjectTask = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($project_id);
-                $projectTaskID = $activeProjectTask[0]['id'];
                 
-                if (!count($activeProjectTask) ) {
+                if ( !count($activeProjectTask) ) {
                     $haveToBeRenewed = true;
                     $html_parts[] = '<span class="red">'.__('Warning ! No associate projectTask with process status exist', 'projectbridge') .' </span><br/>';
-                      
+                    $projectTaskID = null;
+                }else{
+                    $projectTaskID = $activeProjectTask[0]['id'];
                 }
                 
                 //$consumption = ProjectTask_Ticket::getTicketsTotalActionTime($projectTaskID);
@@ -220,12 +222,12 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $classRation = 'red';
                 }
                 $html_parts[] = '<span class="'.$classRation.'">';
-                if($consumption) {
+                if( $activeProjectTask ) {
                     $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours);
                     $html_parts[] = '&nbsp;';
                     $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
                 } else{
-                    $html_parts[] = '?/'. $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours);
+                    $html_parts[] = '0/'. $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours).'&nbsp; (0%)';
                 }
                 $html_parts[] = '</span>';
             }
@@ -1032,7 +1034,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         if (!empty($project_id)) {
             $bridge_contract = new PluginProjectbridgeContract();
-            $contract_bridges = $bridge_contract->find(" project_id = " . $project_id);
+            $contract_bridges = $bridge_contract->find(['project_id' => $project_id]);
 
             $html_parts = [];
             $html_parts[] = '<div class="spaced">' . "\n";
