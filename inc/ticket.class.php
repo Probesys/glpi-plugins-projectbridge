@@ -157,17 +157,14 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @return array
      */
     private static function _getProjectList() {
-        $search_filters = [
-          'TRUE',
-          '`is_deleted` = 0',
-        ];
+        $search_filters = ['is_deleted' => 0];
 
         if (!empty($_SESSION['glpiactiveentities'])) {
-            $search_filters[] = "`entities_id` IN (" . implode(', ', $_SESSION['glpiactiveentities']) . ")";
+            $search_filters['entities_id'] = ['IN'=>implode(', ', $_SESSION['glpiactiveentities'])];
         }
 
         $project = new Project();
-        $project_results = $project->find(implode(" AND ", $search_filters));
+        $project_results = $project->find( $search_filters);
         $project_list = [
           null => Dropdown::EMPTY_VALUE,
         ];
@@ -362,16 +359,14 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                 break;
 
             case 'addProjectTaskLink':
-                $search_filters = [
-                  "TRUE",
-                ];
+                $search_filters = [];
 
                 if (!empty($_SESSION['glpiactiveentities'])) {
-                    $search_filters[] = "`entities_id` IN (" . implode(', ', $_SESSION['glpiactiveentities']) . ")";
+                    $search_filters['entities_id'] = ['IN' => implode(', ', $_SESSION['glpiactiveentities'])];
                 }
 
                 $project_task = new ProjectTask();
-                $project_task_results = $project_task->find(implode(" AND ", $search_filters), "entities_id ASC");
+                $project_task_results = $project_task->find($search_filters, ['entities_id'=> 'ASC']);
                 $project_task_list = [
                   null => Dropdown::EMPTY_VALUE,
                 ];
