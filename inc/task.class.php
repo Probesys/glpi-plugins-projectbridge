@@ -106,9 +106,20 @@ class PluginProjectbridgeTask extends CommonDBTM {
         }
 
         $task = new ProjectTask();
-        //$tasks = $task->find("projectstates_id != " . $state_closed_value );
+       
         $tasks = $task->find(['projectstates_id' => ['!=' , $state_closed_value] ] );
+        $nb_successes += self::closeTaskAndCreateExcessTicket($tasks);
+        
 
+        $cron_task->addVolume($nb_successes);
+
+        echo __('Finish') . "<br />\n";
+
+        return ($nb_successes > 0) ? 1 : 0;
+    }
+    
+    public function closeTaskAndCreateExcessTicket($tasks) {
+        $nb_successes = 0;
         foreach ($tasks as $task_data) {
             $expired = false;
             $timediff = 0;
@@ -132,16 +143,10 @@ class PluginProjectbridgeTask extends CommonDBTM {
                     $brige_task->createExcessTicket($timediff, $task_data['entities_id']);
                 }
 
-                continue;
             }
         }
-
-        $cron_task->addVolume($nb_successes);
-
-        echo __('Finish') . "<br />\n";
-
-        return ($nb_successes > 0) ? 1 : 0;
-    }
+        return $nb_successes;
+    } 
 
     /**
      * Close a task

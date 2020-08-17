@@ -686,11 +686,15 @@ class PluginProjectbridgeContract extends CommonDBTM
         }
 
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
+        
 
         if (empty($state_in_progress_value)) {
             Session::addMessageAfterRedirect(__('The match for the status "In progress" has not been defined. The contract could not be renewed.', 'projectbridge'), false, ERROR);
             return false;
         }
+        
+        // récupération des tâches de projets ouvertes avant la création de la nouvelle
+        $allActiveTasks = self::getAllActiveProjectTasksForProject($project_id);
         
         $renewal_data = $this->getRenewalData($use_input_data = true);
         $plan_end_date = date('Y-m-d  H:i:s', strtotime($renewal_data['begin_date'] . ' + ' . $renewal_data['duration'] . ' months - 1 days'));
@@ -738,6 +742,14 @@ class PluginProjectbridgeContract extends CommonDBTM
         // mise a jour date de début contrat et durée       
         $this->_contract->input['begin_date'] = $renewal_data['begin_date'];
         $this->_contract->input['duration'] = $renewal_data['duration'];
+        
+        // close previous active project taks
+        if($allActiveTasks) {
+            // call crontask function ( projectTask ) to close previous project task and create a new tikcet with exeed time if necessary
+            $pluginProjectbridgeTask = new PluginProjectbridgeTask();
+            $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks);
+        }
+        
     }
 
     /**
