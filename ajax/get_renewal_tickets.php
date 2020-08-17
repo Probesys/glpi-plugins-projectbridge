@@ -17,21 +17,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
         $task->getFromDB($task_id);
 
         $ticket = new Ticket();
-        $all_tickets = $ticket->find("
-            TRUE
-            AND entities_id = " . $task->fields['entities_id'] . "
-            AND is_deleted = 0
-        ");
+        $all_tickets = $ticket->find([
+          'entities_id'=>$task->fields['entities_id'],
+          'is_deleted'=> 0
+          ]
+        );
     }
 
     $unlinked_tickets = [];
 
     if (!empty($all_tickets)) {
         $task_ticket = new ProjectTask_Ticket();
-        $linked_tickets = $task_ticket->find("
-            TRUE
-            AND tickets_id IN (" . implode(', ', array_keys($all_tickets)) . ")
-        ");
+        $linked_tickets = $task_ticket->find([
+          'tickets_id'=> ['IN'=> implode(', ', array_keys($all_tickets))]
+        ]);
 
         $unlinked_tickets = $all_tickets;
 
