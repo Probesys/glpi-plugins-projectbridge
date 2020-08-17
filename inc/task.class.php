@@ -124,10 +124,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
                 $timediff = $action_time - $task_data['planned_duration'];
             }
 
-            if ($expired || (
-                    $timediff >= 0 && $action_time !== null
-                    )
-            ) {
+            if ($expired || ( $timediff >= 0 && $action_time !== null ) ) {
                 $brige_task = new PluginProjectbridgeTask($task_data['id']);
                 $nb_successes += $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0);
 
@@ -431,20 +428,21 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
         $ticket_fields = [
           'entities_id' => $entities_id,
-          'name' => __('Adjustment ticket', 'projectbridge'),
-          'content' => __('Time Adjustment ticket', 'projectbridge'),
+          'name' => addslashes(__('Adjustment ticket', 'projectbridge')),
+          'content' => addslashes(__('Time Adjustment ticket', 'projectbridge')),
           'actiontime' => 0,
           'requesttypes_id' => $ticket_request_type,
           'status' => Ticket::CLOSED,
         ];
 
         $ticket = new Ticket();
+        $return = $ticket->add($ticket_fields);
 
-        if ($ticket->add($ticket_fields)) {
+        if ($return) {
             $ticket_task_data = [
               'actiontime' => $timediff,
               'tickets_id' => $ticket->getId(),
-              'content' => __('Adjustment task', 'projectbridge'),
+              'content' => addslashes(__('Adjustment task', 'projectbridge')),
             ];
 
             $ticket_task = new TicketTask();
