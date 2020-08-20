@@ -106,10 +106,10 @@ class PluginProjectbridgeTask extends CommonDBTM {
         }
 
         $task = new ProjectTask();
-       
-        $tasks = $task->find(['projectstates_id' => ['!=' , $state_closed_value] ] );
+
+        $tasks = $task->find(['projectstates_id' => ['!=', $state_closed_value]]);
         $nb_successes += self::closeTaskAndCreateExcessTicket($tasks);
-        
+
 
         $cron_task->addVolume($nb_successes);
 
@@ -117,9 +117,10 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
         return ($nb_successes > 0) ? 1 : 0;
     }
-    
-    public function closeTaskAndCreateExcessTicket($tasks) {
+
+    public function closeTaskAndCreateExcessTicket($tasks, $fromCronTask = true) {
         $nb_successes = 0;
+
         foreach ($tasks as $task_data) {
             $expired = false;
             $timediff = 0;
@@ -135,18 +136,19 @@ class PluginProjectbridgeTask extends CommonDBTM {
                 $timediff = $action_time - $task_data['planned_duration'];
             }
 
-            if ($expired || ( $timediff >= 0 && $action_time !== null ) ) {
+            if ($expired || ( $timediff >= 0 && $action_time !== null )) {
+
                 $brige_task = new PluginProjectbridgeTask($task_data['id']);
-                $nb_successes += $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0);
+                $nb_successes += $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0, $fromCronTask);
 
                 if ($timediff > 0) {
                     $brige_task->createExcessTicket($timediff, $task_data['entities_id']);
                 }
-
             }
         }
+
         return $nb_successes;
-    } 
+    }
 
     /**
      * Close a task
@@ -156,7 +158,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param integer $action_time
      * @return int
      */
-    public function closeTask($expired = false, $action_time = 0) {
+    public function closeTask($expired = false, $action_time = 0, $fromCronTask = true) {
         $nb_successes = 0;
         echo 'Fermeture de la tâche ' . $this->_task->getId() . "<br />\n";
 
@@ -166,10 +168,10 @@ class PluginProjectbridgeTask extends CommonDBTM {
           'projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('closed'),
         ]);
 
-        if ($closed) {
+        if ($closed && $fromCronTask) {
             $ticket_link = new ProjectTask_Ticket();
-            $ticket_links = $ticket_link->find(['projecttasks_id'=>$this->_task->getId()]);
-               
+            $ticket_links = $ticket_link->find(['projecttasks_id' => $this->_task->getId()]);
+
             if (!empty($ticket_links)) {
                 $ticket_states_to_ignore = [
                   Ticket::SOLVED,
@@ -227,8 +229,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                 // link groups (requesters, observers, technicians)
                                 $group_ticket = new Group_Ticket();
 
-                                $ticket_groups = $group_ticket->find(['tickets_id'=>$old_ticket_id]);
-                                    
+                                $ticket_groups = $group_ticket->find(['tickets_id' => $old_ticket_id]);
+
 
                                 foreach ($ticket_groups as $ticket_group_data) {
                                     $group = new Group();
@@ -245,7 +247,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
                                 // link users (requesters, observers, technicians)
                                 $ticket_user = new Ticket_User();
-                                $ticket_users = $ticket_user->find(['tickets_id'=>$old_ticket_id]);
+                                $ticket_users = $ticket_user->find(['tickets_id' => $old_ticket_id]);
 
                                 foreach ($ticket_users as $ticket_user_data) {
                                     $ticket_user = new Ticket_User();
@@ -260,7 +262,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
                                 // reproduce links to other tickets
                                 $ticket_link = new Ticket_Ticket();
-                                $ticket_links = $ticket_link->find(['tickets_id_1'=>$old_ticket_id]);
+                                $ticket_links = $ticket_link->find(['tickets_id_1' => $old_ticket_id]);
 
                                 foreach ($ticket_links as $ticket_link_data) {
                                     $ticket_link = new Ticket_Ticket();
@@ -281,7 +283,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
                                 // add followups
                                 $ticket_followup = new ITILFollowup();
-                                $ticket_followups = $ticket_followup->find(['tickets_id'=>$old_ticket_id]);
+                                $ticket_followups = $ticket_followup->find(['tickets_id' => $old_ticket_id]);
 
                                 foreach ($ticket_followups as $ticket_followup_data) {
                                     $ticket_new_followup_data = array_diff_key($ticket_followup_data, ['id' => null]);
@@ -308,7 +310,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                         [
                                           'items_id' => $old_ticket_id,
                                           'itemtype' => 'Ticket'
-                                        ]);
+                                ]);
 
                                 foreach ($ticket_document_items as $ticket_document_item_data) {
                                     $ticket_new_document_item_data = array_diff_key($ticket_document_item_data, ['id' => null, 'date_mod' => null]);
@@ -332,7 +334,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
                                 // add tasks
                                 $ticket_task = new TicketTask();
-                                $ticket_tasks = $ticket_task->find(['tickets_id'=>$old_ticket_id]);
+                                $ticket_tasks = $ticket_task->find(['tickets_id' => $old_ticket_id]);
 
                                 foreach ($ticket_tasks as $ticket_task_data) {
                                     $ticket_new_task_data = array_diff_key($ticket_task_data, ['id' => null, 'actiontime' => null, 'begin' => null, 'end' => null]);
@@ -351,8 +353,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                           'items_id' => $old_ticket_id,
                                           'id_search_option' => 24,
                                           'itemtype' => 'Ticket'
-                                        ], ['id'=>'DESC'], 1);
-                                
+                                        ], ['id' => 'DESC'], 1);
+
 
                                 if (!empty($solutions)) {
                                     $ticket_new_solution_data = array_diff_key(current($solutions), ['id' => null,]);
@@ -455,6 +457,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
             PluginProjectbridgeTicket::deleteProjectLinks($ticket->getId());
         }
+
+        return $ticket->getId();
     }
 
     /**
@@ -479,7 +483,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
         $nb_successes = 0;
 
         $ticket_task = new TicketTask();
-        $ticket_tasks = $ticket_task->find(['actiontime' => ['>'=> 0]]);
+        $ticket_tasks = $ticket_task->find(['actiontime' => ['>' => 0]]);
 
         echo __('find') . ' ' . count($ticket_tasks) . ' ' . __('tasks with time', 'projectbridge') . "<br />\n";
 
@@ -513,7 +517,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
         }
 
         $task_link = new ProjectTask_Ticket();
-        $task_links = $task_link->find(['tickets_id'=>$ticket_id]);
+        $task_links = $task_link->find(['tickets_id' => $ticket_id]);
 
         if (!empty($task_links)) {
             foreach ($task_links as $task_link) {
@@ -565,7 +569,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
      */
     public static function customizeDurationColumns(Project $project) {
         $task = new ProjectTask();
-        $tasks = $task->find(['projects_id'=>$project->getId()]);
+        $tasks = $task->find(['projects_id' => $project->getId()]);
 
         if (!empty($tasks)) {
             $duration_data = [];

@@ -205,15 +205,13 @@ class PluginProjectbridgeContract extends CommonDBTM
                 }else{
                     $projectTaskID = $activeProjectTask[0]['id'];
                 }
-                
-                //$consumption = ProjectTask_Ticket::getTicketsTotalActionTime($projectTaskID);
+               
                 $consumption = PluginProjectbridgeContract::getTicketsTotalActionTime($projectTaskID);        
                 if ($consumption) {
                     $consumption = $consumption / 3600;
                     $consumption_ratio = $consumption / $nb_hours;
                 }
                 
-                $html_parts[] = __('Comsuption', 'projectbridge') . ' : ';
                 $classRation = '';
                 if ( $consumption >= $nb_hours) {
                     $haveToBeRenewed = true;
@@ -221,11 +219,12 @@ class PluginProjectbridgeContract extends CommonDBTM
                 }
                 $html_parts[] = '<span class="'.$classRation.'">';
                 if( $activeProjectTask ) {
+                    $html_parts[] = __('Comsuption', 'projectbridge') . ' : ';
                     $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours);
                     $html_parts[] = '&nbsp;';
                     $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
                 } else{
-                    $html_parts[] = '0/'. $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours).'&nbsp; (0%)';
+                    //$html_parts[] = '0/'. $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours).'&nbsp; (0%)';
                 }
                 $html_parts[] = '</span>';
             }
@@ -695,13 +694,20 @@ class PluginProjectbridgeContract extends CommonDBTM
         
         // récupération des tâches de projets ouvertes avant la création de la nouvelle
         $allActiveTasks = self::getAllActiveProjectTasksForProject($project_id);
+        // close previous active project taks
+        if($allActiveTasks) {
+            // call crontask function ( projectTask ) to close previous project task and create a new tikcet with exeed time if necessary
+            $pluginProjectbridgeTask = new PluginProjectbridgeTask();
+            $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks, false);
+        }
         
         $renewal_data = $this->getRenewalData($use_input_data = true);
         $plan_end_date = date('Y-m-d  H:i:s', strtotime($renewal_data['begin_date'] . ' + ' . $renewal_data['duration'] . ' months - 1 days'));
 
         $project_task_data = [
           // data from contract
-          'name' => date('Y-m'),
+          //'name' => date('Y-m'),
+          'name' => date('Y-m', strtotime($renewal_data['begin_date'])),
           'entities_id' => $this->_contract->fields['entities_id'],
           'is_recursive' => $this->_contract->fields['is_recursive'],
           'projects_id' => $project_id,
@@ -743,12 +749,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         $this->_contract->input['begin_date'] = $renewal_data['begin_date'];
         $this->_contract->input['duration'] = $renewal_data['duration'];
         
-        // close previous active project taks
-        if($allActiveTasks) {
-            // call crontask function ( projectTask ) to close previous project task and create a new tikcet with exeed time if necessary
-            $pluginProjectbridgeTask = new PluginProjectbridgeTask();
-            $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks);
-        }
+        
         
     }
 
@@ -781,13 +782,14 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $task_start_date = date('Y-m-d', strtotime($previous_task_end . ' + 1 day'));
                 $datediff = ceil((strtotime($previous_task_end) - strtotime($previous_task_start)) / 3600 / 24);
                 $task_end_date = date('Y-m-d', strtotime($task_start_date . ' + ' . $datediff . ' days'));
+                $use_closed = false;
             } else {
                 if (empty($this->_contract->input['_projecttask_begin_date'])) {
                     $task_start_date = date('Y-m-d');
                 } else {
                     $task_start_date = date('Y-m-d', strtotime($this->_contract->input['_projecttask_begin_date']));
 
-                    $use_closed = true;
+                    $use_closed = false;
                 }
             }
 
@@ -795,10 +797,13 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $task_end_date = (
                     !empty($this->_contract->fields['duration']) ? Infocom::getWarrantyExpir(date('Y-m-d', strtotime($task_start_date)), $this->_contract->fields['duration']) : ''
                 );
-                $use_closed = true;
+                //$use_closed = true;
             } else {
                 $task_end_date = $this->_contract->input['_projecttask_end_date'];
             }
+        }
+        if($use_input_data && empty($this->_contract->input['_projecttask_begin_date']) ) {
+             $task_start_date = date('Y-m-d', strtotime($this->_contract->input['_projecttask_begin_date']));
         }
 
         $nb_hours = $this->getNbHours();
@@ -808,6 +813,15 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         if ($consumption > $nb_hours) {
             $delta_hours_to_use = $consumption - $nb_hours;
+            // cas ou le temps est dépassé mais pas la date
+            if($open_exists && !$use_input_data) {
+                $now = new \DateTime();
+                $previous_task_end_object = new \DateTime($previous_task_end);
+                if($now < $previous_task_end_object) {
+                   $task_start_date = date('Y-m-d'); 
+                }
+            }
+            
         }
 
         if (!empty($this->_contract->input['projectbridge_nb_hours_to_use'])) {

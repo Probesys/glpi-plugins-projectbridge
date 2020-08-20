@@ -11,11 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
     $contract_id = (int) $_POST['contract_id'];
     $task_id = (int) $_POST['task_id'];
     $all_tickets = [];
-
+    
+    // creation d'un eventuel ticket de depassement
+    createRenewalTicket($contract_id);
+    
+    
     $task = new ProjectTask();
     if ($task_id) {
         $task->getFromDB($task_id);
-
         $ticket = new Ticket();
         $all_tickets = $ticket->find([
           'entities_id'=>$task->fields['entities_id'],
@@ -23,6 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
           ]
         );
     }
+    
+    
 
     $unlinked_tickets = [];
 
@@ -114,3 +119,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
 
     Html::closeForm();
 }
+
+function createRenewalTicket($contract_id) {
+    // récupération des tâches de projets ouvertes avant la création de la nouvelle
+    $contract = new Contract();
+    $contract->getFromDB($contract_id);
+    $bridge_contract = new PluginProjectbridgeContract($contract);
+    $project_id = $bridge_contract->getProjectId();  
+    $allActiveTasks = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($project_id);
+    // close previous active project taks
+    if($allActiveTasks) {
+        // call crontask function ( projectTask ) to close previous project task and create a new tikcet with exeed time if necessary
+        $pluginProjectbridgeTask = new PluginProjectbridgeTask();
+        $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks, false);
+    }
+}
+
+

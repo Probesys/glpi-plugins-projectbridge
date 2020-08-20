@@ -289,8 +289,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                 COUNT(1) AS nb_links
             FROM
                 glpi_projecttasks_tickets
-            WHERE TRUE
-                AND tickets_id = " . $ticket_id . "
+            WHERE tickets_id = " . $ticket_id . "
         ";
 
         $result = $DB->query($get_nb_links_query);
@@ -308,8 +307,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
             $delete_links_query = "
                 DELETE FROM
                     glpi_projecttasks_tickets
-                WHERE TRUE
-                    AND tickets_id = " . $ticket_id . "
+                WHERE tickets_id = " . $ticket_id . "
             ";
 
             $DB->query($delete_links_query);
@@ -320,8 +318,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
         $delete_bridge_links_query = "
             DELETE FROM
                 " . PluginProjectbridgeTicket::$table_name . "
-            WHERE TRUE
-                AND ticket_id = " . $ticket_id . "
+            WHERE ticket_id = " . $ticket_id . "
         ";
 
         $DB->query($delete_bridge_links_query);
