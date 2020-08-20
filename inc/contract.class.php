@@ -698,7 +698,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         if($allActiveTasks) {
             // call crontask function ( projectTask ) to close previous project task and create a new tikcet with exeed time if necessary
             $pluginProjectbridgeTask = new PluginProjectbridgeTask();
-            $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks, false);
+            $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks, true);
         }
         
         $renewal_data = $this->getRenewalData($use_input_data = true);
@@ -853,135 +853,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     {
         return 'ProjectBridge';
     }
-
-    /**
-     * Give cron information
-     *
-     * @param $name string Cron name
-     * @return array of information
-     */
-    public static function cronInfo($name)
-    {
-        $return = [];
-        switch ($name) {
-            case 'AlertContractsToRenew':
-                $return = [
-                  'description' => __('Contract Alert to renew', 'projectbridge'),
-                ];
-                break;
-        }
-        
-        return $return;
-    }
-
-    /**
-     * Cron action to alert on contracts to renew
-     *
-     * @param CronTask|null $task for log, if NULL display (default NULL)
-     * @return integer 1 if an action was done, 0 if not
-     */
-    public static function cronAlertContractsToRenew($task = null)
-    {
-        if (class_exists('PluginProjectbridgeConfig')) {
-            $plugin = new Plugin();
-
-            if (!$plugin->isActivated(PluginProjectbridgeConfig::NAMESPACE)) {
-                echo __('Disabled plugin') . "<br />\n";
-                return 0;
-            }
-        } else {
-            echo __('Plugin is not installed', 'projectbridge') . "<br />\n";
-            return 0;
-        }
-
-        $nb_successes = 0;
-        $recipients = PluginProjectbridgeConfig::getRecipients();
-        echo count($recipients) . ' ' . __('person(s) to alert', 'projectbridge') . "<br />\n";
-
-        if (count($recipients)) {
-            $contracts = PluginProjectbridgeContract::getContractsToRenew();
-            echo count($contracts) . ' ' . __('contract(s) to renew', 'projectbridge') . "<br />\n";
-
-            $subject = count($contracts) . ' ' . __('contract(s) to renew', 'projectbridge');
-
-            $html_parts = [];
-            $html_parts[] = '<p>' . "\n";
-            $html_parts[] = count($contracts) . ' ' . __('contract(s) to renew', 'projectbridge') . ' :';
-            $html_parts[] = '</p>' . "\n";
-
-            $html_parts[] = '<ol>' . "\n";
-
-            global $CFG_GLPI;
-
-            foreach ($contracts as $contract_id => $contract_data) {
-                $html_parts[] = '<li>' . "\n";
-
-                $html_parts[] = '<strong>' . __('Name') . '</strong> : ';
-                $html_parts[] = '<a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/contract.form.php?id=' . $contract_id . '">';
-                $html_parts[] = $contract_data['contract']->fields['name'];
-                $html_parts[] = '</a>';
-                $html_parts[] = '<br />' . "\n";
-
-                $entity = new Entity();
-                $entity->getFromDB($contract_data['contract']->fields['entities_id']);
-                $html_parts[] = '<strong>' . __('Entity') . '</strong> : ';
-                $html_parts[] = $entity->fields['name'];
-                $html_parts[] = '<br />' . "\n";
-
-                $bridge_contract = new PluginProjectbridgeContract($contract_data['contract']);
-                $project_id = $bridge_contract->getProjectId();
-
-                // first search if open projecttask exist
-                $search_close = false;
-                $projectTaskObject = self::getProjectTaskOject($project_id, $search_close);
-                if (!$projectTaskObject) {
-                    // if not finded, search closed projecttask
-                    $search_close = true;
-                    $projectTaskObject = self::getProjectTaskOject($project_id, $search_close); 
-                }
-                if ($projectTaskObject) {    
-                    $plan_end_date = self::getProjectTaskFieldValue($project_id, $search_close, 'plan_end_date');
-                    $html_parts[] = '<strong>';
-                    $html_parts[] = __('Expected end date', 'projectbridge');
-                    $html_parts[] = '</strong> : ';
-                    $html_parts[] = date('d-m-Y', strtotime($plan_end_date));
-                    $html_parts[] = '<br />' . "\n";
-
-                    $consumption = self::getProjectTaskConsumption($project_id, $search_close);
-                    $html_parts[] = '<strong>';
-                    $html_parts[] = __('Effective duration');
-                    $html_parts[] = '</strong> : ';
-                    $html_parts[] = round($consumption, 2);
-                    $html_parts[] = ' | ';
-
-                    $task_duration = self::getProjectTaskPlannedDuration($project_id, $search_close);
-                    $html_parts[] = '<strong>';
-                    $html_parts[] = __('Planned duration');
-                    $html_parts[] = '</strong> : ';
-                    $html_parts[] = round($task_duration, 2);
-                    $html_parts[] = '<br />' . "\n";
-                }
-
-                $html_parts[] = '<br />' . "\n";
-                $html_parts[] = '</li>' . "\n";
-            }
-
-            $html_parts[] = '</ol>' . "\n";
-
-            foreach ($recipients as $recipient) {
-                $success = PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
-
-                if ($success) {
-                    $nb_successes++;
-                    $task->addVolume(count($contracts));
-                }
-            }
-        }
-
-        echo __('Finish') . "<br />\n";
-
-        return ($nb_successes > 0) ? 1 : 0;
-    }
+   
 
     /**
      * Get the contracts to renew

@@ -121,7 +121,7 @@ function plugin_projectbridge_install() {
     }
 
     // cron for alerts
-    CronTask::Register('PluginProjectbridgeContract', 'AlertContractsToRenew', DAY_TIMESTAMP);
+    CronTask::Register('PluginProjectbridgeTask', 'AlertContractsToRenew', DAY_TIMESTAMP);
 
     // cron to process tasks (expired, quota reached, ...)
     CronTask::Register('PluginProjectbridgeTask', 'ProcessTasks', DAY_TIMESTAMP);
