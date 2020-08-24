@@ -8,41 +8,54 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty($_POST['contract_id'])) {
+    
     $contract_id = (int) $_POST['contract_id'];
     $task_id = (int) $_POST['task_id'];
-    $all_tickets = [];
-    
+
     // creation d'un eventuel ticket de depassement
     createRenewalTicket($contract_id);
     
-    
-    $task = new ProjectTask();
-    if ($task_id) {
-        $task->getFromDB($task_id);
-        $ticket = new Ticket();
-        $all_tickets = $ticket->find([
-          'entities_id'=>$task->fields['entities_id'],
-          'is_deleted'=> 0
-          ]
-        );
-    }
-    
-    
-
     $unlinked_tickets = [];
-
-    if (!empty($all_tickets)) {
+    $task = new ProjectTask();
+    # TODO https://gitlab.probesys.com/glpi/glpi-plugin-projectbridge/-/issues/18#note_2257 
+    # n'afficher que les tickets qui n'ont pas de tâche de projet lié et qui sont associé à l'entité
+    if ($task_id) {
+        global $DB;
+        $task->getFromDB($task_id);
+        $entity_id = $task->fields['entities_id'];
+        
+        
+        $ticket = new Ticket();
         $task_ticket = new ProjectTask_Ticket();
-        $linked_tickets = $task_ticket->find([
-          'tickets_id'=> ['IN'=> implode(', ', array_keys($all_tickets))]
-        ]);
-
-        $unlinked_tickets = $all_tickets;
-
-        foreach ($linked_tickets as $ticket_link_data) {
-            unset($unlinked_tickets[$ticket_link_data['tickets_id']]);
+        
+        // récupération des tickets liés à une tâche de projet, à l'entité et non supprimés
+        foreach ($DB->request([
+            'SELECT' => $ticket->getTable().'.id',
+            'FROM'   => $task_ticket->getTable(),
+            'INNER JOIN' => [
+              $ticket->getTable() => [
+                'FKEY' => [
+                  $task_ticket->getTable() => 'tickets_id',
+                  $ticket->getTable() => 'id'
+                ]
+              ]
+              ],
+            'WHERE'  => [
+                'entities_id'=>$task->fields['entities_id'],
+                'is_deleted'=> 0
+            ]
+         ]) as $data) {
+              $linkedTicketsids[] = $data['id'];
         }
-    }
+
+        // récupération des tickets associés à l'entité, non supprimés et non associés à une tâche de projet
+        $unlinked_tickets = $ticket->find([           
+            'NOT' => ['id' => ['IN' => implode(', ', $linkedTicketsids)]],
+            'entities_id' => $task->fields['entities_id'],
+            'is_deleted'=> 0,
+            
+            ],'date DESC');
+    }    
 
     global $CFG_GLPI;
     
