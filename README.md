@@ -5,7 +5,7 @@ By Probesys: https://probesys.com
 
 Language: french / english ( and more if you want translate it in other languages )
 
-Works with: GLPI 9.3.x and 9.4.x
+Works with: GLPI 9.3.x and 9.4.x and 9.5.x
 
 This plugin allows to count down time from contracts by linking tickets with project tasks and project tasks with contracts.
 

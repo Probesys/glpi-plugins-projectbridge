@@ -3,14 +3,15 @@
    <name>ProjectBridge</name>
    <key>projectbridge</key>
    <state>stable</state>
-   <logo></logo>
+   <logo>https://avatars2.githubusercontent.com/u/1265671</logo>
    <description>
       <short>
-         <fr>ProjectBridge : ajout de liens entre les tickets et les contrats pour en décompter le temps</fr>
+         <fr><![CDATA[ProjectBridge : ajout de liens entre les tickets et les contrats pour en décompter le temps]]></fr>
+         <en><![CDATA[ProjectBridge : This plugin allows to count down time from contracts by linking tickets with project tasks and project tasks with contracts]]></en>
       </short>
       <long>
          <fr>
-            ProjectBridge est un plugin qui vous permet de lier des tickets à un contrat et d'en décompter le temps. Cela est fait en liant les tickets à des tâches de projets, elles-mêmes liées aux contrats.
+            <![CDATA[ProjectBridge est un plugin qui vous permet de lier des tickets à un contrat et d'en décompter le temps. Cela est fait en liant les tickets à des tâches de projets, elles-mêmes liées aux contrats.
 
             Fonctionnalités
             ===============
@@ -27,8 +28,28 @@
 
             - Changer le lien d'un ticket vers un autre projet, et donc un autre contrat
 
-            - Créer de projets à partir de contrats existants et les lier
+            - Créer de projets à partir de contrats existants et les lier]]>
          </fr>
+         <en>
+            <![CDATA[
+            This plugin is based on the old glpi plugin "Best management". We have rewritten and rethought all the code and the features.
+
+            Features
+            ========
+
+            - Configure recipients of expiration alerts and reached quota alerts
+
+            - Link default contracts to entities: tickets created in that entity will automatically be linked to the project and thus to the contract
+
+            - Link contracts to projects
+
+            - Automatically create a project and it's task when creating a contract
+
+            - Renew a contract when quota is reached or it expired
+
+            - Change a ticket's link to another project, and thus another contract
+            ]]>
+         </en>
       </long>
    </description>
    <homepage>https://github.com/Probesys/glpi-plugins-projectbridge/</homepage>
@@ -48,8 +69,9 @@
    </versions>
    <langs>
       <lang>fr_FR</lang>
+      <lang>en_GB</lang>
    </langs>
-   <license>AGPL-3.0</license>
+   <license><![CDATA[AGPL-3.0]]></license>
    <tags>
       <fr>
          <tag>Contrats</tag>
