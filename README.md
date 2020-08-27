@@ -21,7 +21,6 @@ Features
 * link contracts to projects
 * automatically create a project and it's task when creating a contract
 * renew a contract when quota is reached or it expired
-* create projects from existing contracts and link them: `php plugins/projectbridge/scripts/link_data.php`
 * change a ticket's link to another project, and thus another contract
 
 Known issues
