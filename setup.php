@@ -1,8 +1,8 @@
 <?php
 
 define('PROJECTBRIDGE_VERSION', '2.2.0');
-define('MIN_GLPI_VERSION', '9.4');
-define('MAX_GLPI_VERSION', '9.6');
+define('PROJECTBRIDGE_MIN_GLPI_VERSION', '9.4');
+define('PROJECTBRIDGE_MAX_GLPI_VERSION', '9.6');
 
 if (!class_exists('PluginProjectbridgeConfig')) {
     require_once(__DIR__.'/inc/config.class.php');
@@ -22,8 +22,8 @@ function plugin_version_projectbridge() {
         'homepage'       => 'https://github.com/Probesys/glpi-plugins-projectbridge',
         'requirements'   => [
          'glpi'   => [
-            'min' => MIN_GLPI_VERSION,
-            'max' => MAX_GLPI_VERSION,
+            'min' => PROJECTBRIDGE_MIN_GLPI_VERSION,
+            'max' => PROJECTBRIDGE_MAX_GLPI_VERSION,
          ],
          'php'    => [
             'min' => '7.0'
@@ -73,8 +73,8 @@ function plugin_projectbridge_check_prerequisites() {
     $prerequisites_check_ok = false;
 
    try {
-      if (version_compare(GLPI_VERSION, MIN_GLPI_VERSION, '<')) {
-          throw new Exception('This plugin requires GLPI >= ' . MIN_GLPI_VERSION);
+      if (version_compare(GLPI_VERSION, PROJECTBRIDGE_MIN_GLPI_VERSION, '<')) {
+          throw new Exception('This plugin requires GLPI >= ' . PROJECTBRIDGE_MIN_GLPI_VERSION);
       }
 
          $prerequisites_check_ok = true;
