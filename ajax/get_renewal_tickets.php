@@ -8,13 +8,13 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty($_POST['contract_id'])) {
-    
+
     $contract_id = (int) $_POST['contract_id'];
     $task_id = (int) $_POST['task_id'];
 
     // creation d'un eventuel ticket de depassement
     createRenewalTicket($contract_id);
-    
+
     $unlinked_tickets = [];
     $task = new ProjectTask();
     # TODO https://gitlab.probesys.com/glpi/glpi-plugin-projectbridge/-/issues/18#note_2257 
@@ -23,42 +23,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
         global $DB;
         $task->getFromDB($task_id);
         $entity_id = $task->fields['entities_id'];
-        
-        
+
+
         $ticket = new Ticket();
         $task_ticket = new ProjectTask_Ticket();
-        
+
         // récupération des tickets liés à une tâche de projet, à l'entité et non supprimés
         foreach ($DB->request([
-            'SELECT' => $ticket->getTable().'.id',
-            'FROM'   => $task_ticket->getTable(),
+            'SELECT' => $ticket->getTable() . '.id',
+            'FROM' => $task_ticket->getTable(),
             'INNER JOIN' => [
-              $ticket->getTable() => [
-                'FKEY' => [
-                  $task_ticket->getTable() => 'tickets_id',
-                  $ticket->getTable() => 'id'
+                $ticket->getTable() => [
+                    'FKEY' => [
+                        $task_ticket->getTable() => 'tickets_id',
+                        $ticket->getTable() => 'id'
+                    ]
                 ]
-              ]
-              ],
-            'WHERE'  => [
-                'entities_id'=>$task->fields['entities_id'],
-                'is_deleted'=> 0
+            ],
+            'WHERE' => [
+                'entities_id' => $entity_id,
+                'is_deleted' => 0
             ]
-         ]) as $data) {
-              $linkedTicketsids[] = $data['id'];
+        ]) as $data) {
+            $linkedTicketsids[] = $data['id'];
         }
 
         // récupération des tickets associés à l'entité, non supprimés et non associés à une tâche de projet
-        $unlinked_tickets = $ticket->find([           
-            'NOT' => ['id' => ['IN' => implode(', ', $linkedTicketsids)]],
-            'entities_id' => $task->fields['entities_id'],
-            'is_deleted'=> 0,
-            
-            ],'date DESC');
-    }    
+        $unlinked_tickets = $ticket->find([
+            'NOT' => ['id' => $linkedTicketsids],
+            'entities_id' => $entity_id,
+            'is_deleted' => 0,
+                ], 'date DESC');
+    }
 
     global $CFG_GLPI;
-    
+
     $html = '';
 
     $html .= '<form method="post" action="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php">' . "\n";
@@ -93,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
         $html .= '<tr class="tab_bg_1">' . "\n";
         $html .= '<td>';
         $html .= Html::getCheckbox([
-          'name' => 'ticket_ids[' . $ticket_data['id'] . ']',
+                    'name' => 'ticket_ids[' . $ticket_data['id'] . ']',
         ]);
         $html .= '</td>' . "\n";
         $html .= '<td>';
@@ -127,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
     $html .= '</td>' . "\n";
     $html .= '</tr>' . "\n";
     $html .= '</table>' . "\n";
-    
+
     echo $html;
 
     Html::closeForm();
@@ -138,14 +137,31 @@ function createRenewalTicket($contract_id) {
     $contract = new Contract();
     $contract->getFromDB($contract_id);
     $bridge_contract = new PluginProjectbridgeContract($contract);
-    $project_id = $bridge_contract->getProjectId();  
+    $project_id = $bridge_contract->getProjectId();
     $allActiveTasks = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($project_id);
-    // close previous active project taks
-    if($allActiveTasks) {
-        // call crontask function ( projectTask ) to close previous project task and create a new tikcet with exeed time if necessary
-        $pluginProjectbridgeTask = new PluginProjectbridgeTask();
-        $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks, false);
+    
+    // call crontask function ( projectTask ) to create a new tikcet with exeed time if necessary
+    foreach ($allActiveTasks as $task_data) {
+        $expired = false;
+        $timediff = 0;
+        $action_time = null;
+
+        if (!empty($task_data['plan_end_date']) && time() >= strtotime($task_data['plan_end_date'])
+        ) {
+            $expired = true;
+        }
+
+        if (!empty($task_data['planned_duration'])) {
+            $action_time = PluginProjectbridgeContract::getTicketsTotalActionTime($task_data['id']);
+            $timediff = $action_time - $task_data['planned_duration'];
+        }
+
+        if ($expired || ( $timediff >= 0 && $action_time !== null )) {
+
+            $brige_task = new PluginProjectbridgeTask($task_data['id']);
+            if ($timediff > 0) {
+                $brige_task->createExcessTicket($timediff, $task_data['entities_id']);
+            }
+        }
     }
 }
-
-

@@ -694,11 +694,12 @@ class PluginProjectbridgeContract extends CommonDBTM
         
         // récupération des tâches de projets ouvertes avant la création de la nouvelle
         $allActiveTasks = self::getAllActiveProjectTasksForProject($project_id);
+        
         // close previous active project taks
         if($allActiveTasks) {
             // call crontask function ( projectTask ) to close previous project task and create a new tikcet with exeed time if necessary
             $pluginProjectbridgeTask = new PluginProjectbridgeTask();
-            $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks, true);
+            $newTicketIds = $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks, false);
         }
         
         $renewal_data = $this->getRenewalData($use_input_data = true);
@@ -731,7 +732,8 @@ class PluginProjectbridgeContract extends CommonDBTM
         // create the new project's task
         $project_task = new ProjectTask();
         $task_id = $project_task->add($project_task_data);
-
+        
+        // associate selected tickets
         if ($task_id && !empty($this->_contract->input['ticket_ids']) && is_array($this->_contract->input['ticket_ids'])) {
             // link selected tickets
             foreach ($this->_contract->input['ticket_ids'] as $ticket_id => $selected) {
@@ -743,6 +745,14 @@ class PluginProjectbridgeContract extends CommonDBTM
                     ]);
                 }
             }
+        }
+        // associate new tickets created from old tickets
+        foreach( $newTicketIds as $ticket_id ) {
+            $project_task_ticket = new ProjectTask_Ticket();
+                    $project_task_ticket->add([
+                      'tickets_id' => $ticket_id,
+                      'projecttasks_id' => $task_id,
+                    ]);
         }
         
         // mise a jour date de début contrat et durée       

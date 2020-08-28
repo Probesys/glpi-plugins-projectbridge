@@ -115,7 +115,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
         $task = new ProjectTask();
 
         $tasks = $task->find(['projectstates_id' => ['!=', $state_closed_value]]);
-        $nb_successes += self::closeTaskAndCreateExcessTicket($tasks);
+        $nb_successes += count(self::closeTaskAndCreateExcessTicket($tasks));
 
 
         $cron_task->addVolume($nb_successes);
@@ -125,9 +125,9 @@ class PluginProjectbridgeTask extends CommonDBTM {
         return ($nb_successes > 0) ? 1 : 0;
     }
 
-    public function closeTaskAndCreateExcessTicket($tasks, $fromCronTask = true) {
+    public function closeTaskAndCreateExcessTicket($tasks,  $fromCronTask = true) {
         $nb_successes = 0;
-
+        $newTicketIds = [];
         foreach ($tasks as $task_data) {
             $expired = false;
             $timediff = 0;
@@ -144,17 +144,18 @@ class PluginProjectbridgeTask extends CommonDBTM {
             }
 
             if ($expired || ( $timediff >= 0 && $action_time !== null )) {
-
+                 
                 $brige_task = new PluginProjectbridgeTask($task_data['id']);
-                $nb_successes += $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0, $fromCronTask);
-
-                if ($timediff > 0) {
-                    $brige_task->createExcessTicket($timediff, $task_data['entities_id']);
+                //$nb_successes += $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0, $fromCronTask);
+                $newTicketIds = array_merge($newTicketIds, $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0, $fromCronTask));
+                
+                if ($fromCronTask && $timediff > 0 ) {
+                        $brige_task->createExcessTicket($timediff, $task_data['entities_id']);
                 }
             }
         }
 
-        return $nb_successes;
+        return array_unique($newTicketIds);
     }
 
     /**
@@ -165,8 +166,10 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param integer $action_time
      * @return int
      */
-    public function closeTask($expired = false, $action_time = 0, $fromCronTask = true) {
-        $nb_successes = 0;
+    public function closeTask($expired = false, $action_time = 0) {
+       
+        $newTicketIds = [];
+        
         echo 'Fermeture de la tâche ' . $this->_task->getId() . "<br />\n";
 
         // close task
@@ -175,7 +178,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
           'projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('closed'),
         ]);
 
-        if ($closed && $fromCronTask) {
+        if ($closed ) {
             $ticket_link = new ProjectTask_Ticket();
             $ticket_links = $ticket_link->find(['projecttasks_id' => $this->_task->getId()]);
 
@@ -212,7 +215,6 @@ class PluginProjectbridgeTask extends CommonDBTM {
                         if ($closed) {
 
                             // clone the old ticket into a new one WITHOUT the link to the project task
-
                             $old_ticket_id = $ticket->getId();
                             $ticket_fields = array_diff_key($ticket_fields, $ticket_fields_to_ignore);
                             $ticket_fields['name'] = str_replace("'", "\'", $ticket_fields['name']);
@@ -385,8 +387,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                         $_SESSION['glpi_currenttime'] = $glpi_time_before;
                                     }
                                 }
-
-                                $nb_successes++;
+                                array_push($newTicketIds, $ticket->getId());
+                                //$nb_successes++;
                             }
                         }
                     }
@@ -394,7 +396,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
             }
         }
 
-        if ($nb_successes > 0) {
+        if (count($newTicketIds) > 0) {
             $recipients = PluginProjectbridgeConfig::getRecipients();
             echo __('find', 'projectbridge') . count($recipients) . ' ' . __('person(s) to alert', 'projectbridge') . "<br />\n";
 
@@ -427,7 +429,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
             }
         }
 
-        return $nb_successes;
+        return $newTicketIds;
     }
 
     /**
