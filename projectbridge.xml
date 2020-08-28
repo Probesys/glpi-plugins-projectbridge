@@ -63,6 +63,10 @@
    </authors>
    <versions>
       <version>
+         <num>2.2</num>
+         <compatibility>~9.5.1</compatibility>
+      </version> 
+      <version>
          <num>2.0</num>
          <compatibility>9.4</compatibility>
       </version>
