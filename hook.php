@@ -139,6 +139,12 @@ function plugin_projectbridge_install() {
  */
 function plugin_projectbridge_uninstall() {
     global $DB;
+    
+    // clean crontasks infos
+    $clear_crontaksInfos_query = "DELETE FROM ".CronTask::getTable()."git status"
+            . " WHERE itemtype LIKE 'PluginProjectbridge%'";
+    
+    $DB->query($clear_crontaksInfos_query) or die($DB->error());
 
     $tables_to_drop = [
       PluginProjectbridgeEntity::$table_name,
