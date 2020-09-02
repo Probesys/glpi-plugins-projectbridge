@@ -58,8 +58,7 @@ function plugin_projectbridge_install() {
     }
 
     // configs datatable
-    if (!$DB->tableExists(PluginProjectbridgeConfig::$table_name)) {
-        $create_tableConfig_query = "
+    $create_tableConfig_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeConfig::$table_name . "`
             (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -70,6 +69,7 @@ function plugin_projectbridge_install() {
             COLLATE='utf8_unicode_ci'
             ENGINE=InnoDB
         ";
+    if (!$DB->tableExists(PluginProjectbridgeConfig::$table_name)) {
         $DB->query($create_tableConfig_query) or die($DB->error());
         $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
             (1, 'RecipientIds', '[]'),
