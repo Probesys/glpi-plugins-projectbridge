@@ -17,7 +17,7 @@ Features
 ========
 
 * configure recipients of expiration alerts and reached quota alerts
-* link default contracts to entities: tickets created in that entity will automatically be linked to the project and thus to the contract
+* link default contracts to entities: tickets created in that entity will automatically be linked to selected contract (and thus corresponding ongoing project task)
 * link contracts to projects
 * automatically create a project and it's task when creating a contract
 * renew a contract when quota is reached or it expired
@@ -27,21 +27,21 @@ Features
 
 From configuration panel you can :
 
-1. Match the status names and their values in GLPI.
-2. Define the users receiving alerts.
-3. Indicate if only count the duration of public ticket tasks from the project 
+1. Match status names and their values in your GLPI configuration.
+2. Define users receiving alerts from ProjectBridge.
+3. Include private ticket tasks duration to contract.
 
-![Setup](https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/configuration-panel.png)
+![Setup](https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/configuration-panel.png)
 
 ## Usage
 
 1. From the contract page, if no project task is active, you can create new one :
 
-![Usage](https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/create-and-affect-new-contract.gif)
+![Usage](https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/create-and-affect-new-contract.gif)
 
 1. Renew a contract when quota is reached or it expired :
 
-![Usage](https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/renew-contract.gif) 
+![Usage](https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/renew-contract.gif) 
 
 Known issues
 ============
