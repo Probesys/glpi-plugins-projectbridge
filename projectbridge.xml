@@ -10,8 +10,7 @@
          <en><![CDATA[ProjectBridge : This plugin allows to count down time from contracts by linking tickets with project tasks and project tasks with contracts]]></en>
       </short>
       <long>
-         <fr>
-            <![CDATA[ProjectBridge est un plugin qui vous permet de lier des tickets à un contrat et d'en décompter le temps. Cela est fait en liant les tickets à des tâches de projets, elles-mêmes liées aux contrats.
+         <fr><![CDATA[ProjectBridge est un plugin qui vous permet de lier des tickets à un contrat et d'en décompter le temps. Cela est fait en liant les tickets à des tâches de projets, elles-mêmes liées aux contrats.
             <br />Fonctionnalités
             <br />===============
             <br />- Lier un contrat par défaut à une entité: les tickets créés dans ces entités seront automatiquement liés au projet, et donc au contrat
@@ -22,8 +21,7 @@
             <br />- Changer le lien d'un ticket vers un autre projet, et donc un autre contrat
             <br />- Créer de projets à partir de contrats existants et les lier]]>
          </fr>
-         <en>
-            <![CDATA[This plugin is based on the old glpi plugin "Best management". We have rewritten and rethought all the code and the features.
+         <en><![CDATA[This plugin is based on the old glpi plugin "Best management". We have rewritten and rethought all the code and the features.
             <br />Features
             <br />========
             <br />- Configure recipients of expiration alerts and reached quota alerts
@@ -31,8 +29,7 @@
             <br />- Link contracts to projects
             <br />- Automatically create a project and it's task when creating a contract
             <br />- Renew a contract when quota is reached or it expired
-            <br />- Change a ticket's link to another project, and thus another contract
-            ]]>
+            <br />- Change a ticket's link to another project, and thus another contract]]>
          </en>
       </long>
    </description>
