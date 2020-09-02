@@ -36,7 +36,7 @@
    <homepage>https://github.com/Probesys/glpi-plugins-projectbridge/</homepage>
    <download>https://github.com/Probesys/glpi-plugins-projectbridge/releases</download>
    <issues>https://github.com/Probesys/glpi-plugins-projectbridge/issues</issues>
-   <readme>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/README.md</readme>
+   <readme>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/README.md</readme>
    <authors>
       <author>Probesys</author>
       <author>Pierre de Vésian</author>
@@ -67,8 +67,8 @@
       </fr>
    </tags>
    <screenshots>
-	<screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/configuration-panel</screenshot>
-        <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/usage1</screenshot>
-        <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/usage2</screenshot>
+	    <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/configuration-panel</screenshot>
+      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/usage1</screenshot>
+      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/usage2</screenshot>
    </screenshots>
 </root>
