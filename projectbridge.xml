@@ -66,4 +66,9 @@
          <tag>Tâches</tag>
       </fr>
    </tags>
+   <screenshots>
+	<screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/configuration-panel</screenshot>
+        <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/usage1</screenshot>
+        <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/usage2</screenshot>
+   </screenshots>
 </root>

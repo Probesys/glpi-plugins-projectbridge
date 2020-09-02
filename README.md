@@ -5,7 +5,7 @@ By Probesys: https://probesys.com
 
 Language: french / english ( and more if you want translate it in other languages )
 
-Works with: GLPI 9.3.x and 9.4.x and 9.5.x
+Works with: GLPI 9.3.x, 9.4.x and 9.5.x
 
 This plugin allows to count down time from contracts by linking tickets with project tasks and project tasks with contracts.
 
@@ -22,6 +22,26 @@ Features
 * automatically create a project and it's task when creating a contract
 * renew a contract when quota is reached or it expired
 * change a ticket's link to another project, and thus another contract
+
+## Configuration
+
+From configuration panel you can :
+
+1. Match the status names and their values in GLPI.
+2. Define the users receiving alerts.
+3. Indicate if only count the duration of public ticket tasks from the project 
+
+![Setup](https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/configuration-panel.png)
+
+## Usage
+
+1. From the contract page, if no project task is active, you can create new one :
+
+![Usage](https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/create-and-affect-new-contract.gif)
+
+1. Renew a contract when quota is reached or it expired :
+
+![Usage](https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/master/screenshots/renew-contract.gif) 
 
 Known issues
 ============

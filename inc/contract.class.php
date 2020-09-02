@@ -678,6 +678,7 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
     public function renewProjectTask()
     {
+        global $DB;
         $project_id = $this->getProjectId();
         
         if ($project_id <= 0) {
@@ -757,9 +758,17 @@ class PluginProjectbridgeContract extends CommonDBTM
         
         // mise a jour date de début contrat et durée       
         $this->_contract->input['begin_date'] = $renewal_data['begin_date'];
-        $this->_contract->input['duration'] = $renewal_data['duration'];
+        $this->_contract->input['duration'] = $renewal_data['planned_duration'];
         
+        $DB->update(
+                $this->getTable(), [
+                    'nb_hours' => $renewal_data['nb_hours_to_use']
+                ],[
+                    'id' =>$this->getID()
+                ] 
+                );
         
+
         
     }
 
