@@ -72,7 +72,7 @@ if ($can_update) {
     echo '    table td:first-child, table th:first-child { border-left: 0px;}';
     echo '</style>' . "\n";
 
-    echo '<a href="' . rtrim($CFG_GLPI['root_doc'], '/') . '/plugins/projectbridge/front/projecttask.php">';
+    echo '<a href="' . Plugin::getPhpDir('projectbridge', false) . '/front/projecttask.php">';
     echo __('Project Tasks', 'projectbridge');
     echo '</a>';
 

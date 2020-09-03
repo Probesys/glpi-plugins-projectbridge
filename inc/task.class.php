@@ -41,7 +41,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
         $menu = parent::getMenuContent();
 
         $menu['title'] = __('ProjectBridge project tasks', 'projectbridge');
-        $menu['page'] = '/plugins/projectbridge/front/projecttask.php';
+        $menu['page'] = Plugin::getPhpDir('projectbridge', false).'/front/projecttask.php';
 
         return $menu;
     }
