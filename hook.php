@@ -119,6 +119,12 @@ function plugin_projectbridge_install() {
         ";
         $DB->query($create_table_query) or die($DB->error());
     }
+    
+    // clean old crontask
+    if (version_compare(PROJECTBRIDGE_VERSION, '2.2.3', '<')) {
+        $update_crontask_table = "UPDATE ".Crontask::getTable()." SET itemtype='PluginProjectbridgeTask' WHERE itemtype='PluginProjectbridgeContract' AND name='AlertContractsToRenew'";
+        $DB->query($update_crontask_table) or die($DB->error());
+    }
 
     // cron for alerts
     CronTask::Register('PluginProjectbridgeTask', 'AlertContractsToRenew', DAY_TIMESTAMP);
@@ -141,10 +147,9 @@ function plugin_projectbridge_uninstall() {
     global $DB;
     
     // clean crontasks infos
-    $clear_crontaksInfos_query = "DELETE FROM ".CronTask::getTable()."git status"
-            . " WHERE itemtype LIKE 'PluginProjectbridge%'";
-    
-    $DB->query($clear_crontaksInfos_query) or die($DB->error());
+    //$clear_crontaksInfos_query = "DELETE FROM ".CronTask::getTable()." WHERE itemtype LIKE 'PluginProjectbridge%'";
+    //$DB->query($clear_crontaksInfos_query) or die($DB->error());
+    Crontask::unregister('Projectbridge');
 
     $tables_to_drop = [
       PluginProjectbridgeEntity::$table_name,
