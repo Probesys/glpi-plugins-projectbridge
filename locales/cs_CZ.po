@@ -7,30 +7,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ProjectBridge 2.0\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
-"POT-Creation-Date: 2019-05-15 16:24+0200\n"
-"PO-Revision-Date: 2020-09-03 09:46+0200\n"
+"POT-Creation-Date: 2020-08-13 10:04+0200\n"
+"PO-Revision-Date: 2020-09-03 10:06+0200\n"
+"Last-Translator: probeSys <contact@probesys.com>\n"
 "Language-Team: \n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.4.1\n"
-"Last-Translator: probeSys <contact@probesys.com>\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
-"Language: cs\n"
 
-#: hook.php:1333
+#: hook.php:1373
 msgid "Delete the link with any project task"
 msgstr "Smazat jakékoli propojení s úkolem projektu"
 
-#: hook.php:1334
+#: hook.php:1374
 msgid "Link to a project"
 msgstr "Propojit s projektem"
 
-#: hook.php:1335
+#: hook.php:1375
 msgid "Force link to a project task"
 msgstr "Vynutit propojení s úkolem projektu"
 
-#: ajax/get_renewal_tickets.php:55
+#: ajax/get_renewal_tickets.php:54
 msgid ""
 "Select tickets in the entity (not deleted and unrelated to a project task) "
 "that you want to link to the new task"
@@ -38,11 +38,11 @@ msgstr ""
 "Vyberte požadavky v entitě (nesmazané a nesouvisející s úkolem projektu), "
 "které chcete propojit s novým úkolem"
 
-#: ajax/get_renewal_tickets.php:131
+#: ajax/get_renewal_tickets.php:109
 msgid "Link tickets to renewal"
 msgstr "Propojit požadavky s obnovením"
 
-#: front/config.form.php:47 front/config.form.php:51
+#: front/config.form.php:46 front/config.form.php:50
 msgid "ProjectBridge Configuration"
 msgstr "Nastavení ProjectBridge"
 
@@ -50,43 +50,51 @@ msgstr "Nastavení ProjectBridge"
 msgid "Project Tasks"
 msgstr "Úkoly projektu"
 
-#: front/config.form.php:83
+#: front/config.form.php:82
 msgid "Status Configuration"
 msgstr "Nastavení stavu"
 
-#: front/config.form.php:87
+#: front/config.form.php:86
 msgid "Please match the status names and their values in GLPI"
 msgstr "Používejte stejné názvy stavů, jaké mají hodnoty v GLPI"
 
-#: front/config.form.php:99
+#: front/config.form.php:96
 msgid "Status name"
 msgstr "Název stavu"
 
-#: front/config.form.php:103
+#: front/config.form.php:99
 msgid "Status type"
 msgstr "Typ stavu"
 
-#: front/config.form.php:107
+#: front/config.form.php:102
 msgid "Corresponding status"
 msgstr "Odpovídající stav"
 
-#: front/config.form.php:187
+#: front/config.form.php:179
 msgid "In progress"
 msgstr "Probíhá"
 
-#: front/config.form.php:227
+#: front/config.form.php:207
 msgid "Renewal"
 msgstr "Obnovení"
 
-#: front/config.form.php:288
+#: front/config.form.php:252
 msgid "People receiving alerts"
 msgstr "Lidí, kteří obdrží výstrahu"
 
-#: front/config.form.php:340
+#: front/config.form.php:292
 msgid "Nobody receive alerts"
 msgstr "Výstrahu neobdrží nikdo"
 
-#: front/config.form.php:377
+#: front/config.form.php:323
+msgid "General config"
+msgstr ""
+
+#: front/config.form.php:337
+msgid "Count only public tasks in project"
+msgstr ""
+
+#: front/config.form.php:352
 msgid "Please activate the plugin or get the right of access"
 msgstr "Aktivujte zásuvný modul nebo získejte oprávnění pro přístup k němu"
 
@@ -94,39 +102,43 @@ msgstr "Aktivujte zásuvný modul nebo získejte oprávnění pro přístup k n�
 msgid "linking Project"
 msgstr "propojuje se projekt"
 
-#: inc/contract.class.php:129 inc/contract.class.php:428
+#: inc/contract.class.php:124 inc/contract.class.php:428
 msgid "Create project"
 msgstr "Vytvořit projekt"
 
-#: inc/contract.class.php:182
+#: inc/contract.class.php:177 inc/ticket.class.php:103
 msgid "Access to linked project"
 msgstr "Přístup k propojeným projektům"
 
-#: inc/contract.class.php:207
+#: inc/contract.class.php:205
+msgid "Warning ! No associate projectTask with \"In progress\" status exist"
+msgstr ""
+
+#: inc/contract.class.php:216
 msgid "Comsuption"
 msgstr "Spotřeba"
 
-#: inc/contract.class.php:229
+#: inc/contract.class.php:251
 msgid "Expired in less than 24h"
 msgstr "Platnost skončí za méně než 24 hodin"
 
-#: inc/contract.class.php:231
+#: inc/contract.class.php:253
 msgid "Expired in"
 msgstr "Platnost skončila v"
 
-#: inc/contract.class.php:236
+#: inc/contract.class.php:258
 msgid "Expired today"
 msgstr "Platnost skončila dnes"
 
-#: inc/contract.class.php:238
+#: inc/contract.class.php:260
 msgid "Expired since"
 msgstr "Platnost skončila od"
 
-#: inc/contract.class.php:250
+#: inc/contract.class.php:269
 msgid "Renew the contract"
 msgstr "Obnovit smlouvu"
 
-#: inc/contract.class.php:295 inc/contract.class.php:453
+#: inc/contract.class.php:300 inc/contract.class.php:491
 msgid "Number of hours"
 msgstr "Počet hodin"
 
@@ -134,19 +146,15 @@ msgstr "Počet hodin"
 msgid "Confirm renewal"
 msgstr "Potvrdit obnovení"
 
-#: inc/contract.class.php:205
-msgid "Warning ! No associate projectTask with \"In progress\" status exist"
-msgstr "Warning ! No associate projectTask with \"In progress\" status exist"
-
 #: inc/contract.class.php:432
 msgid "Remember to refresh this page after creating the project"
 msgstr "Po vytvoření projektu nezapomeňte tuto stránku načíst znovu"
 
-#: inc/contract.class.php:484 inc/task.class.php:97
-msgid "Please define the correspondence of the \"Closed\" status."
-msgstr "Definujte korespondenci stavu „Uzavřeno“."
+#: inc/contract.class.php:559
+msgid "Please define the correspondence of the \""
+msgstr "Definujte korespondenci stavu „Uzavřeno“"
 
-#: inc/contract.class.php:593
+#: inc/contract.class.php:691
 msgid ""
 "The match for the status \"In progress\" has not been defined. The contract "
 "could not be renewed."
@@ -154,36 +162,36 @@ msgstr ""
 "Shoda pro stav „Probíhá“ nebyla definována. Smlouvu proto nebylo možné "
 "obnovit."
 
-#: inc/contract.class.php:741
+#: inc/contract.class.php:843
 msgid "Contract Alert to renew"
 msgstr "Výstraha ohledně obnovení smlouvy"
 
-#: inc/contract.class.php:765 inc/task.class.php:88
+#: inc/contract.class.php:867 inc/task.class.php:88
 msgid "Plugin is not installed"
 msgstr "Zásuvný modul není nainstalovaný"
 
-#: inc/contract.class.php:771 inc/task.class.php:412
+#: inc/contract.class.php:873 inc/task.class.php:403
 msgid "person(s) to alert"
 msgstr "osoba/y, které upozornit"
 
-#: inc/contract.class.php:775 inc/contract.class.php:777
-#: inc/contract.class.php:781
+#: inc/contract.class.php:877 inc/contract.class.php:879
+#: inc/contract.class.php:883
 msgid "contract(s) to renew"
 msgstr "smlouva/y, které obnovit"
 
-#: inc/contract.class.php:809
+#: inc/contract.class.php:919
 msgid "Expected end date"
 msgstr "Očekávaný datum skončení"
 
-#: inc/contract.class.php:923 inc/contract.class.php:926
+#: inc/contract.class.php:1049 inc/contract.class.php:1052
 msgid "Access to linked contract"
 msgstr "Přístup k propojeným smlouvám"
 
-#: inc/contract.class.php:926
+#: inc/contract.class.php:1052
 msgid "Link to contract nonexistent"
 msgstr "Propojení se smlouvou neexistuje"
 
-#: inc/contract.class.php:930
+#: inc/contract.class.php:1056
 msgid "No linked contract"
 msgstr "Žádná propojená smlouva"
 
@@ -215,60 +223,64 @@ msgstr "Nakládání s úkolem projektu"
 msgid "Update percentage counters performed in project tasks"
 msgstr "Aktualizovat čítače procent provedených v úkolech projektu"
 
+#: inc/task.class.php:97
+msgid "Please define the correspondence of the \"Closed\" status."
+msgstr "Definujte korespondenci stavu „Uzavřeno“."
+
 #: inc/task.class.php:104
 msgid "Please define the correspondence of the \"Renewal\" status."
 msgstr "Definujte korespondenci stavu „Obnovení“."
 
-#: inc/task.class.php:220
+#: inc/task.class.php:211
 msgid "This ticket comes from an automatic copy of the ticket"
 msgstr "Tento požadavek pochází z automatické kopie požadavku"
 
-#: inc/task.class.php:220
+#: inc/task.class.php:211
 msgid ""
 "following the overtaking of hours or the expiry of the maintenance contract"
 msgstr "následuje překročení hodin nebo skončení platnosti smlouvy údržbě"
 
-#: inc/task.class.php:412
+#: inc/task.class.php:403
 msgid "find"
 msgstr "najít"
 
-#: inc/task.class.php:426
+#: inc/task.class.php:417
 msgid "The open task of the project"
 msgstr "Otevřený úkol projektu"
 
-#: inc/task.class.php:426
+#: inc/task.class.php:417
 msgid "just closed"
 msgstr "právě uzavřeno"
 
-#: inc/task.class.php:429
+#: inc/task.class.php:420
 msgid "Reason"
 msgstr "Důvod"
 
-#: inc/task.class.php:433
+#: inc/task.class.php:424
 msgid "Overtaking"
 msgstr "Překročení"
 
-#: inc/task.class.php:458
+#: inc/task.class.php:449
 msgid "Adjustment ticket"
 msgstr "Požadavek na úpravu"
 
-#: inc/task.class.php:459
+#: inc/task.class.php:450
 msgid "Time Adjustment ticket"
 msgstr "Požadavek na úpravu času"
 
-#: inc/task.class.php:471
+#: inc/task.class.php:462
 msgid "Adjustment task"
 msgstr "Úkol úpravy"
 
-#: inc/task.class.php:505
+#: inc/task.class.php:496
 msgid "tasks with time"
 msgstr "úkol s časem"
 
-#: inc/task.class.php:508
+#: inc/task.class.php:499
 msgid "re-calculuation for ticket task"
 msgstr "přepočítání pro úkol požadavku"
 
-#: inc/ticket.class.php:49
+#: inc/ticket.class.php:94
 msgid "Related project"
 msgstr "Související projekt"
 
@@ -276,6 +288,6 @@ msgstr "Související projekt"
 msgid "Make the connection"
 msgstr "Vytvořit propojení"
 
-#: inc/ticket.class.php:320
+#: inc/ticket.class.php:319
 msgid "Link(s) with project task(s) deleted"
 msgstr "Propojení s úkolem/y projektu smazáno/y"
