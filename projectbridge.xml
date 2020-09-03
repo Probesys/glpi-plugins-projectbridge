@@ -44,13 +44,14 @@
    </authors>
    <versions>
       <version>
-         <num>2.2</num>
-         <compatibility>~9.5.1</compatibility>
-      </version> 
-      <version>
          <num>2.0</num>
          <compatibility>9.4</compatibility>
       </version>
+      <version>
+         <num>2.2</num>
+         <compatibility>~9.5.1</compatibility>
+         <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.2.0/glpi-plugin-projectbridge-2.2.0.tar.bz2</download_url>
+      </version> 
    </versions>
    <langs>
       <lang>fr_FR</lang>
@@ -68,8 +69,8 @@
       </fr>
    </tags>
    <screenshots>
-	    <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/configuration-panel</screenshot>
-      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/usage1</screenshot>
-      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/usage2</screenshot>
+      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/configuration-panel.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/usage1.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/usage2.png</screenshot>
    </screenshots>
 </root>

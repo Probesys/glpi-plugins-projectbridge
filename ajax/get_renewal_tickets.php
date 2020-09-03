@@ -17,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
 
     $unlinked_tickets = [];
     $task = new ProjectTask();
-    # TODO https://gitlab.probesys.com/glpi/glpi-plugin-projectbridge/-/issues/18#note_2257 
     # n'afficher que les tickets qui n'ont pas de tâche de projet lié et qui sont associé à l'entité
     if ($task_id) {
         global $DB;
