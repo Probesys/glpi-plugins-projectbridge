@@ -1,7 +1,7 @@
 #!/bin/bash
 
 soft='ProjectBridge'
-version='2.2.0'
+version="$(grep PROJECTBRIDGE_VERSION setup.php |cut -f 4 -d\'|grep -v ^$)"
 email=contact@probesys.com
 copyright='PROBESYS'
 
