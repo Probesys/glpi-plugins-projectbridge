@@ -680,6 +680,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     {
         global $DB;
         $project_id = $this->getProjectId();
+        $newTicketIds = [];
         
         if ($project_id <= 0) {
             return;
