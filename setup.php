@@ -3,7 +3,13 @@
 define('PROJECTBRIDGE_VERSION', '2.2.3RC1');
 define('PROJECTBRIDGE_MIN_GLPI_VERSION', '9.4');
 define('PROJECTBRIDGE_MAX_GLPI_VERSION', '9.6');
-define('PROJECTBRIDGE_DIR', Plugin::getPhpDir("projectbridge"));
+
+if (!defined("PROJECTBRIDGE_DIR")) {
+   define('PROJECTBRIDGE_DIR', Plugin::getPhpDir("projectbridge"));
+}
+if (!defined("PROJECTBRIDGE_WEB_DIR")) {
+   define("PROJECTBRIDGE_WEB_DIR", Plugin::getWebDir("projectbridge"));
+}
 
 if (!class_exists('PluginProjectbridgeConfig')) {
     require_once(__DIR__.'/inc/config.class.php');
