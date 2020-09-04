@@ -187,7 +187,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
     public static function postShowTask(ProjectTask $project_task) {
         global $CFG_GLPI;
 
-        $get_tickets_actiontime_url = Plugin::getPhpDir('projectbridge', false) . '/ajax/get_tickets_actiontime.php';
+        $get_tickets_actiontime_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/ajax/get_tickets_actiontime.php';
         $js_block = '
             var
                 current_table_cell,

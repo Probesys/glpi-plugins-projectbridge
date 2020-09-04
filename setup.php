@@ -1,14 +1,14 @@
 <?php
 
-define('PROJECTBRIDGE_VERSION', '2.2.3RC1');
-define('PROJECTBRIDGE_MIN_GLPI_VERSION', '9.4');
-define('PROJECTBRIDGE_MAX_GLPI_VERSION', '9.6');
+define('PLUGIN_PROJECTBRIDGE_VERSION', '2.2.3RC1');
+define('PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION', '9.4');
+define('PLUGIN_PROJECTBRIDGE_MAX_GLPI_VERSION', '9.6');
 
-if (!defined("PROJECTBRIDGE_DIR")) {
-   define('PROJECTBRIDGE_DIR', Plugin::getPhpDir("projectbridge"));
+if (!defined("PLUGIN_PROJECTBRIDGE_DIR")) {
+   define('PLUGIN_PROJECTBRIDGE_DIR', Plugin::getPhpDir("projectbridge"));
 }
-if (!defined("PROJECTBRIDGE_WEB_DIR")) {
-   define("PROJECTBRIDGE_WEB_DIR", Plugin::getWebDir("projectbridge"));
+if (!defined("PLUGIN_PROJECTBRIDGE_WEB_DIR")) {
+   define("PLUGIN_PROJECTBRIDGE_WEB_DIR", Plugin::getWebDir("projectbridge"));
 }
 
 if (!class_exists('PluginProjectbridgeConfig')) {
@@ -23,14 +23,14 @@ if (!class_exists('PluginProjectbridgeConfig')) {
 function plugin_version_projectbridge() {
     return [
         'name' => 'Projectbridge',
-        'version' => PROJECTBRIDGE_VERSION,
+        'version' => PLUGIN_PROJECTBRIDGE_VERSION,
         'author' => '<a href="http://www.probesys.com">Probesys</a>',
         'license' => 'GLPv3',
         'homepage'       => 'https://github.com/Probesys/glpi-plugins-projectbridge',
         'requirements'   => [
          'glpi'   => [
-            'min' => PROJECTBRIDGE_MIN_GLPI_VERSION,
-            'max' => PROJECTBRIDGE_MAX_GLPI_VERSION,
+            'min' => PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION,
+            'max' => PLUGIN_PROJECTBRIDGE_MAX_GLPI_VERSION,
          ],
          'php'    => [
             'min' => '7.0'
@@ -80,8 +80,8 @@ function plugin_projectbridge_check_prerequisites() {
     $prerequisites_check_ok = false;
 
    try {
-      if (version_compare(GLPI_VERSION, PROJECTBRIDGE_MIN_GLPI_VERSION, '<')) {
-          throw new Exception('This plugin requires GLPI >= ' . PROJECTBRIDGE_MIN_GLPI_VERSION);
+      if (version_compare(GLPI_VERSION, PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION, '<')) {
+          throw new Exception('This plugin requires GLPI >= ' . PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION);
       }
 
          $prerequisites_check_ok = true;

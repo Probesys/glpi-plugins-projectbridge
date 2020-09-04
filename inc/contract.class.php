@@ -314,7 +314,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
                 $html_parts[] = '</table>' . "\n";
 
-                $modal_url = Plugin::getPhpDir('projectbridge', false).'/ajax/get_renewal_tickets.php';
+                $modal_url = PLUGIN_PROJECTBRIDGE_WEB_DIR.'/ajax/get_renewal_tickets.php';
                 $html_parts[] = Ajax::createModalWindow('renewal_tickets_modal', $modal_url, [
                           'display' => false,
                           'extraparams' => [
@@ -553,7 +553,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         if (empty($state_value)) {
             global $CFG_GLPI;
-            $redirect_url = Plugin::getPhpDir('projectbridge', false) . '/front/config.form.php';
+            $redirect_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/front/config.form.php';
 
             Session::addMessageAfterRedirect(__('Please define the correspondence of the "'.ucfirst($status).'" status.', 'projectbridge'), false, ERROR);
             Html::redirect($redirect_url);
