@@ -1,7 +1,7 @@
 <?php
 
-class PluginProjectbridgeTicket extends CommonDBTM {
-
+class PluginProjectbridgeTicket extends CommonDBTM
+{
     private $_ticket;
     private $_project_id;
     public static $table_name = 'glpi_plugin_projectbridge_tickets';
@@ -11,7 +11,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      *
      * @param Ticket $ticket
      */
-    public function __construct(Ticket $ticket = null) {
+    public function __construct(Ticket $ticket = null)
+    {
         $this->_ticket = $ticket;
     }
 
@@ -21,7 +22,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param void
      * @return integer|null
      */
-    public function getProjectId() {
+    public function getProjectId()
+    {
         if ($this->_project_id === null) {
             $result = $this->getFromDBByCrit(['ticket_id' => $this->_ticket->getId()]);
 
@@ -39,10 +41,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param  Ticket $ticket
      * @return void
      */
-    public static function postShow(Ticket $ticket) {
-        
-
-
+    public static function postShow(Ticket $ticket)
+    {
         global $CFG_GLPI;
 
         $project_list = PluginProjectbridgeTicket::_getProjectList();
@@ -60,7 +60,6 @@ class PluginProjectbridgeTicket extends CommonDBTM {
 
             if ($contract_id) {
                 // default contract found, let's find the linked project
-
                 $contract = new Contract();
                 $contract->getFromDB($contract_id);
                 $bridge_contract = new PluginProjectbridgeContract($contract);
@@ -70,13 +69,19 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                     // project does not exist anymore
                     $project_id = null;
                 }
+                if ($project_id) {
+                    // save link between ticket and project in DB
+                    $bridge_ticket->add([
+                        'project_id' => $project_id,
+                        'ticket_id' => $ticket->getID()
+                    ]);
+                }
             } else {
                 $project_id = null;
             }
         }
 
-        if (empty($project_id) || !isset($project_list[$project_id])
-        ) {
+        if (empty($project_id) || !isset($project_list[$project_id])) {
             $project_id = null;
         }
 
@@ -156,15 +161,16 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      *
      * @return array
      */
-    private static function _getProjectList() {
+    private static function _getProjectList()
+    {
         $search_filters = ['is_deleted' => 0];
 
         if (!empty($_SESSION['glpiactiveentities'])) {
-            $search_filters['entities_id'] = ['IN'=>implode(', ', $_SESSION['glpiactiveentities'])];
+            $search_filters['entities_id'] = $_SESSION['glpiactiveentities'];
         }
 
         $project = new Project();
-        $project_results = $project->find( $search_filters);
+        $project_results = $project->find($search_filters);
         $project_list = [
           null => Dropdown::EMPTY_VALUE,
         ];
@@ -184,11 +190,14 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param  ProjectTask $project_task
      * @return void
      */
-    public static function postShowTask(ProjectTask $project_task) {
+    public static function postShowTask(ProjectTask $project_task)
+    {
         global $CFG_GLPI;
+        $onlypublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
 
         $get_tickets_actiontime_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/ajax/get_tickets_actiontime.php';
         $js_block = '
+            //debugger;
             var
                 current_table_cell,
                 table_parent,
@@ -197,7 +206,9 @@ class PluginProjectbridgeTicket extends CommonDBTM {
             ;
 
             $(".tab_cadre_fixehov tr", "form[id^=massProjectTask_Ticket]").each(function() {
-                current_table_cell = $("td.center:nth-child(2)", this);
+                
+                current_table_cell = $("td.left:nth-child(2)", this);
+                console.log(current_table_cell);
 
                 if (current_table_cell.length) {
                     if (table_parent === undefined) {
@@ -237,15 +248,20 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                                 current_row = $(elm);
 
                                 if (idx > 1) {
-                                    current_table_cell = $("td.center:nth-child(2)", current_row);
+                                    current_table_cell = $("td.left:nth-child(2)", current_row);
                                     current_ticket_id = getTicketIdFromCell(current_table_cell);
                                     current_action_time = 0;
+                                    private_action_time = 0;
 
                                     if (tickets_actiontime[current_ticket_id] !== undefined) {
-                                        current_action_time = tickets_actiontime[current_ticket_id];
+                                        current_action_time = tickets_actiontime[current_ticket_id]["totalDuration"];
+                                        private_action_time = tickets_actiontime[current_ticket_id]["privateDuration"];
                                     }
-
-                                    current_row.append("<td>" + current_action_time + " heure(s)</td>");
+                                    if(private_action_time > 0) {
+                                        current_row.append("<td>" + current_action_time + " heure(s) dont " + private_action_time + " heures privées</td>");
+                                    }else {
+                                        current_row.append("<td>" + current_action_time + " heure(s) </td>");
+                                    }
                                 } else if (idx == 0) {
                                     current_table_cell = $("th", current_row);
                                     current_table_cell.attr("colspan", parseInt(current_table_cell.attr("colspan")) + 1);
@@ -280,7 +296,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param  int $ticket_id
      * @return void
      */
-    public static function deleteProjectLinks($ticket_id) {
+    public static function deleteProjectLinks($ticket_id)
+    {
         global $DB;
 
         // use a query as ProjectTask_Ticket can only get one item and does not return the number
@@ -294,8 +311,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
 
         $result = $DB->query($get_nb_links_query);
 
-        if ($result && $DB->numrows($result)
-        ) {
+        if ($result && $DB->numrows($result)) {
             $results = $DB->fetch_assoc($result);
             $nb_links = (int) $results['nb_links'];
         } else {
@@ -330,9 +346,10 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param  MassiveAction $ma
      * @return boolean
      */
-    public static function showMassiveActionsSubForm(MassiveAction $ma) {
-        
+    public static function showMassiveActionsSubForm(MassiveAction $ma)
+    {
         $return = false;
+        global $DB;
         
         switch ($ma->getAction()) {
             case 'deleteProjectLink':
@@ -359,11 +376,11 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                 $search_filters = [];
 
                 if (!empty($_SESSION['glpiactiveentities'])) {
-                    $search_filters['entities_id'] = ['IN' => implode(', ', $_SESSION['glpiactiveentities'])];
+                    $search_filters['entities_id'] =  $_SESSION['glpiactiveentities'];
                 }
 
                 $project_task = new ProjectTask();
-                $project_task_results = $project_task->find($search_filters, ['entities_id'=> 'ASC']);
+                $project_task_results = $project_task->find($search_filters, 'entities_id ASC');
                 $project_task_list = [
                   null => Dropdown::EMPTY_VALUE,
                 ];
@@ -385,7 +402,26 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                   'value' => null,
                   'values' => $project_task_list,
                 ];
-
+                
+                // pre selection auto contrat par defaut entité en cours
+                $criteria = ['entity_id' =>$_SESSION['glpiactive_entity']];
+                $req = $DB->request(PluginProjectbridgeEntity::$table_name, $criteria);
+                if ($row = $req->next()) {
+                    $contract_id = $row['contract_id'];
+                    
+                    $pluginProjectbridgeContract = new PluginProjectbridgeContract();
+                   
+                    $req2 = $DB->request(PluginProjectbridgeContract::$table_name, ['contract_id' => $contract_id]);
+                    if ($row = $req2->next()) {
+                        $projectId= $row['project_id'];
+                        $tasks = $pluginProjectbridgeContract::getAllActiveProjectTasksForProject($projectId);
+                        if (count($tasks)) {
+                            $projectTaskId = $tasks[0]['id'];
+                            $project_task_config['value'] = $projectTaskId;
+                        }
+                    }
+                }
+                
                 Dropdown::showFromArray('projectbridge_projecttask_id', $project_task_list, $project_task_config);
                 echo '<br />';
                 echo '<br />';
@@ -396,7 +432,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
             default:
             // nothing to do
         }
-        if(!$return) {
+        if (!$return) {
             return parent::showMassiveActionsSubForm($ma);
         }
         
@@ -411,7 +447,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param  array         $ids Item ids
      * @return void
      */
-    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids) {
+    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids)
+    {
         $caseFinded = false;
         switch ($ma->getAction()) {
             case 'deleteProjectLink':
@@ -440,8 +477,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                     $project = new Project();
 
                     if ($project->getFromDB($project_id) && PluginProjectbridgeContract::getProjectTaskOject($project_id)) {
-
-                        $task_id = getProjectTaskFieldValue($project_id, false, 'id');
+                        $task_id = PluginProjectbridgeContract::getProjectTaskFieldValue($project_id, false, 'id');
 
                         foreach ($ids as $ticket_id) {
                             $ticket = new Ticket();
@@ -509,10 +545,9 @@ class PluginProjectbridgeTicket extends CommonDBTM {
             default:
             // nothing to do
         }
-        if(!$caseFinded) {
+        if (!$caseFinded) {
             parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
         }
         return;
     }
-
 }

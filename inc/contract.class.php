@@ -137,13 +137,13 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
     private static function _getPostShowUpdateHtml(Contract $contract)
     {
-        $search_filters = [          
-          'is_deleted' => 0,
+        $search_filters = [
+            'is_deleted' => 0,
         ];
 
         $haveToBeRenewed = false;
         if (!empty($_SESSION['glpiactiveentities'])) {
-            $search_filters['entities_id'] =  ['IN', implode(', ', $_SESSION['glpiactiveentities'])] ;
+            $search_filters['entities_id'] = ['IN', implode(', ', $_SESSION['glpiactiveentities'])];
         }
 
         $bridge_contract = new PluginProjectbridgeContract($contract);
@@ -152,7 +152,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         $project = new Project();
         $project_results = $project->find($search_filters);
         $project_list = [
-          null => Dropdown::EMPTY_VALUE,
+            null => Dropdown::EMPTY_VALUE,
         ];
 
         foreach ($project_results as $project_data) {
@@ -160,9 +160,9 @@ class PluginProjectbridgeContract extends CommonDBTM
         }
 
         $project_config = [
-          'value' => $project_id,
-          'display' => false,
-          'values' => $project_list,
+            'value' => $project_id,
+            'display' => false,
+            'values' => $project_list,
         ];
 
         $html_parts = [];
@@ -170,8 +170,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         global $CFG_GLPI;
 
-        if (!empty($project_id) && isset($project_list[$project_id]) ) 
-        {
+        if (!empty($project_id) && isset($project_list[$project_id])) {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left:5px;" target="_blank">';
             $html_parts[] = __('Access to linked project', 'projectbridge');
             $html_parts[] = '</a>' . "\n";
@@ -181,49 +180,48 @@ class PluginProjectbridgeContract extends CommonDBTM
             $html_parts[] = '<br />';
             $html_parts[] = '<br />';
 
-            
-            if (self::getProjectTaskOject($project_id) ) {
+            if (self::getProjectTaskOject($project_id)) {
                 $search_closed = false;
             } else {
                 $search_closed = true;
             }
-            
-            
 
             $consumption_ratio = 0;
             $nb_hours = $bridge_contract->getNbHours();
 
             if ($nb_hours) {
-                
+
                 // get all activ projectTask
                 $activeProjectTask = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($project_id);
-                
-                if ( !count($activeProjectTask) ) {
+
+                if (!count($activeProjectTask)) {
                     $haveToBeRenewed = true;
-                    $html_parts[] = '<span class="red">'.__('Warning ! No associate projectTask with "In progress" status exist', 'projectbridge') .' </span><br/>';
+                    $html_parts[] = '<span class="red">' . __('Warning ! No associate projectTask with "In progress" status exist', 'projectbridge') . ' </span><br/>';
                     $projectTaskID = null;
-                }else{
+                    $lastClosedProjectTask = PluginProjectbridgeContract::getLastClosedProjectTasksForProject($project_id);
+                    $projectTaskID = $lastClosedProjectTask['id'];
+                } else {
                     $projectTaskID = $activeProjectTask[0]['id'];
                 }
-               
-                $consumption = PluginProjectbridgeContract::getTicketsTotalActionTime($projectTaskID);        
+
+                $consumption = PluginProjectbridgeContract::getTicketsTotalActionTime($projectTaskID);
                 if ($consumption) {
                     $consumption = $consumption / 3600;
                     $consumption_ratio = $consumption / $nb_hours;
                 }
-                
+
                 $classRation = '';
-                if ( $consumption >= $nb_hours) {
+                if ($consumption >= $nb_hours) {
                     $haveToBeRenewed = true;
                     $classRation = 'red';
                 }
-                $html_parts[] = '<span class="'.$classRation.'">';
-                if( $activeProjectTask ) {
+                $html_parts[] = '<span class="' . $classRation . '">';
+                if ($activeProjectTask || $lastClosedProjectTask) {
                     $html_parts[] = __('Comsuption', 'projectbridge') . ' : ';
                     $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours);
                     $html_parts[] = '&nbsp;';
                     $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
-                } else{
+                } else {
                     //$html_parts[] = '0/'. $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours).'&nbsp; (0%)';
                 }
                 $html_parts[] = '</span>';
@@ -247,16 +245,16 @@ class PluginProjectbridgeContract extends CommonDBTM
 
                 if ($end_date_delta == 0) {
                     $end_date_reached = true;
-                    $html_parts[] = '<span class="red">'.__('Expired in less than 24h', 'projectbridge').' ! </span>';
+                    $html_parts[] = '<span class="red">' . __('Expired in less than 24h', 'projectbridge') . ' ! </span>';
                 } elseif ($end_date_delta > 0) {
                     $html_parts[] = __('Expired in', 'projectbridge') . ' ' . $end_date_delta . ' ' . _n('Day', 'Days', abs($end_date_delta));
                 } else {
                     $end_date_reached = true;
 
                     if ($date_delta > -1) {
-                        $html_parts[] = '<span class="red">'.__('Expired today', 'projectbridge').' ! </span>';
+                        $html_parts[] = '<span class="red">' . __('Expired today', 'projectbridge') . ' ! </span>';
                     } else {
-                        $html_parts[] = '<span class="red">'.__('Expired since', 'projectbridge') . ' ' . (abs($end_date_delta)) . ' ' . _n('Day', 'Days', abs($end_date_delta)).' ! </span>';
+                        $html_parts[] = '<span class="red">' . __('Expired since', 'projectbridge') . ' ' . (abs($end_date_delta)) . ' ' . _n('Day', 'Days', abs($end_date_delta)) . ' ! </span>';
                         $haveToBeRenewed = true;
                     }
                 }
@@ -276,21 +274,21 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '</td>' . "\n";
                 $html_parts[] = '<td>';
                 $html_parts[] = Html::showDateField('projecttask_begin_date', [
-                          'value' => $renewal_data['begin_date'],
-                          'maybeempty' => false,
-                          'display' => false,
+                            'value' => $renewal_data['begin_date'],
+                            'maybeempty' => false,
+                            'display' => false,
                 ]);
                 $html_parts[] = '</td>' . "\n";
                 $html_parts[] = '</tr>' . "\n";
-               
-                
+
+
                 $html_parts[] = '<tr>' . "\n";
                 $html_parts[] = '<td>';
-                $html_parts[] = __('Duration').' ('._n('Month', 'Months', 2).')';
+                $html_parts[] = __('Duration') . ' (' . _n('Month', 'Months', 2) . ')';
                 $html_parts[] = '</td>' . "\n";
                 $html_parts[] = '<td>';
                 $html_parts[] = '<input type="number" min="0" max="12" name="projectbridge_duration" value="' . $renewal_data['duration'] . '" style="width: 50px" step="any" />';
-               
+
                 $html_parts[] = '</td>' . "\n";
                 $html_parts[] = '</tr>' . "\n";
 
@@ -314,17 +312,17 @@ class PluginProjectbridgeContract extends CommonDBTM
 
                 $html_parts[] = '</table>' . "\n";
 
-                $modal_url = PLUGIN_PROJECTBRIDGE_WEB_DIR.'/ajax/get_renewal_tickets.php';
+                $modal_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/ajax/get_renewal_tickets.php';
                 $html_parts[] = Ajax::createModalWindow('renewal_tickets_modal', $modal_url, [
-                          'display' => false,
-                          'extraparams' => [
-                            //'task_id' => PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_id', $search_closed),
-                            'task_id' => self::getProjectTaskFieldValue($project_id, $search_closed, 'id'),
-                            'contract_id' => $contract->getId(),
-                            'project_id' => $project_id
-                          ],
+                            'display' => false,
+                            'extraparams' => [
+                                //'task_id' => PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_id', $search_closed),
+                                'task_id' => self::getProjectTaskFieldValue($project_id, $search_closed, 'id'),
+                                'contract_id' => $contract->getId(),
+                                'project_id' => $project_id
+                            ],
                 ]);
-                
+
                 $date_format = Toolbox::getDateFormat('js');
 
                 $js_block = '
@@ -361,11 +359,11 @@ class PluginProjectbridgeContract extends CommonDBTM
                         const fp = fieldwithFlatPicketParent.flatpickr({
                             defaultDate: fieldwithFlatPicket.val(),
                             altInput: true,
-                            altFormat: \''.$date_format.'\',
+                            altFormat: \'' . $date_format . '\',
                             dateFormat: \'Y-m-d\',
                             wrap: true,
                             weekNumbers: true,
-                            locale: "'.$CFG_GLPI['languages'][$_SESSION['glpilanguage']][3].'",
+                            locale: "' . $CFG_GLPI['languages'][$_SESSION['glpilanguage']][3] . '",
                         });
                         if($("table.projectbridge-renewal-data").find("input.flatpickr").length > 1){
                             $("table.projectbridge-renewal-data").find("input.flatpickr").last().remove();
@@ -436,43 +434,83 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         return implode('', $html_parts);
     }
-    
-    public static function getTicketsTotalActionTime($projecttasks_id) {
-      global $DB;
-      
-      $whereConditionsArray = ['projecttasks_id' => $projecttasks_id];
-      
-      $onlypublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
-      if($onlypublicTasks) {
-          $whereConditionsArray['is_private'] = 0;
-      }
 
-      $iterator = $DB->request([
-         'SELECT'       => new QueryExpression('SUM('.TicketTask::getTable().'.actiontime) AS duration'),
-         'FROM'         => ProjectTask_Ticket::getTable(),
-         'INNER JOIN'   => [
-            Ticket::getTable() => [
-               'FKEY'   => [
-                  ProjectTask_Ticket::getTable()  => 'tickets_id',
-                  Ticket::getTable()    => 'id'
-               ]
-            ],
-           TicketTask::getTable() => [
-               'FKEY'   => [                  
-                  Ticket::getTable()    => 'id',
-                  TicketTask::getTable()  => 'tickets_id'
-               ]
-            ],
-         ],
-         'WHERE' => $whereConditionsArray
-      ]);
-      
+    /**
+     * clacul the totale ticket actiontime
+     * @global object $DB
+     * @param type $projecttasks_id
+     * @return int
+     */
+    public static function getTicketsTotalActionTime($projecttasks_id)
+    {
+        global $DB;
 
-      if ($row = $iterator->next()) {
-         return $row['duration'];
-      }
-      return 0;
-   }
+        $whereConditionsArray = ['projecttasks_id' => $projecttasks_id];
+
+        $onlypublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
+        if ($onlypublicTasks) {
+            $whereConditionsArray['is_private'] = 0;
+        }
+
+        $iterator = $DB->request([
+            'SELECT' => new QueryExpression('SUM(' . TicketTask::getTable() . '.actiontime) AS duration'),
+            'FROM' => ProjectTask_Ticket::getTable(),
+            'INNER JOIN' => [
+                Ticket::getTable() => [
+                    'FKEY' => [
+                        ProjectTask_Ticket::getTable() => 'tickets_id',
+                        Ticket::getTable() => 'id'
+                    ]
+                ],
+                TicketTask::getTable() => [
+                    'FKEY' => [
+                        Ticket::getTable() => 'id',
+                        TicketTask::getTable() => 'tickets_id'
+                    ]
+                ],
+            ],
+            'WHERE' => $whereConditionsArray
+        ]);
+
+
+        if ($row = $iterator->next()) {
+            return $row['duration'] ? $row['duration'] : 0;
+        }
+        return 0;
+    }
+
+    /**
+     * Get nb tickets associate ton one projectTask
+     * @global object $DB
+     * @param type $projecttasks_id
+     * @return int
+     */
+    public static function getNbTicketsAssociateToProjectTask($projecttasks_id)
+    {
+        global $DB;
+
+        $whereConditionsArray = ['projecttasks_id' => $projecttasks_id];
+
+        $iterator = $DB->request([
+            'SELECT' => new QueryExpression('COUNT(' . ProjectTask_Ticket::getTable() . '.tickets_id) AS nb'),
+            'FROM' => ProjectTask_Ticket::getTable(),
+            'INNER JOIN' => [
+                Ticket::getTable() => [
+                    'FKEY' => [
+                        ProjectTask_Ticket::getTable() => 'tickets_id',
+                        Ticket::getTable() => 'id'
+                    ]
+                ],
+            ],
+            'WHERE' => $whereConditionsArray
+        ]);
+
+
+        if ($row = $iterator->next()) {
+            return $row['nb'];
+        }
+        return 0;
+    }
 
     /**
      * Get HTML to manage hours
@@ -497,84 +535,83 @@ class PluginProjectbridgeContract extends CommonDBTM
         return implode('', $html_parts);
     }
 
-       
     /**
      * search list of projectTask by criterias
      * @param array $criteria
      * @param string $order
      * @param integer $limit
      */
-    public static function getProjectTaskBy($criteria, $order='', $limit= '') {
+    public static function getProjectTaskBy($criteria, $order = '', $limit = '')
+    {
         $project_tasks = new ProjectTask();
         $tasks = $project_tasks->find($criteria, $order, $limit);
-        
+
         return $tasks;
     }
-    
+
     /**
      * get projectTask object bu projectId
      * @param integer $project_id
      * @param boolean $search_closed
      * @return object
      */
-    public static function getProjectTaskOject($project_id, $search_closed = false) {
+    public static function getProjectTaskOject($project_id, $search_closed = false)
+    {
         $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
         $criteria = [
-                    'projects_id' => $project_id,
-                    'projectstates_id' => [$search_closed?'=':'!=', $state_closed_value]
-                  ];
+            'projects_id' => $project_id,
+            'projectstates_id' => [$search_closed ? '=' : '!=', $state_closed_value]
+        ];
         $order = 'plan_end_date DESC';
-        
+
         $projectTaskObject = null;
         $projectTaskFinded = self::getProjectTaskBy($criteria, $order, 1);
-        
+
         if (count($projectTaskFinded)) {
             $firstElement = reset($projectTaskFinded);
             $projectTaskId = $firstElement['id'];
             $projectTask = new ProjectTask();
             $projectTaskObject = $projectTask->getById($projectTaskId);
         }
-        
+
         return $projectTaskObject;
     }
-    
+
     /**
      * get all closed projecttask associate to one project
-     * 
+     *
      * @param integer $project_id id of the project
      * @param string $status the search status ( closed / in_progress
      * @param integer $limit
      * @return type
      */
-    public static function getProjectTasksForProjectByStatus($project_id, $status, $operator= '=', $limit = '') 
+    public static function getProjectTasksForProjectByStatus($project_id, $status, $operator = '=', $limit = '')
     {
-
         $state_value = PluginProjectbridgeState::getProjectStateIdByStatus($status);
 
         if (empty($state_value)) {
             global $CFG_GLPI;
             $redirect_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/front/config.form.php';
 
-            Session::addMessageAfterRedirect(__('Please define the correspondence of the "'.ucfirst($status).'" status.', 'projectbridge'), false, ERROR);
+            Session::addMessageAfterRedirect(__('Please define the correspondence of the "' . ucfirst($status) . '" status.', 'projectbridge'), false, ERROR);
             Html::redirect($redirect_url);
             return null;
         }
-        
+
         $project_tasks = new ProjectTask();
 
         $where = [
-          'projects_id' => $project_id,
-          'projectstates_id' => [$operator, $state_value]
+            'projects_id' => $project_id,
+            'projectstates_id' => [$operator, $state_value]
         ];
 
         $order = 'plan_end_date DESC';
 
         $tasks = $project_tasks->find($where, $order, $limit);
-        
-        return $tasks;
 
+        return $tasks;
     }
-    
+
     /**
      * get all active projecttask associate to one project
      * @global object $DB
@@ -584,7 +621,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     public static function getAllActiveProjectTasksForProject($project_id)
     {
         global $DB;
-      
+
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
         $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
         $state_renewal_value = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
@@ -593,67 +630,96 @@ class PluginProjectbridgeContract extends CommonDBTM
         foreach ($DB->request(
             'glpi_projecttasks',
             [
-                                "projects_id" => $project_id,
-                                "projectstates_id" => [$state_in_progress_value, $state_renewal_value],
-                                'ORDER'       => ['plan_start_date DESC']
-                                ]
+                    "projects_id" => $project_id,
+                    "projectstates_id" => [$state_in_progress_value, $state_renewal_value],
+                    'ORDER' => ['plan_start_date DESC']
+                ]
         ) as $data) {
-              $tasks[] = $data;
+            $tasks[] = $data;
         }
         return $tasks;
     }
-    
+
+    /**
+     * get last closed projecttask associate to one project
+     * @global object $DB
+     * @param integer $project_id
+     * @return type
+     */
+    public static function getLastClosedProjectTasksForProject($project_id)
+    {
+        global $DB;
+
+        $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
+
+        $task = null;
+        foreach ($DB->request(
+            'glpi_projecttasks',
+            [
+                    "projects_id" => $project_id,
+                    "projectstates_id" => [$state_closed_value],
+                    'ORDER' => ['plan_start_date DESC'],
+                    'LIMIT' => 1
+                ]
+        ) as $data) {
+            $task = $data;
+        }
+        return $task;
+    }
+
     /**
      * get projectTask consumption
      * @param integer $project_id
      * @param boolean $search_closed
      * @return object
      */
-    public static function getProjectTaskConsumption($project_id, $search_closed) {
+    public static function getProjectTaskConsumption($project_id, $search_closed)
+    {
         $return = 0;
         $projectTaskId = self::getProjectTaskFieldValue($project_id, $search_closed, 'id');
-        if($projectTaskId) {
+        if ($projectTaskId) {
             $action_time = ProjectTask_Ticket::getTicketsTotalActionTime($projectTaskId);
             if ($action_time > 0) {
-                        $return = $action_time / 3600;
-                    }
+                $return = $action_time / 3600;
+            }
         }
-        return $return;          
+        return $return;
     }
-    
+
     /**
      * get projectTask duration
      * @param integer $project_id
      * @param boolean $search_closed
      * @return object
      */
-    public static function getProjectTaskPlannedDuration($project_id, $search_closed){
+    public static function getProjectTaskPlannedDuration($project_id, $search_closed)
+    {
         $return = 0;
         $plannedDuration = self::getProjectTaskFieldValue($project_id, $search_closed, 'planned_duration');
-        if($plannedDuration){
+        if ($plannedDuration) {
             $return = $plannedDuration / 3600;
         }
-        
-        return $return;        
-    } 
-    
+
+        return $return;
+    }
+
     /**
      * get projectTask value of one field
      * @param integer $project_id
      * @param boolean $search_closed
      * @return object
      */
-    public static function getProjectTaskFieldValue($project_id, $search_closed, $field){
+    public static function getProjectTaskFieldValue($project_id, $search_closed, $field)
+    {
         $return = '';
 
         $projectTaskObject = self::getProjectTaskOject($project_id, $search_closed);
-        if($projectTaskObject) {
+        if ($projectTaskObject) {
             $return = $projectTaskObject->getField($field);
         }
-        
+
         return $return;
-        
-    } 
+    }
 
     /**
      * calcul the end date of one contract
@@ -681,60 +747,60 @@ class PluginProjectbridgeContract extends CommonDBTM
         global $DB;
         $project_id = $this->getProjectId();
         $newTicketIds = [];
-        
+
         if ($project_id <= 0) {
             return;
         }
 
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
-        
+
 
         if (empty($state_in_progress_value)) {
             Session::addMessageAfterRedirect(__('The match for the status "In progress" has not been defined. The contract could not be renewed.', 'projectbridge'), false, ERROR);
             return false;
         }
-        
+
         // récupération des tâches de projets ouvertes avant la création de la nouvelle
         $allActiveTasks = self::getAllActiveProjectTasksForProject($project_id);
-        
+
         // close previous active project taks
-        if($allActiveTasks) {
+        if ($allActiveTasks) {
             // call crontask function ( projectTask ) to close previous project task and create a new tikcet with exeed time if necessary
             $pluginProjectbridgeTask = new PluginProjectbridgeTask();
             $newTicketIds = $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks, false);
         }
-        
+
         $renewal_data = $this->getRenewalData($use_input_data = true);
         $plan_end_date = date('Y-m-d  H:i:s', strtotime($renewal_data['begin_date'] . ' + ' . $renewal_data['duration'] . ' months - 1 days'));
 
         $project_task_data = [
-          // data from contract
-          //'name' => date('Y-m'),
-          'name' => date('Y-m', strtotime($renewal_data['begin_date'])),
-          'entities_id' => $this->_contract->fields['entities_id'],
-          'is_recursive' => $this->_contract->fields['is_recursive'],
-          'projects_id' => $project_id,
-          'content' => addslashes($this->_contract->fields['comment']),
-          'comment' => '',
-          'plan_start_date' => date('Y-m-d H:i:s', strtotime($renewal_data['begin_date'])),
-          'plan_end_date' => $plan_end_date,
-          'planned_duration' => $renewal_data['nb_hours_to_use'] * 3600, // in seconds
-          'projectstates_id' => $state_in_progress_value, // "in progress"
-          // standard data to bootstrap task
-          'projecttasktemplates_id' => 0,
-          'projecttasks_id' => 0,
-          'projecttasktypes_id' => 0,
-          'percent_done' => 0,
-          'is_milestone' => 0,
-          'real_start_date' => '',
-          'real_end_date' => '',
-          'effective_duration' => 0,
+            // data from contract
+            //'name' => date('Y-m'),
+            'name' => date('Y-m', strtotime($renewal_data['begin_date'])),
+            'entities_id' => $this->_contract->fields['entities_id'],
+            'is_recursive' => $this->_contract->fields['is_recursive'],
+            'projects_id' => $project_id,
+            'content' => addslashes($this->_contract->fields['comment']),
+            'comment' => '',
+            'plan_start_date' => date('Y-m-d H:i:s', strtotime($renewal_data['begin_date'])),
+            'plan_end_date' => $plan_end_date,
+            'planned_duration' => $renewal_data['nb_hours_to_use'] * 3600, // in seconds
+            'projectstates_id' => $state_in_progress_value, // "in progress"
+            // standard data to bootstrap task
+            'projecttasktemplates_id' => 0,
+            'projecttasks_id' => 0,
+            'projecttasktypes_id' => 0,
+            'percent_done' => 0,
+            'is_milestone' => 0,
+            'real_start_date' => '',
+            'real_end_date' => '',
+            'effective_duration' => 0,
         ];
 
         // create the new project's task
         $project_task = new ProjectTask();
         $task_id = $project_task->add($project_task_data);
-        
+
         // associate selected tickets
         if ($task_id && !empty($this->_contract->input['ticket_ids']) && is_array($this->_contract->input['ticket_ids'])) {
             // link selected tickets
@@ -742,35 +808,34 @@ class PluginProjectbridgeContract extends CommonDBTM
                 if ($selected) {
                     $project_task_ticket = new ProjectTask_Ticket();
                     $project_task_ticket->add([
-                      'tickets_id' => $ticket_id,
-                      'projecttasks_id' => $task_id,
+                        'tickets_id' => $ticket_id,
+                        'projecttasks_id' => $task_id,
                     ]);
                 }
             }
         }
         // associate new tickets created from old tickets
-        foreach( $newTicketIds as $ticket_id ) {
+        foreach ($newTicketIds as $ticket_id) {
             $project_task_ticket = new ProjectTask_Ticket();
-                    $project_task_ticket->add([
-                      'tickets_id' => $ticket_id,
-                      'projecttasks_id' => $task_id,
-                    ]);
+            $project_task_ticket->add([
+                'tickets_id' => $ticket_id,
+                'projecttasks_id' => $task_id,
+            ]);
         }
-        
-        // mise a jour date de début contrat et durée       
+
+        // mise a jour date de début contrat et durée
         $this->_contract->input['begin_date'] = $renewal_data['begin_date'];
         $this->_contract->input['duration'] = $renewal_data['planned_duration'];
-        
-        $DB->update(
-                $this->getTable(), [
-                    'nb_hours' => $renewal_data['nb_hours_to_use']
-                ],[
-                    'id' =>$this->getID()
-                ] 
-                );
-        
 
-        
+        $DB->update(
+            $this->getTable(),
+            [
+            'nb_hours' => $renewal_data['nb_hours_to_use']
+                ],
+            [
+            'id' => $this->getID()
+                ]
+        );
     }
 
     /**
@@ -780,13 +845,13 @@ class PluginProjectbridgeContract extends CommonDBTM
      * @return array
      */
     public function getRenewalData($use_input_data = false)
-    {        
+    {
         $project_id = $this->getProjectId();
         $open_exists = self::getProjectTasksForProjectByStatus($project_id, 'closed', '!=', 1);
         $closed_exists = self::getProjectTasksForProjectByStatus($project_id, 'closed', '=', 1);
         $use_closed = false;
 
-        if (!$use_input_data && $closed_exists && !$open_exists ) {
+        if (!$use_input_data && $closed_exists && !$open_exists) {
             $use_closed = true;
 
             $previous_task_start = self::getProjectTaskFieldValue($project_id, true, 'plan_start_date');
@@ -796,7 +861,7 @@ class PluginProjectbridgeContract extends CommonDBTM
             $task_start_date = date('Y-m-d', strtotime($previous_task_end . ' + 1 day'));
             $task_end_date = date('Y-m-d', strtotime($task_start_date . ' + ' . $datediff . ' days'));
         } else {
-            if($open_exists) {
+            if ($open_exists) {
                 $previous_task_start = self::getProjectTaskFieldValue($project_id, false, 'plan_start_date');
                 $previous_task_end = self::getProjectTaskFieldValue($project_id, false, 'plan_end_date');
                 $task_start_date = date('Y-m-d', strtotime($previous_task_end . ' + 1 day'));
@@ -817,13 +882,13 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $task_end_date = (
                     !empty($this->_contract->fields['duration']) ? Infocom::getWarrantyExpir(date('Y-m-d', strtotime($task_start_date)), $this->_contract->fields['duration']) : ''
                 );
-                //$use_closed = true;
+            //$use_closed = true;
             } else {
                 $task_end_date = $this->_contract->input['_projecttask_end_date'];
             }
         }
-        if($use_input_data && empty($this->_contract->input['_projecttask_begin_date']) ) {
-             $task_start_date = date('Y-m-d', strtotime($this->_contract->input['_projecttask_begin_date']));
+        if ($use_input_data && empty($this->_contract->input['_projecttask_begin_date'])) {
+            $task_start_date = date('Y-m-d', strtotime($this->_contract->input['_projecttask_begin_date']));
         }
 
         $nb_hours = $this->getNbHours();
@@ -834,34 +899,32 @@ class PluginProjectbridgeContract extends CommonDBTM
         if ($consumption > $nb_hours) {
             $delta_hours_to_use = $consumption - $nb_hours;
             // cas ou le temps est dépassé mais pas la date
-            if($open_exists && !$use_input_data) {
+            if ($open_exists && !$use_input_data) {
                 $now = new \DateTime();
                 $previous_task_end_object = new \DateTime($previous_task_end);
-                if($now < $previous_task_end_object) {
-                   $task_start_date = date('Y-m-d'); 
+                if ($now < $previous_task_end_object) {
+                    $task_start_date = date('Y-m-d');
                 }
             }
-            
         }
 
         if (!empty($this->_contract->input['projectbridge_nb_hours_to_use'])) {
             $nb_hours_to_use = $this->_contract->input['projectbridge_nb_hours_to_use'];
         }
-        
+
         $duration = $this->_contract->getField('duration');
 
         $renewal_data = [
-          'begin_date' => $task_start_date,
-          'end_date' => $task_end_date,
-          'nb_hours_to_use' => $nb_hours_to_use,
-          'delta_hours_to_use' => $delta_hours_to_use,
-          'duration' => $duration,
-          'consumption' => $consumption
+            'begin_date' => $task_start_date,
+            'end_date' => $task_end_date,
+            'nb_hours_to_use' => $nb_hours_to_use,
+            'delta_hours_to_use' => $delta_hours_to_use,
+            'duration' => $duration,
+            'consumption' => $consumption
         ];
 
         return $renewal_data;
     }
-    
 
     /**
      * Type name for cron
@@ -873,7 +936,6 @@ class PluginProjectbridgeContract extends CommonDBTM
     {
         return 'ProjectBridge';
     }
-   
 
     /**
      * Get the contracts to renew
@@ -902,33 +964,32 @@ class PluginProjectbridgeContract extends CommonDBTM
             while ($row = $DB->fetch_assoc($result)) {
                 $contract = new Contract();
                 $contract->getFromDB($row['id']);
-                
+
                 $bridge_contract = new PluginProjectbridgeContract($contract);
                 $project_id = $bridge_contract->getProjectId();
                 $project = new Project();
                 $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
                 $project->getFromDB($project_id);
-                //if ($project && $project->fields['projectstates_id'] != $state_closed_value && !self::getProjectTaskOject($project_id, false) && self::getProjectTaskOject($project_id, true) ) { 
+                //if ($project && $project->fields['projectstates_id'] != $state_closed_value && !self::getProjectTaskOject($project_id, false) && self::getProjectTaskOject($project_id, true) ) {
                 if ($project && $project->fields['projectstates_id'] != $state_closed_value) {
-                    $now =  new DateTime();
+                    $now = new DateTime();
                     $planEndDate = self::getContractPlanEndDate($contract);
                     $nb_hours = $bridge_contract->getNbHours();
-                    
-                    
+
+
                     // search open projectTask
                     $projectTask = self::getProjectTaskOject($project_id, false);
                     // search close projecttask
-                    if(!$projectTask){
+                    if (!$projectTask) {
                         $projectTask = self::getProjectTaskOject($project_id, true);
                     }
                     $consumption = 0;
-                    if($projectTask){
-                        $consumption = self::getTicketsTotalActionTime($projectTask->getField('id'))/3600;
+                    if ($projectTask) {
+                        $consumption = self::getTicketsTotalActionTime($projectTask->getField('id')) / 3600;
                     }
-                    if($consumption>=$nb_hours || $planEndDate <= $now)
-                    {
+                    if ($consumption >= $nb_hours || $planEndDate <= $now) {
                         $contracts[$contract->getId()] = [
-                          'contract' => $contract,
+                            'contract' => $contract,
                         ];
                     }
                 }
@@ -979,30 +1040,26 @@ class PluginProjectbridgeContract extends CommonDBTM
             echo implode(' ', $html_parts);
         }
     }
-    
+
     /**
      * fonction retournant le format utilisé dans la configuration de GLPI pour les affichages de dates
      * @return string
      */
-    private function getDateFormat() {
-
+    private function getDateFormat()
+    {
         switch ($_SESSION['glpidate_format']) {
-                case "0":
-                default:    
-                    $dataf = 'Y-m-d'; 
-                    break;
-                case "1": 
-                    $dataf = 'd-m-Y'; 
-                    break;
-                case "2": 
-                    $dataf = 'm-d-Y'; 
-                    break;    
+            case "0":
+            default:
+                $dataf = 'Y-m-d';
+                break;
+            case "1":
+                $dataf = 'd-m-Y';
+                break;
+            case "2":
+                $dataf = 'm-d-Y';
+                break;
         }
-        
-        return $dataf;
-       
-    }
-    
 
-    
+        return $dataf;
+    }
 }
