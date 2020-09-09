@@ -52,6 +52,11 @@
          <compatibility>~9.5.1</compatibility>
          <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.2.0/glpi-plugin-projectbridge-2.2.0.tar.bz2</download_url>
       </version> 
+      <version>
+         <num>2.3RC1</num>
+         <compatibility>~9.5.1</compatibility>
+         <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.3RC1/glpi-plugin-projectbridge-2.3RC1.tar.bz2</download_url>
+      </version> 
    </versions>
    <langs>
       <lang>fr_FR</lang>
