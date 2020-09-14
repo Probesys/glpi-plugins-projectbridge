@@ -189,6 +189,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
 
         $get_tickets_actiontime_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/ajax/get_tickets_actiontime.php';
         $js_block = '
+            debugger;
             var
                 current_table_cell,
                 table_parent,
@@ -197,7 +198,9 @@ class PluginProjectbridgeTicket extends CommonDBTM {
             ;
 
             $(".tab_cadre_fixehov tr", "form[id^=massProjectTask_Ticket]").each(function() {
-                current_table_cell = $("td.center:nth-child(2)", this);
+                
+                current_table_cell = $("td.left:nth-child(2)", this);
+                console.log(current_table_cell);
 
                 if (current_table_cell.length) {
                     if (table_parent === undefined) {
@@ -237,7 +240,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                                 current_row = $(elm);
 
                                 if (idx > 1) {
-                                    current_table_cell = $("td.center:nth-child(2)", current_row);
+                                    current_table_cell = $("td.left:nth-child(2)", current_row);
                                     current_ticket_id = getTicketIdFromCell(current_table_cell);
                                     current_action_time = 0;
 

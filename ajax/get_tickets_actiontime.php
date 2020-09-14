@@ -12,7 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'
     && is_array($_POST['ticket_ids'])
 ) {
     $ticket = new Ticket();
-    $tickets = $ticket->find("TRUE AND id IN (" . implode(', ', $_POST['ticket_ids']) . ")");
+    
+    $tickets = $ticket->find([ 'id' => $_POST['ticket_ids'] ]);
 
     $tickets_actiontime = [];
 
