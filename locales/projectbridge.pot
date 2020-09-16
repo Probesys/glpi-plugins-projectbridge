@@ -5,9 +5,9 @@
 #
 #, fuzzy
 msgid   ""
-msgstr  "Project-Id-Version: ProjectBridge 2.3RC2\n"
+msgstr  "Project-Id-Version: ProjectBridge 2.3RC3\n"
         "Report-Msgid-Bugs-To: contact@probesys.com\n"
-        "POT-Creation-Date: 2020-09-09 16:14+0200\n"
+        "POT-Creation-Date: 2020-09-16 12:00+0200\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,14 +22,9 @@ msgctxt "projectbridge"
 msgid   "Delete the link with any project task"
 msgstr  ""
 
-#: hook.php:1387
+#: hook.php:1389
 msgctxt "projectbridge"
-msgid   "Link to a project"
-msgstr  ""
-
-#: hook.php:1388
-msgctxt "projectbridge"
-msgid   "Force link to a project task"
+msgid   "Force to a contract"
 msgstr  ""
 
 #: ajax/get_renewal_tickets.php:69
@@ -222,22 +217,22 @@ msgctxt "projectbridge"
 msgid   "No linked contract"
 msgstr  ""
 
-#: inc/entity.class.php:63
+#: inc/entity.class.php:66
 msgctxt "projectbridge"
 msgid   "Default contract"
 msgstr  ""
 
-#: inc/entity.class.php:73
+#: inc/entity.class.php:76
 msgctxt "projectbridge"
 msgid   "Default contract access"
 msgstr  ""
 
-#: inc/entity.class.php:77
+#: inc/entity.class.php:80
 msgctxt "projectbridge"
 msgid   "Create a new contract"
 msgstr  ""
 
-#: inc/entity.class.php:81
+#: inc/entity.class.php:84
 msgctxt "projectbridge"
 msgid   "Remember to refresh this page after creating the contract"
 msgstr  ""
@@ -363,7 +358,7 @@ msgctxt "projectbridge"
 msgid   "Make the connection"
 msgstr  ""
 
-#: inc/ticket.class.php:314
+#: inc/ticket.class.php:317
 msgctxt "projectbridge"
 msgid   "Link(s) with project task(s) deleted"
 msgstr  ""
