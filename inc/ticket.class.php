@@ -186,10 +186,11 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      */
     public static function postShowTask(ProjectTask $project_task) {
         global $CFG_GLPI;
+        $onlypublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
 
         $get_tickets_actiontime_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/ajax/get_tickets_actiontime.php';
         $js_block = '
-            debugger;
+            //debugger;
             var
                 current_table_cell,
                 table_parent,
@@ -243,12 +244,17 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                                     current_table_cell = $("td.left:nth-child(2)", current_row);
                                     current_ticket_id = getTicketIdFromCell(current_table_cell);
                                     current_action_time = 0;
+                                    private_action_time = 0;
 
                                     if (tickets_actiontime[current_ticket_id] !== undefined) {
-                                        current_action_time = tickets_actiontime[current_ticket_id];
+                                        current_action_time = tickets_actiontime[current_ticket_id]["totalDuration"];
+                                        private_action_time = tickets_actiontime[current_ticket_id]["privateDuration"];
                                     }
-
-                                    current_row.append("<td>" + current_action_time + " heure(s)</td>");
+                                    if(private_action_time > 0) {
+                                        current_row.append("<td>" + current_action_time + " heure(s) dont " + private_action_time + " heures privées</td>");
+                                    }else {
+                                        current_row.append("<td>" + current_action_time + " heure(s) </td>");
+                                    }
                                 } else if (idx == 0) {
                                     current_table_cell = $("th", current_row);
                                     current_table_cell.attr("colspan", parseInt(current_table_cell.attr("colspan")) + 1);
