@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ProjectBridge 2.0\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
-"POT-Creation-Date: 2020-08-13 10:04+0200\n"
-"PO-Revision-Date: 2020-09-03 10:06+0200\n"
+"POT-Creation-Date: 2020-09-13 10:04+0200\n"
+"PO-Revision-Date: 2020-09-22 10:06+0200\n"
 "Last-Translator: probeSys <contact@probesys.com>\n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -88,11 +88,11 @@ msgstr "Výstrahu neobdrží nikdo"
 
 #: front/config.form.php:323
 msgid "General config"
-msgstr ""
+msgstr "Obecné nastavení"
 
 #: front/config.form.php:337
 msgid "Count only public tasks in project"
-msgstr ""
+msgstr "Spočítat pouze veřejné úkoly v projektu"
 
 #: front/config.form.php:352
 msgid "Please activate the plugin or get the right of access"
@@ -112,7 +112,7 @@ msgstr "Přístup k propojeným projektům"
 
 #: inc/contract.class.php:205
 msgid "Warning ! No associate projectTask with \"In progress\" status exist"
-msgstr ""
+msgstr "Varování! Neexistují žádné související úkoly projektu ve stavu „Zpracovávání“"
 
 #: inc/contract.class.php:216
 msgid "Comsuption"
