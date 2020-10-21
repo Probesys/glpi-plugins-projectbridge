@@ -51,6 +51,7 @@ function plugin_init_projectbridge() {
     $PLUGIN_HOOKS['config_page'][PluginProjectbridgeConfig::NAMESPACE] = 'front/config.form.php';
     $PLUGIN_HOOKS['post_show_item'][PluginProjectbridgeConfig::NAMESPACE] = 'plugin_projectbridge_post_show_item';
     $PLUGIN_HOOKS['post_show_tab'][PluginProjectbridgeConfig::NAMESPACE] = 'plugin_projectbridge_post_show_tab';
+    $PLUGIN_HOOKS['pre_item_form'][PluginProjectbridgeConfig::NAMESPACE] = ['PluginProjectbridgeItemForm', 'preItemForm'];
     $PLUGIN_HOOKS['pre_item_update'][PluginProjectbridgeConfig::NAMESPACE] = [
         'Entity' => 'plugin_projectbridge_pre_entity_update',
         'Contract' => 'plugin_projectbridge_pre_contract_update',
@@ -61,6 +62,7 @@ function plugin_init_projectbridge() {
     $PLUGIN_HOOKS['item_add'][PluginProjectbridgeConfig::NAMESPACE] = [
         'Contract' => 'plugin_projectbridge_contract_add',
         'TicketTask' => 'plugin_projectbridge_ticketask_add',
+        'Ticket'=> 'plugin_projectbridge_ticket_add',
     ];
 
     $PLUGIN_HOOKS['use_massive_action'][PluginProjectbridgeConfig::NAMESPACE] = 1;

@@ -441,6 +441,10 @@ function plugin_projectbridge_ticket_update(Ticket $ticket) {
         $bridge_entity = new PluginProjectbridgeEntity($entity);
         $contract_id = $bridge_entity->getContractId();
     }
+    
+    if(array_key_exists('projectbridge_contract_id', $_POST)) {
+        $contract_id = $_POST['projectbridge_contract_id'];
+    }
 
     if ($is_project_link_update || $contract_id
     ) {
@@ -503,6 +507,9 @@ function plugin_projectbridge_ticketask_add(TicketTask $ticket_task) {
         PluginProjectbridgeTask::updateProgressPercent((int) $ticket_task->fields['tickets_id']);
     }
 }
+
+
+
 
 /**
  * Hook called before the update of a ticket task
