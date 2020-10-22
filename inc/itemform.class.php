@@ -92,7 +92,6 @@ class PluginProjectbridgeItemForm {
                         $contract->getTable() => 'id'
                     ]
                 ],
-                
                 $project->getTable() => [
                     'FKEY' => [
                         $bridge_contract->getTable() => 'project_id',
@@ -106,7 +105,6 @@ class PluginProjectbridgeItemForm {
                     ]
                 ]
             ],
-            
             'WHERE' => [
                 $contract->getTable().'.entities_id' => $entityID,
                 $contract->getTable().'.is_deleted' => 0,
@@ -122,12 +120,7 @@ class PluginProjectbridgeItemForm {
             null => Dropdown::EMPTY_VALUE,
         ];
         foreach ($contract_datas as $contract_data) {
-            // test if contract is available
-//            $contractObject = $contract->getById($contract_data['contract_id']);
-//            $planEndDate = $bridge_contract->getContractPlanEndDate($contractObject);
-//            if ($planEndDate >= $now) {
-                $contract_list[$contract_data['contract_id']] = $contract_data['name'] ;
-            //}
+            $contract_list[$contract_data['contract_id']] = $contract_data['name'] ;
         }
         $config = [
             'value' => $defaultContractID,
