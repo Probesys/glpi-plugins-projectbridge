@@ -62,7 +62,8 @@ if ($can_update) {
       'projectbridge_delete_recipient',
       'projectbridge_add_recipient',
       'projectbridge_add_recipient_submit',
-      'projectbridge_config_countOnlyPublicTasks'
+      'projectbridge_config_countOnlyPublicTasks',
+      'projectbridge_config_addContractSelectorOnCreatingTicketForm'  
     ];
 
     $post_data = getPostDataFromFields($post_fields);
@@ -315,11 +316,7 @@ if ($can_update) {
     echo '</table>' . "\n";
     Html::closeForm();
     
-    $countOnlyPublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
-    if (isset($post_data['projectbridge_config_countOnlyPublicTasks']) ){
-        $countOnlyPublicTasks = $post_data['projectbridge_config_countOnlyPublicTasks'];
-        PluginProjectbridgeConfig::updateConfValue('CountOnlyPublicTasks', $countOnlyPublicTasks);
-    }
+    
     echo '<h2>'.__('General config', 'projectbridge').'</h2>';
     echo '<form method="post" action="">' . "\n";
     echo '<table>' . "\n";
@@ -333,6 +330,12 @@ if ($can_update) {
     echo '</th>' . "\n";
     echo '</tr>' . "\n";
     echo '<tbody>' . "\n";
+    
+    $countOnlyPublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
+    if (isset($post_data['projectbridge_config_countOnlyPublicTasks']) ){
+        $countOnlyPublicTasks = $post_data['projectbridge_config_countOnlyPublicTasks'];
+        PluginProjectbridgeConfig::updateConfValue('CountOnlyPublicTasks', $countOnlyPublicTasks);
+    }
     echo '<tr">' . "\n";
     echo '<td>'.__('Count only public tasks in project', 'projectbridge').'' . "\n";
     echo '</td>' . "\n";
@@ -340,6 +343,22 @@ if ($can_update) {
     Dropdown::showYesNo('projectbridge_config_countOnlyPublicTasks',$countOnlyPublicTasks,[]);
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
+    
+    // AddContractSelectorOnCreatingTicketForm
+    $addContractSelectorOnCreatingTicketForm = PluginProjectbridgeConfig::getConfValueByName('AddContractSelectorOnCreatingTicketForm');
+    if (isset($post_data['projectbridge_config_addContractSelectorOnCreatingTicketForm']) ){
+        $addContractSelectorOnCreatingTicketForm = $post_data['projectbridge_config_addContractSelectorOnCreatingTicketForm'];
+        PluginProjectbridgeConfig::updateConfValue('AddContractSelectorOnCreatingTicketForm', $addContractSelectorOnCreatingTicketForm);
+    }
+    echo '<tr">' . "\n";
+    echo '<td>'.__('Add contract selector on creating ticket form', 'projectbridge').'' . "\n";
+    echo '</td>' . "\n";
+    echo '<td>' . "\n";
+    Dropdown::showYesNo('projectbridge_config_addContractSelectorOnCreatingTicketForm',$addContractSelectorOnCreatingTicketForm,[]);
+    echo '</td>' . "\n";
+    echo '</tr>' . "\n";
+    
+    
     echo '</tbody>' . "\n";
     echo '</table>' . "\n";
     echo '<input type="submit" class="submit" name="projectbridge_save_general_config" value="' . __('Save') . '" />';

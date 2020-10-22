@@ -45,17 +45,19 @@ class PluginProjectbridgeItemForm {
         $item = $params['item'];
         $options = $params['options'];
         $out = "";
-        // only for create new ticket form
-        if ($item::getType() == Ticket::getType() && $options['id'] == 0) {
-            // récupération entité courante
-            $entityID = $options['entities_id'];
+        if( PluginProjectbridgeConfig::getConfValueByName('AddContractSelectorOnCreatingTicketForm') ) {
+            // only for create new ticket form
+            if ($item::getType() == Ticket::getType() && $options['id'] == 0) {
+                // récupération entité courante
+                $entityID = $options['entities_id'];
 
-            $out = '<tr tab_bg_1>';
-            $out .= '<th>' . __('Associated contract') . '<span class="required">*</span></th>';
-            // récupération des contrats associés à l'entité
-            $out .= '<td>' . str_replace('<select', '<select required', self::getEntityContracts($entityID)) . '</td>';
-            $out .= '<th></th><td></td>';
-            $out .= '</tr>';
+                $out = '<tr tab_bg_1>';
+                $out .= '<th>' . __('Associated contract') . '<span class="required">*</span></th>';
+                // récupération des contrats associés à l'entité
+                $out .= '<td>' . str_replace('<select', '<select required', self::getEntityContracts($entityID)) . '</td>';
+                $out .= '<th></th><td></td>';
+                $out .= '</tr>';
+            }
         }
 
         echo $out;

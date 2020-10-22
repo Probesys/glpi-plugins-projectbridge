@@ -47,10 +47,10 @@ class PluginProjectbridgeTicket extends CommonDBTM {
 
         $project_list = PluginProjectbridgeTicket::_getProjectList();
 
-        $bridge_ticket = new PluginProjectbridgeTicket($ticket);
-        $project_id = $bridge_ticket->getProjectId();
+        //$bridge_ticket = new PluginProjectbridgeTicket($ticket);
+        //$project_id = $bridge_ticket->getProjectId();
 
-        if (!$project_id) {
+        //if (!$project_id) {
             // no link between ticket and project in DB, get the contract for the current entity
 
             $entity = new Entity();
@@ -73,7 +73,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
             } else {
                 $project_id = null;
             }
-        }
+        //}
 
         if (empty($project_id) || !isset($project_list[$project_id])
         ) {

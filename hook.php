@@ -73,7 +73,8 @@ function plugin_projectbridge_install() {
         $DB->query($create_tableConfig_query) or die($DB->error());
         $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
             (1, 'RecipientIds', '[]'),
-            (2, 'CountOnlyPublicTasks', '1');";
+            (2, 'CountOnlyPublicTasks', '1')
+            (3, 'AddContractSelectorOnCreatingTicketForm', '0');";
         $DB->query($insert_table_query) or die($DB->error());
     } else {
         // test if old version of glpi_plugin_projectbridge_configs      
@@ -100,6 +101,16 @@ function plugin_projectbridge_install() {
             $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
             (1, 'RecipientIds', '" . json_encode(array_unique($userIds)) . "'),
             (2, 'CountOnlyPublicTasks', '1');";
+            $DB->query($insert_table_query) or die($DB->error());
+        }
+        // test if config addContractSelectorOnCreatingTicketForm is present
+        $req = $DB->request([
+          'FROM' => PluginProjectbridgeConfig::$table_name,
+          'WHERE' => ['name'=> 'AddContractSelectorOnCreatingTicketForm']  
+        ]);
+        if (!count($req)) {
+            $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
+            (3, 'AddContractSelectorOnCreatingTicketForm', '0');";
             $DB->query($insert_table_query) or die($DB->error());
         }
     }
