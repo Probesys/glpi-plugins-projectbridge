@@ -50,20 +50,14 @@ class PluginProjectbridgeItemForm {
             if ($item::getType() == Ticket::getType() && $options['id'] == 0) {
                 // récupération entité courante
                 $entityID = $options['entities_id'];
-
-                $out = '<tr tab_bg_1>';
-                $out .= '<th>' . __('Associated contract') . '<span class="required">*</span></th>';
-                // récupération des contrats associés à l'entité
-                $out .= '<td>' . str_replace('<select', '<select required', self::getEntityContracts($entityID)) . '</td>';
-                $out .= '<th></th><td></td>';
-                $out .= '</tr>';
+                $out = self::getEntityContractsSelector($entityID);
             }
         }
 
         echo $out;
     }
 
-    private static function getEntityContracts($entityID) {
+    private static function getEntityContractsSelector($entityID) {
         global $DB;
         // récupération du contrat par défaut
         $entity = new Entity();
@@ -80,7 +74,6 @@ class PluginProjectbridgeItemForm {
         $now = new DateTime();
 
         $contract_datas = [];
-
 
         foreach ($DB->request([
             'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
@@ -131,8 +124,22 @@ class PluginProjectbridgeItemForm {
         ];
 
         $html_parts = Dropdown::showFromArray('projectbridge_contract_id', $contract_list, $config);
+        $requiredSpan = '';
+        if(count($contract_datas)) {
+            // if at least one contract was found, add required attribute
+            $html_parts = str_replace('<select', '<select required', $html_parts);
+            $requiredSpan = '<span class="required">*</span>';
+        }
+        
+        $out = '<tr tab_bg_1>';
+        $out .= '<th>' . __('Associated contract') .$requiredSpan. '</th>';
+        // récupération des contrats associés à l'entité
+        $out .= '<td>' . $html_parts . '</td>';
+        $out .= '<th></th><td></td>';
+        $out .= '</tr>';
+        
 
-        return $html_parts;
+        return $out;
     }
 
     /**
