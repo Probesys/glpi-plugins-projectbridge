@@ -45,12 +45,12 @@ class PluginProjectbridgeItemForm {
         $item = $params['item'];
         $options = $params['options'];
         $out = "";
-        if( PluginProjectbridgeConfig::getConfValueByName('AddContractSelectorOnCreatingTicketForm') ) {
+        if( !substr_count($_SERVER['SCRIPT_NAME'], 'helpdesk.public.php') && PluginProjectbridgeConfig::getConfValueByName('AddContractSelectorOnCreatingTicketForm') ) {
             // only for create new ticket form
             if ($item::getType() == Ticket::getType() && $options['id'] == 0) {
                 // récupération entité courante
                 $entityID = $options['entities_id'];
-                $out = self::getEntityContractsSelector($entityID);
+                $out .= self::getEntityContractsSelector($entityID);
             }
         }
 
