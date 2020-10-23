@@ -41,16 +41,14 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      */
     public static function postShow(Ticket $ticket) {
         
-
-
         global $CFG_GLPI;
 
         $project_list = PluginProjectbridgeTicket::_getProjectList();
 
-        //$bridge_ticket = new PluginProjectbridgeTicket($ticket);
-        //$project_id = $bridge_ticket->getProjectId();
+        $bridge_ticket = new PluginProjectbridgeTicket($ticket);
+        $project_id = $bridge_ticket->getProjectId();
 
-        //if (!$project_id) {
+        if (!$project_id) {
             // no link between ticket and project in DB, get the contract for the current entity
 
             $entity = new Entity();
@@ -60,7 +58,6 @@ class PluginProjectbridgeTicket extends CommonDBTM {
 
             if ($contract_id) {
                 // default contract found, let's find the linked project
-
                 $contract = new Contract();
                 $contract->getFromDB($contract_id);
                 $bridge_contract = new PluginProjectbridgeContract($contract);
@@ -69,14 +66,20 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                 if (!isset($project_list[$project_id])) {
                     // project does not exist anymore
                     $project_id = null;
+                } 
+                if($project_id) {
+                    // save link between ticket and project in DB
+                    $bridge_ticket->add([
+                        'project_id' => $project_id,
+                        'ticket_id' => $ticket->getID()
+                    ]);
                 }
             } else {
                 $project_id = null;
             }
-        //}
+        }
 
-        if (empty($project_id) || !isset($project_list[$project_id])
-        ) {
+        if ( empty($project_id) || !isset($project_list[$project_id]) ) {
             $project_id = null;
         }
 
@@ -303,8 +306,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
 
         $result = $DB->query($get_nb_links_query);
 
-        if ($result && $DB->numrows($result)
-        ) {
+        if ( $result && $DB->numrows($result) ) {
             $results = $DB->fetch_assoc($result);
             $nb_links = (int) $results['nb_links'];
         } else {

@@ -439,42 +439,35 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false) {
  * @return void
  */
 function plugin_projectbridge_ticket_update(Ticket $ticket) {
-    if (!empty($ticket->input['update']) && $ticket->input['update'] == 'Faire la liaison' && !empty($ticket->input['projectbridge_project_id'])
-    ) {
+    if ( !empty($ticket->input['update']) && $ticket->input['update'] == 'Faire la liaison' && !empty($ticket->input['projectbridge_project_id']) ) {
         $is_project_link_update = true;
         $contract_id = null;
     } else {
         $is_project_link_update = false;
-
         $entity = new Entity();
         $entity->getFromDB($ticket->fields['entities_id']);
-
         $bridge_entity = new PluginProjectbridgeEntity($entity);
         $contract_id = $bridge_entity->getContractId();
     }
     
-    if(array_key_exists('projectbridge_contract_id', $_POST)) {
+    if( array_key_exists('projectbridge_contract_id', $_POST) ) {
         $contract_id = $_POST['projectbridge_contract_id'];
     }
 
-    if ($is_project_link_update || $contract_id
-    ) {
+    if ( $is_project_link_update || $contract_id ) {
         // default contract for the entity found or update
 
-        if (!$is_project_link_update) {
+        if ( !$is_project_link_update ) {
             $contract = new Contract();
             $contract->getFromDB($contract_id);
-
             $contract_bridge = new PluginProjectbridgeContract($contract);
             $project_id = $contract_bridge->getProjectId();
         } else {
             $project_id = (int) $ticket->input['projectbridge_project_id'];
         }
 
-        if ($project_id && PluginProjectbridgeContract::getProjectTaskOject($project_id)
-        ) {
+        if ( $project_id && PluginProjectbridgeContract::getProjectTaskOject($project_id) ) {
             // project linked to contract found & task exists
-
             PluginProjectbridgeTicket::deleteProjectLinks($ticket->getId());
 
             $task_id = PluginProjectbridgeContract::getProjectTaskFieldValue($project_id, false, 'id');
@@ -485,9 +478,10 @@ function plugin_projectbridge_ticket_update(Ticket $ticket) {
               'projecttasks_id' => $task_id,
               'tickets_id' => $ticket->getId(),
             ]);
+            
+            $bridge_ticket = new PluginProjectbridgeTicket($ticket);
 
             if ($is_project_link_update) {
-                $bridge_ticket = new PluginProjectbridgeTicket($ticket);
 
                 if ($bridge_ticket->getProjectId() > 0) {
                     $bridge_ticket->update([
@@ -500,6 +494,11 @@ function plugin_projectbridge_ticket_update(Ticket $ticket) {
                       'project_id' => $project_id,
                     ]);
                 }
+            } else {
+                $bridge_ticket->add([
+                      'ticket_id' => $ticket->getId(),
+                      'project_id' => $project_id,
+                ]);
             }
         }
     }
