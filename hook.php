@@ -132,7 +132,7 @@ function plugin_projectbridge_install() {
     }
     
     // clean old crontask
-    if (version_compare(PLUGIN_PROJECTBRIDGE_VERSION, '2.2.3', '<')) {
+    if (version_compare(PLUGIN_PROJECTBRIDGE_VERSION, '2.2.3', '>')) {
         //$update_crontask_table = "UPDATE ".Crontask::getTable()." SET itemtype='PluginProjectbridgeTask' WHERE itemtype='PluginProjectbridgeContract' AND name='AlertContractsToRenew'";
         //$DB->query($update_crontask_table) or die($DB->error());
         $delete_crontask_table = "DELETE FROM ".Crontask::getTable()."  WHERE itemtype='PluginProjectbridgeContract' AND name='AlertContractsToRenew'";
