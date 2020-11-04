@@ -1063,19 +1063,30 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
             break;
 
         case PluginProjectbridgeTicket::$table_name:
+            $onlypublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
+            $wherePrivateCondition = '';
+            $tableName= Ticket::getTable();
+            if ( !Session::haveRight("task", CommonITILTask::SEEPRIVATE) || $onlypublicTasks) {    
+                
+                $tableName = TicketTask::getTable();
+                $wherePrivateCondition = ' AND `'.$tableName.'`.`is_private` = 0 ';
+            }
             if ($itemtype == 'Entity') {
                 $left_join = "
                     LEFT JOIN (
                         SELECT
                             `glpi_tickets`.`entities_id`,
-                            SUM(`glpi_tickets`.`actiontime`) / 3600 AS `actiontime_sum`
+                            SUM(`".$tableName."`.`actiontime`) / 3600 AS `actiontime_sum`
                         FROM
                             `glpi_tickets`
                         LEFT OUTER JOIN `glpi_projecttasks_tickets`
                             ON (`glpi_tickets`.`id` = `glpi_projecttasks_tickets`.`tickets_id`)
+                        INNER JOIN `glpi_tickettasks`
+                            ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`)    
                         WHERE TRUE
                             AND `glpi_tickets`.`is_deleted` = 0
                             AND `glpi_projecttasks_tickets`.`tickets_id` IS NULL
+                            ".$wherePrivateCondition." 
                         GROUP BY
                             `glpi_tickets`.`entities_id`
                     ) AS `unlinked_ticket_actiontimes`
@@ -1086,13 +1097,16 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                     LEFT JOIN (
                         SELECT
                             `glpi_projecttasks_tickets`.`projecttasks_id`,
-                            SUM(`glpi_tickets`.`actiontime`) / 3600 AS `actiontime_sum`
+                            SUM(`".$tableName."`.`actiontime`) / 3600 AS `actiontime_sum`
                         FROM
                             `glpi_tickets`
                         INNER JOIN `glpi_projecttasks_tickets`
                             ON (`glpi_tickets`.`id` = `glpi_projecttasks_tickets`.`tickets_id`)
+                        INNER JOIN `glpi_tickettasks`
+                            ON (`glpi_tickets`.`id` = `glpi_tickettasks`.`tickets_id`)    
                         WHERE TRUE
                             AND `glpi_tickets`.`is_deleted` = 0
+                            ".$wherePrivateCondition."
                         GROUP BY
                             `glpi_projecttasks_tickets`.`projecttasks_id`
                     ) AS `ticket_actiontimes`
