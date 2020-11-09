@@ -74,8 +74,12 @@ class PluginProjectbridgeItemForm {
         $now = new DateTime();
 
         $contract_datas = [];
-
-        foreach ($DB->request([
+        
+        // get ids of ancestor entities
+        $entitiesIDS = getAncestorsOf($entity->getTable(), $entityID);
+        
+        // get contratcs associate to current entity with active projectTask
+        $sub1 = new \QuerySubQuery([
             'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
             'FROM' => $bridge_contract->getTable(),
             'INNER JOIN' => [
@@ -96,16 +100,70 @@ class PluginProjectbridgeItemForm {
                         $project->getTable() => 'id',
                         $projectTask->getTable() => 'projects_id'
                     ]
-                ]
+                ],
+                $entity->getTable() => [
+                    'FKEY' => [
+                        $entity->getTable() => 'id',
+                        $contract->getTable() => 'entities_id'
+                    ]
+                ],
+
             ],
             'WHERE' => [
-                $contract->getTable().'.entities_id' => $entityID,
+                $entity->getTable().'.id' =>  $entityID,    
                 $contract->getTable().'.is_deleted' => 0,
                 $contract->getTable().'.is_template' => 0,
                 $projectTask->getTable().'.projectstates_id' => [$state_in_progress_value, $state_renewal_value],
-                $projectTask->getTable().'.plan_end_date' => ['>=', 'NOW()']
+                $projectTask->getTable().'.plan_end_date' => ['>=', 'NOW()'],
+
             ]
-        ]) as $data) {
+        ]);
+        
+        // get contracts associate to ancestor entities with active projectTask
+        $sub2 = new \QuerySubQuery([
+            'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
+            'FROM' => $bridge_contract->getTable(),
+            'INNER JOIN' => [
+                $contract->getTable() => [
+                    'FKEY' => [
+                        $bridge_contract->getTable() => 'contract_id',
+                        $contract->getTable() => 'id'
+                    ]
+                ],
+                $project->getTable() => [
+                    'FKEY' => [
+                        $bridge_contract->getTable() => 'project_id',
+                        $project->getTable() => 'id'
+                    ]
+                ],
+                $projectTask->getTable() => [
+                    'FKEY' => [
+                        $project->getTable() => 'id',
+                        $projectTask->getTable() => 'projects_id'
+                    ]
+                ],
+                $entity->getTable() => [
+                    'FKEY' => [
+                        $entity->getTable() => 'id',
+                        $contract->getTable() => 'entities_id'
+                    ]
+                ],
+
+            ],
+            'WHERE' => [
+                $entity->getTable().'.id' =>  $entitiesIDS, 
+                $contract->getTable().'.is_deleted' => 0,
+                $contract->getTable().'.is_template' => 0,
+                $contract->getTable().'.is_recursive' => 1,
+                $projectTask->getTable().'.projectstates_id' => [$state_in_progress_value, $state_renewal_value],
+                $projectTask->getTable().'.plan_end_date' => ['>=', 'NOW()'],
+
+            ]
+        ]);
+        // create union query
+        $union = new \QueryUnion([$sub1, $sub2], true);
+        
+        foreach ($DB->request(['FROM' => $union]) as $data) {
             $contract_datas[] = $data;
         }
 
