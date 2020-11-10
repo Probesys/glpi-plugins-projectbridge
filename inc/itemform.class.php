@@ -77,6 +77,8 @@ class PluginProjectbridgeItemForm {
         
         // get ids of ancestor entities
         $entitiesIDS = getAncestorsOf($entity->getTable(), $entityID);
+        // prevent empty array
+        array_push($entitiesIDS, $entityID);
         
         // get contratcs associate to current entity with active projectTask
         $sub1 = new \QuerySubQuery([
