@@ -473,6 +473,34 @@ class PluginProjectbridgeContract extends CommonDBTM
       }
       return 0;
    }
+   
+   public static function getNbTicketsAssociateToProjectTask($projecttasks_id){
+       global $DB;
+      
+      $whereConditionsArray = ['projecttasks_id' => $projecttasks_id];
+      
+      
+      $iterator = $DB->request([
+         'SELECT'       => new QueryExpression('COUNT('.ProjectTask_Ticket::getTable().'.tickets_id) AS nb'),
+         'FROM'         => ProjectTask_Ticket::getTable(),
+         'INNER JOIN'   => [
+            Ticket::getTable() => [
+               'FKEY'   => [
+                  ProjectTask_Ticket::getTable()  => 'tickets_id',
+                  Ticket::getTable()    => 'id'
+               ]
+            ],
+           
+         ],
+         'WHERE' => $whereConditionsArray
+      ]);
+      
+
+      if ($row = $iterator->next()) {
+         return $row['nb'];
+      }
+      return 0;
+   } 
 
     /**
      * Get HTML to manage hours

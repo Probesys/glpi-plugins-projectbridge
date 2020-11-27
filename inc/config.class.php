@@ -41,7 +41,7 @@ class PluginProjectbridgeConfig extends CommonDBTM {
     
     public static function getConfByName($name) {
         global $DB;
-        
+        $conf = null;
         $req = $DB->request([
           'SELECT' => ['*'],
           'FROM' => PluginProjectbridgeConfig::$table_name,

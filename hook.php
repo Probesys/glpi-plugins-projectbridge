@@ -740,6 +740,13 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype) {
               'name' => 'Statut du projet',
               'massiveaction' => false,
             ];
+            $options[] = [
+              'id' => 4235,
+              'table' => PluginProjectbridgeTicket::$table_name,
+              'field' => 'project_id',
+              'name' => 'Tickets associés',
+              'massiveaction' => false,
+            ];
 
             break;
 
@@ -1014,6 +1021,16 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
                     AS `ITEM_" . $offset . "`,
                 ";
             }
+            else if ($key == 4235) {
+                // project status
+
+                $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
+
+                $select = "
+                    nb_tickets
+                    AS `ITEM_" . $offset . "`,
+                ";
+            }
 
             break;
 
@@ -1097,7 +1114,7 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                     LEFT JOIN (
                         SELECT
                             `glpi_projecttasks_tickets`.`projecttasks_id`,
-                            SUM(`".$tableName."`.`actiontime`) / 3600 AS `actiontime_sum`
+                            SUM(`".$tableName."`.`actiontime`) / 3600 AS `actiontime_sum`, COUNT(*) as nb_tickets
                         FROM
                             `glpi_tickets`
                         INNER JOIN `glpi_projecttasks_tickets`
@@ -1260,7 +1277,8 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     $where = $link . "`glpi_projects`.`name` " . Search::makeTextSearch($val);
                 } else if ($key == 4212) {
                     // project task
-                    $where = $link . "`glpi_projecttasks`.`name` " . Search::makeTextSearch($val);
+                    //$where = $link . "(`glpi_projecttasks`.`name` " . Search::makeTextSearch($val)." OR `glpi_projecttasks`.`id`=".$val." )";
+                    $where = $link . "(`glpi_projecttasks`.`id`=".$val." )";
                 } else if ($key == 4213) {
                     // project task status
                     $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
@@ -1426,4 +1444,16 @@ function plugin_projectbridge_MassiveActions($type) {
     }
 
     return $massive_actions;
+}
+
+function plugin_projectbridge_giveItem($type, $ID, $data, $num) {
+   global $CFG_GLPI, $DB;
+   if($num == "projecttask_4235"){
+       $projectTaskId = $data['raw']['id'];
+       // calcul nombre tickets associés à la tâche de projet
+       $pluginProjectbridgeContract = new PluginProjectbridgeContract();
+       $nbTickets = $pluginProjectbridgeContract->getNbTicketsAssociateToProjectTask($projectTaskId);
+       $ticket_search_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/ticket.php?is_deleted=0&criteria[0][field]=4212&criteria[0][searchtype]=contains&criteria[0][value]='.$projectTaskId.'';
+       return '<a href="'.$ticket_search_link.'">'.$nbTickets.'</a>';
+   }
 }
