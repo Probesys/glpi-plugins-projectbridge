@@ -71,6 +71,7 @@ function plugin_init_projectbridge() {
     $PLUGIN_HOOKS['menu_toadd'][PluginProjectbridgeConfig::NAMESPACE] = [
         'tools' => 'PluginProjectbridgeTask',
     ];
+    $PLUGIN_HOOKS['add_javascript'][PluginProjectbridgeConfig::NAMESPACE] = 'js/projectbridge.js.php';
 }
 
 /**

@@ -32,6 +32,11 @@ class PluginProjectbridgeTask extends CommonDBTM {
         return 'ProjectBridge';
     }
 
+    static function getMenuName() {
+        //return __('ProjectBridge project tasks', 'projectbridge');  
+        return 'ProjectBridge';
+    }
+
     /**
      * Add menu content
      *
@@ -40,10 +45,17 @@ class PluginProjectbridgeTask extends CommonDBTM {
     public static function getMenuContent() {
         $menu = parent::getMenuContent();
 
-        $menu['title'] = __('ProjectBridge project tasks', 'projectbridge');
-        $menu['page'] = PLUGIN_PROJECTBRIDGE_WEB_DIR.'/front/projecttask.php';
+        $menu = [
+            'title' => self::getMenuName(),
+            'page' => Plugin::getPhpDir('projectbridge', false) . '/front/projecttask.php',
+            'icon' => self::getIcon(),
+        ];
 
         return $menu;
+    }
+
+    static function getIcon() {
+        return "fa fa-tasks";
     }
 
     /**
@@ -57,21 +69,21 @@ class PluginProjectbridgeTask extends CommonDBTM {
         switch ($name) {
             case 'ProcessTasks':
                 $return = [
-                  'description' => __('Project task treatment', 'projectbridge'),
+                    'description' => __('Project task treatment', 'projectbridge'),
                 ];
 
                 break;
 
             case 'UpdateProgressPercent':
                 $return = [
-                  'description' => __('Update percentage counters performed in project tasks', 'projectbridge'),
+                    'description' => __('Update percentage counters performed in project tasks', 'projectbridge'),
                 ];
-                break; 
+                break;
             case 'AlertContractsToRenew':
                 $return = [
-                  'description' => __('Contract Alert to renew', 'projectbridge'),
+                    'description' => __('Contract Alert to renew', 'projectbridge'),
                 ];
-                break;    
+                break;
         }
 
         return $return;
@@ -125,7 +137,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
         return ($nb_successes > 0) ? 1 : 0;
     }
 
-    public function closeTaskAndCreateExcessTicket($tasks,  $fromCronTask = true) {
+    public function closeTaskAndCreateExcessTicket($tasks, $fromCronTask = true) {
         $nb_successes = 0;
         $newTicketIds = [];
         foreach ($tasks as $task_data) {
@@ -144,13 +156,13 @@ class PluginProjectbridgeTask extends CommonDBTM {
             }
 
             if ($expired || ( $timediff >= 0 && $action_time !== null )) {
-                 
+
                 $brige_task = new PluginProjectbridgeTask($task_data['id']);
                 //$nb_successes += $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0, $fromCronTask);
                 $newTicketIds = array_merge($newTicketIds, $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0, $fromCronTask));
-                
-                if ($fromCronTask && $timediff > 0 ) {
-                        $brige_task->createExcessTicket($timediff, $task_data['entities_id']);
+
+                if ($fromCronTask && $timediff > 0) {
+                    $brige_task->createExcessTicket($timediff, $task_data['entities_id']);
                 }
             }
         }
@@ -167,34 +179,34 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @return int
      */
     public function closeTask($expired = false, $action_time = 0) {
-       
+
         $newTicketIds = [];
-        
+
         echo 'Fermeture de la tâche ' . $this->_task->getId() . "<br />\n";
 
         // close task
         $closed = $this->_task->update([
-          'id' => $this->_task->getId(),
-          'projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('closed'),
+            'id' => $this->_task->getId(),
+            'projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('closed'),
         ]);
 
-        if ($closed ) {
+        if ($closed) {
             $ticket_link = new ProjectTask_Ticket();
             $ticket_links = $ticket_link->find(['projecttasks_id' => $this->_task->getId()]);
 
             if (!empty($ticket_links)) {
                 $ticket_states_to_ignore = [
-                  Ticket::SOLVED,
-                  Ticket::CLOSED,
+                    Ticket::SOLVED,
+                    Ticket::CLOSED,
                 ];
 
                 $ticket_fields_to_ignore = [
-                  'id' => null,
-                  'closedate' => null,
-                  'solvedate' => null,
-                  'users_id_lastupdater' => null,
-                  'close_delay_stat' => null,
-                  'solve_delay_stat' => null,
+                    'id' => null,
+                    'closedate' => null,
+                    'solvedate' => null,
+                    'users_id_lastupdater' => null,
+                    'close_delay_stat' => null,
+                    'solve_delay_stat' => null,
                 ];
 
                 $ticket_request_type = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
@@ -208,8 +220,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
                         // close the ticket
                         $ticket_fields = $ticket->fields;
                         $closed = $ticket->update([
-                          'id' => $ticket->getId(),
-                          'status' => Ticket::CLOSED,
+                            'id' => $ticket->getId(),
+                            'status' => Ticket::CLOSED,
                         ]);
 
                         if ($closed) {
@@ -231,8 +243,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
                             if ($ticket->add($ticket_fields)) {
                                 // force ticket update
                                 $ticket->update([
-                                  'id' => $ticket->getId(),
-                                  'users_id_recipient' => $ticket_fields['users_id_recipient'],
+                                    'id' => $ticket->getId(),
+                                    'users_id_recipient' => $ticket_fields['users_id_recipient'],
                                 ]);
 
                                 // link groups (requesters, observers, technicians)
@@ -247,9 +259,9 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                     if ($group->getFromDB($ticket_group_data['groups_id'])) {
                                         $group_ticket = new Group_Ticket();
                                         $group_ticket->add([
-                                          'tickets_id' => $ticket->getId(),
-                                          'groups_id' => $ticket_group_data['groups_id'],
-                                          'type' => $ticket_group_data['type'],
+                                            'tickets_id' => $ticket->getId(),
+                                            'groups_id' => $ticket_group_data['groups_id'],
+                                            'type' => $ticket_group_data['type'],
                                         ]);
                                     }
                                 }
@@ -261,11 +273,11 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                 foreach ($ticket_users as $ticket_user_data) {
                                     $ticket_user = new Ticket_User();
                                     $ticket_user->add([
-                                      'tickets_id' => $ticket->getId(),
-                                      'users_id' => $ticket_user_data['users_id'],
-                                      'type' => $ticket_user_data['type'],
-                                      'use_notification' => $ticket_user_data['use_notification'],
-                                      'alternative_email' => $ticket_user_data['alternative_email'],
+                                        'tickets_id' => $ticket->getId(),
+                                        'users_id' => $ticket_user_data['users_id'],
+                                        'type' => $ticket_user_data['type'],
+                                        'use_notification' => $ticket_user_data['use_notification'],
+                                        'alternative_email' => $ticket_user_data['alternative_email'],
                                     ]);
                                 }
 
@@ -276,18 +288,18 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                 foreach ($ticket_links as $ticket_link_data) {
                                     $ticket_link = new Ticket_Ticket();
                                     $ticket_link->add([
-                                      'tickets_id_1' => $ticket->getId(),
-                                      'tickets_id_2' => $ticket_link_data['tickets_id_2'],
-                                      'link' => $ticket_link_data['link'],
+                                        'tickets_id_1' => $ticket->getId(),
+                                        'tickets_id_2' => $ticket_link_data['tickets_id_2'],
+                                        'link' => $ticket_link_data['link'],
                                     ]);
                                 }
 
                                 // link the clone to the old ticket
                                 $ticket_link = new Ticket_Ticket();
                                 $ticket_link->add([
-                                  'tickets_id_1' => $ticket->getId(),
-                                  'tickets_id_2' => $old_ticket_id,
-                                  'link' => Ticket_Ticket::LINK_TO,
+                                    'tickets_id_1' => $ticket->getId(),
+                                    'tickets_id_2' => $old_ticket_id,
+                                    'link' => Ticket_Ticket::LINK_TO,
                                 ]);
 
                                 // add followups
@@ -305,10 +317,10 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
                                     if ($ticket_followup_id) {
                                         $ticket_followup->update([
-                                          'id' => $ticket_followup_id,
-                                          'date' => $ticket_followup_data['date'],
-                                          'date_mod' => $ticket_followup_data['date_mod'],
-                                          'date_creation' => $ticket_followup_data['date_creation'],
+                                            'id' => $ticket_followup_id,
+                                            'date' => $ticket_followup_data['date'],
+                                            'date_mod' => $ticket_followup_data['date_mod'],
+                                            'date_creation' => $ticket_followup_data['date_creation'],
                                         ]);
                                     }
                                 }
@@ -317,8 +329,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                 $document_item = new Document_Item();
                                 $ticket_document_items = $document_item->find(
                                         [
-                                          'items_id' => $old_ticket_id,
-                                          'itemtype' => 'Ticket'
+                                            'items_id' => $old_ticket_id,
+                                            'itemtype' => 'Ticket'
                                 ]);
 
                                 foreach ($ticket_document_items as $ticket_document_item_data) {
@@ -333,8 +345,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                         $_SESSION['glpi_currenttime'] = $ticket_document_item_data['date_mod'];
 
                                         $document_item->update([
-                                          'id' => $document_item_id,
-                                          'date_mod' => $ticket_document_item_data['date_mod'],
+                                            'id' => $document_item_id,
+                                            'date_mod' => $ticket_document_item_data['date_mod'],
                                         ]);
 
                                         $_SESSION['glpi_currenttime'] = $glpi_time_before;
@@ -359,9 +371,9 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                 $log = new Log();
                                 $solutions = $log->find(
                                         [
-                                          'items_id' => $old_ticket_id,
-                                          'id_search_option' => 24,
-                                          'itemtype' => 'Ticket'
+                                            'items_id' => $old_ticket_id,
+                                            'id_search_option' => 24,
+                                            'itemtype' => 'Ticket'
                                         ], ['id' => 'DESC'], 1);
 
 
@@ -380,8 +392,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                         $_SESSION['glpi_currenttime'] = $ticket_new_solution_data['date_mod'];
 
                                         $log->update([
-                                          'id' => $log_id,
-                                          'date_mod' => $ticket_new_solution_data['date_mod'],
+                                            'id' => $log_id,
+                                            'date_mod' => $ticket_new_solution_data['date_mod'],
                                         ]);
 
                                         $_SESSION['glpi_currenttime'] = $glpi_time_before;
@@ -443,12 +455,12 @@ class PluginProjectbridgeTask extends CommonDBTM {
         $ticket_request_type = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
 
         $ticket_fields = [
-          'entities_id' => $entities_id,
-          'name' => addslashes(__('Adjustment ticket', 'projectbridge')),
-          'content' => addslashes(__('Time Adjustment ticket', 'projectbridge')),
-          'actiontime' => 0,
-          'requesttypes_id' => $ticket_request_type,
-          'status' => Ticket::CLOSED,
+            'entities_id' => $entities_id,
+            'name' => addslashes(__('Adjustment ticket', 'projectbridge')),
+            'content' => addslashes(__('Time Adjustment ticket', 'projectbridge')),
+            'actiontime' => 0,
+            'requesttypes_id' => $ticket_request_type,
+            'status' => Ticket::CLOSED,
         ];
 
         $ticket = new Ticket();
@@ -456,9 +468,9 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
         if ($return) {
             $ticket_task_data = [
-              'actiontime' => $timediff,
-              'tickets_id' => $ticket->getId(),
-              'content' => addslashes(__('Adjustment task', 'projectbridge')),
+                'actiontime' => $timediff,
+                'tickets_id' => $ticket->getId(),
+                'content' => addslashes(__('Adjustment task', 'projectbridge')),
             ];
 
             $ticket_task = new TicketTask();
@@ -556,8 +568,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
                     }
 
                     $success = $task->update([
-                      'id' => $task->getId(),
-                      'percent_done' => $target_percent,
+                        'id' => $task->getId(),
+                        'percent_done' => $target_percent,
                     ]);
 
                     if ($success) {
@@ -587,8 +599,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
                 $effective_duration = ProjectTask::getTotalEffectiveDuration($task_data['id']);
 
                 $duration_data[$task_data['id']] = [
-                  'planned_duration' => round($task_data['planned_duration'] / 3600 * 100) / 100,
-                  'effective_duration' => round($effective_duration / 3600 * 100) / 100,
+                    'planned_duration' => round($task_data['planned_duration'] / 3600 * 100) / 100,
+                    'effective_duration' => round($effective_duration / 3600 * 100) / 100,
                 ];
             }
 
@@ -666,15 +678,14 @@ class PluginProjectbridgeTask extends CommonDBTM {
             }
         }
     }
-    
+
     /**
      * Cron action to alert on contracts to renew
      *
      * @param CronTask|null $task for log, if NULL display (default NULL)
      * @return integer 1 if an action was done, 0 if not
      */
-    public static function cronAlertContractsToRenew($task = null)
-    {
+    public static function cronAlertContractsToRenew($task = null) {
         if (class_exists('PluginProjectbridgeConfig')) {
             $plugin = new Plugin();
 
@@ -730,9 +741,9 @@ class PluginProjectbridgeTask extends CommonDBTM {
                 if (!$projectTaskObject) {
                     // if not finded, search closed projecttask
                     $search_close = true;
-                    $projectTaskObject = $bridge_contract::getProjectTaskOject($project_id, $search_close); 
+                    $projectTaskObject = $bridge_contract::getProjectTaskOject($project_id, $search_close);
                 }
-                if ($projectTaskObject) {    
+                if ($projectTaskObject) {
                     $plan_end_date = $bridge_contract::getProjectTaskFieldValue($project_id, $search_close, 'plan_end_date');
                     $html_parts[] = '<strong>';
                     $html_parts[] = __('Expected end date', 'projectbridge');
