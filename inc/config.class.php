@@ -77,6 +77,13 @@ class PluginProjectbridgeConfig extends CommonDBTM {
                    'id' => (int) $conf['id']
                 ]
              );
+        }else{
+            $DB->insert(
+                PluginProjectbridgeConfig::$table_name, [
+                   'value'      => json_encode($newValue),
+                   'name'      => $name 
+                ]
+             );
         }
     }
 

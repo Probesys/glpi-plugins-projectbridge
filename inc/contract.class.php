@@ -181,14 +181,11 @@ class PluginProjectbridgeContract extends CommonDBTM
             $html_parts[] = '<br />';
             $html_parts[] = '<br />';
 
-            
             if (self::getProjectTaskOject($project_id) ) {
                 $search_closed = false;
             } else {
                 $search_closed = true;
             }
-            
-            
 
             $consumption_ratio = 0;
             $nb_hours = $bridge_contract->getNbHours();
@@ -202,6 +199,8 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $haveToBeRenewed = true;
                     $html_parts[] = '<span class="red">'.__('Warning ! No associate projectTask with "In progress" status exist', 'projectbridge') .' </span><br/>';
                     $projectTaskID = null;
+                    $lastClosedProjectTask = PluginProjectbridgeContract::getLastClosedProjectTasksForProject($project_id);
+                    $projectTaskID = $lastClosedProjectTask['id'];
                 }else{
                     $projectTaskID = $activeProjectTask[0]['id'];
                 }
@@ -218,7 +217,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $classRation = 'red';
                 }
                 $html_parts[] = '<span class="'.$classRation.'">';
-                if( $activeProjectTask ) {
+                if( $activeProjectTask || $lastClosedProjectTask) {
                     $html_parts[] = __('Comsuption', 'projectbridge') . ' : ';
                     $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours);
                     $html_parts[] = '&nbsp;';
@@ -469,7 +468,7 @@ class PluginProjectbridgeContract extends CommonDBTM
       
 
       if ($row = $iterator->next()) {
-         return $row['duration'];
+         return $row['duration']?$row['duration']:0;
       }
       return 0;
    }
@@ -629,6 +628,33 @@ class PluginProjectbridgeContract extends CommonDBTM
               $tasks[] = $data;
         }
         return $tasks;
+    }
+    
+    /**
+     * get last closed projecttask associate to one project
+     * @global object $DB
+     * @param integer $project_id
+     * @return type
+     */
+    public static function getLastClosedProjectTasksForProject($project_id)
+    {
+        global $DB;
+         
+        $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
+     
+        $task = null;
+        foreach ($DB->request(
+            'glpi_projecttasks',
+            [
+                                "projects_id" => $project_id,
+                                "projectstates_id" => [$state_closed_value],
+                                'ORDER'       => ['plan_start_date DESC'],
+                                'LIMIT'       => 1  
+                                ]
+        ) as $data) {
+              $task = $data;
+        }
+        return $task;
     }
     
     /**

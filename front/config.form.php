@@ -229,6 +229,9 @@ if ($can_update) {
 
     // recipients config
     $recipientIds = PluginProjectbridgeConfig::getConfValueByName('RecipientIds');
+    if(!$recipientIds){
+        $recipientIds = [];
+    }
 
     if (!empty($post_data['projectbridge_delete_recipient']) && is_array($post_data['projectbridge_delete_recipient'])
     ) {
