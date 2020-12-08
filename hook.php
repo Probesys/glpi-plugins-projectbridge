@@ -5,7 +5,8 @@
  *
  * @return boolean
  */
-function plugin_projectbridge_install() {
+function plugin_projectbridge_install()
+{
     global $DB;
 
     if (!$DB->tableExists(PluginProjectbridgeEntity::$table_name)) {
@@ -77,7 +78,7 @@ function plugin_projectbridge_install() {
             (3, 'AddContractSelectorOnCreatingTicketForm', '0');";
         $DB->query($insert_table_query) or die($DB->error());
     } else {
-        // test if old version of glpi_plugin_projectbridge_configs      
+        // test if old version of glpi_plugin_projectbridge_configs
         $fields = $DB->list_fields(PluginProjectbridgeConfig::$table_name);
         if (array_key_exists('user_id', $fields)) {
             // save old values of user_id
@@ -92,8 +93,8 @@ function plugin_projectbridge_install() {
             }
             // delete old table
             $DB->queryOrDie(
-                    "DROP TABLE `" . PluginProjectbridgeConfig::$table_name . "`",
-                    $DB->error()
+                "DROP TABLE `" . PluginProjectbridgeConfig::$table_name . "`",
+                $DB->error()
             );
             // create table with new format
             $DB->query($create_tableConfig_query) or die($DB->error());
@@ -106,7 +107,7 @@ function plugin_projectbridge_install() {
         // test if config addContractSelectorOnCreatingTicketForm is present
         $req = $DB->request([
           'FROM' => PluginProjectbridgeConfig::$table_name,
-          'WHERE' => ['name'=> 'AddContractSelectorOnCreatingTicketForm']  
+          'WHERE' => ['name'=> 'AddContractSelectorOnCreatingTicketForm']
         ]);
         if (!count($req)) {
             $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
@@ -156,7 +157,8 @@ function plugin_projectbridge_install() {
  *
  * @return boolean
  */
-function plugin_projectbridge_uninstall() {
+function plugin_projectbridge_uninstall()
+{
     global $DB;
     
     // clean crontasks infos
@@ -183,7 +185,8 @@ function plugin_projectbridge_uninstall() {
  * @param array $post_show_data
  * @return void
  */
-function plugin_projectbridge_post_show_item(array $post_show_data) {
+function plugin_projectbridge_post_show_item(array $post_show_data)
+{
     if (!empty($post_show_data['item']) && is_object($post_show_data['item'])
     ) {
         switch (get_class($post_show_data['item'])) {
@@ -212,10 +215,11 @@ function plugin_projectbridge_post_show_item(array $post_show_data) {
  * @param boolean $force (optional)
  * @return void|integer|boolean
  */
-function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false) {
+function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false)
+{
     if ((
-            $force === true || $entity->canUpdate()
-            ) && isset($entity->input['projectbridge_contract_id'])
+        $force === true || $entity->canUpdate()
+    ) && isset($entity->input['projectbridge_contract_id'])
     ) {
         if (empty($entity->input['projectbridge_contract_id'])) {
             $selected_contract_id = 0;
@@ -233,7 +237,7 @@ function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false) 
 
         if ($contract_id === null) {
             return $bridge_entity->add($post_data);
-        } else if ($selected_contract_id != $contract_id) {
+        } elseif ($selected_contract_id != $contract_id) {
             $post_data['id'] = $bridge_entity->getId();
             return $bridge_entity->update($post_data);
         }
@@ -246,7 +250,8 @@ function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false) 
  * @param Contract $contract
  * @return void
  */
-function plugin_projectbridge_pre_contract_update(Contract $contract) {
+function plugin_projectbridge_pre_contract_update(Contract $contract)
+{
     if ($contract->canUpdate() && isset($contract->input['update']) && isset($contract->input['projectbridge_project_id'])
     ) {
         if ($contract->input['update'] != 'Lier les tickets au renouvellement') {
@@ -304,10 +309,11 @@ function plugin_projectbridge_pre_contract_update(Contract $contract) {
  * @param boolean $force (optional)
  * @return boolean|void
  */
-function plugin_projectbridge_contract_add(Contract $contract, $force = false) {
+function plugin_projectbridge_contract_add(Contract $contract, $force = false)
+{
     if ($force === true || (
-            $contract->canUpdate() && isset($contract->input['projectbridge_create_project']) && $contract->input['projectbridge_create_project']
-            )
+        $contract->canUpdate() && isset($contract->input['projectbridge_create_project']) && $contract->input['projectbridge_create_project']
+    )
     ) {
         $nb_hours = 0;
 
@@ -332,7 +338,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false) {
         if (!empty($contract->fields['date_creation']) && $contract->fields['date_creation'] != 'NULL'
         ) {
             $date_creation = $contract->fields['date_creation'];
-        } else if (!empty($contract->fields['date']) && $contract->fields['date'] != 'NULL'
+        } elseif (!empty($contract->fields['date']) && $contract->fields['date'] != 'NULL'
         ) {
             $date_creation = $contract->fields['date'];
         } else {
@@ -403,8 +409,8 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false) {
               'content' => addslashes($contract->fields['comment']),
               'plan_start_date' => $begin_date,
               'plan_end_date' => (
-              !empty($begin_date) && !empty($contract->fields['duration']) ? date('Y-m-d H:i:s', strtotime(
-                              Infocom::getWarrantyExpir($begin_date, $contract->fields['duration']) . ' - 1 day'
+                  !empty($begin_date) && !empty($contract->fields['duration']) ? date('Y-m-d H:i:s', strtotime(
+                  Infocom::getWarrantyExpir($begin_date, $contract->fields['duration']) . ' - 1 day'
               )) : ''
               ),
               'planned_duration' => $nb_hours * 3600, // in seconds
@@ -438,8 +444,9 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false) {
  * @param  Ticket $ticket
  * @return void
  */
-function plugin_projectbridge_ticket_update(Ticket $ticket) {
-    if ( !empty($ticket->input['update']) && $ticket->input['update'] == 'Faire la liaison' && !empty($ticket->input['projectbridge_project_id']) ) {
+function plugin_projectbridge_ticket_update(Ticket $ticket)
+{
+    if (!empty($ticket->input['update']) && $ticket->input['update'] == 'Faire la liaison' && !empty($ticket->input['projectbridge_project_id'])) {
         $is_project_link_update = true;
         $contract_id = null;
     } else {
@@ -450,14 +457,14 @@ function plugin_projectbridge_ticket_update(Ticket $ticket) {
         $contract_id = $bridge_entity->getContractId();
     }
     
-    if( array_key_exists('projectbridge_contract_id', $_POST) ) {
+    if (array_key_exists('projectbridge_contract_id', $_POST)) {
         $contract_id = $_POST['projectbridge_contract_id'];
     }
 
-    if ( $is_project_link_update || $contract_id ) {
+    if ($is_project_link_update || $contract_id) {
         // default contract for the entity found or update
 
-        if ( !$is_project_link_update ) {
+        if (!$is_project_link_update) {
             $contract = new Contract();
             $contract->getFromDB($contract_id);
             $contract_bridge = new PluginProjectbridgeContract($contract);
@@ -466,7 +473,7 @@ function plugin_projectbridge_ticket_update(Ticket $ticket) {
             $project_id = (int) $ticket->input['projectbridge_project_id'];
         }
 
-        if ( $project_id && PluginProjectbridgeContract::getProjectTaskOject($project_id) ) {
+        if ($project_id && PluginProjectbridgeContract::getProjectTaskOject($project_id)) {
             // project linked to contract found & task exists
             PluginProjectbridgeTicket::deleteProjectLinks($ticket->getId());
 
@@ -482,7 +489,6 @@ function plugin_projectbridge_ticket_update(Ticket $ticket) {
             $bridge_ticket = new PluginProjectbridgeTicket($ticket);
 
             if ($is_project_link_update) {
-
                 if ($bridge_ticket->getProjectId() > 0) {
                     $bridge_ticket->update([
                       'id' => $bridge_ticket->getId(),
@@ -511,7 +517,8 @@ function plugin_projectbridge_ticket_update(Ticket $ticket) {
  * @param  TicketTask $ticket_task
  * @return void
  */
-function plugin_projectbridge_ticketask_add(TicketTask $ticket_task) {
+function plugin_projectbridge_ticketask_add(TicketTask $ticket_task)
+{
     if (isset($ticket_task->fields['actiontime'])) {
         // no timediff needed because it's already in DB
         PluginProjectbridgeTask::updateProgressPercent((int) $ticket_task->fields['tickets_id']);
@@ -528,7 +535,8 @@ function plugin_projectbridge_ticketask_add(TicketTask $ticket_task) {
  * @param  TicketTask $ticket_task
  * @return void
  */
-function plugin_projectbridge_ticketask_update(TicketTask $ticket_task) {
+function plugin_projectbridge_ticketask_update(TicketTask $ticket_task)
+{
     if (isset($ticket_task->fields['actiontime']) && isset($ticket_task->input['actiontime'])
     ) {
         $timediff = $ticket_task->input['actiontime'] - $ticket_task->fields['actiontime'];
@@ -542,7 +550,8 @@ function plugin_projectbridge_ticketask_update(TicketTask $ticket_task) {
  * @param  array $tab_data
  * @return void
  */
-function plugin_projectbridge_post_show_tab(array $tab_data) {
+function plugin_projectbridge_post_show_tab(array $tab_data)
+{
     if (!empty($tab_data['item']) && is_object($tab_data['item']) && !empty($tab_data['options']['itemtype'])
     ) {
         if ($tab_data['options']['itemtype'] == 'Projecttask_Ticket' || $tab_data['options']['itemtype'] == 'ProjectTask_Ticket'
@@ -551,11 +560,11 @@ function plugin_projectbridge_post_show_tab(array $tab_data) {
             if ($tab_data['item'] instanceof Ticket) {
                 // add a line to allow linking ticket to a project task
                 PluginProjectbridgeTicket::postShow($tab_data['item']);
-            } else if ($tab_data['item'] instanceof ProjectTask) {
+            } elseif ($tab_data['item'] instanceof ProjectTask) {
                 // add data to the list of tickets linked to a project task
                 PluginProjectbridgeTicket::postShowTask($tab_data['item']);
             }
-        } else if ($tab_data['options']['itemtype'] == 'ProjectTask' && $tab_data['item'] instanceof Project
+        } elseif ($tab_data['options']['itemtype'] == 'ProjectTask' && $tab_data['item'] instanceof Project
         ) {
             // add a link to the linked contract after showing the list of tasks in a project
             PluginProjectbridgeContract::postShowProject($tab_data['item']);
@@ -572,7 +581,8 @@ function plugin_projectbridge_post_show_tab(array $tab_data) {
  * @param string $itemtype
  * @return array
  */
-function plugin_projectbridge_getAddSearchOptionsNew($itemtype) {
+function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
+{
     $options = [];
 
     switch ($itemtype) {
@@ -781,7 +791,8 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype) {
  * @param integer $offset
  * @return string
  */
-function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
+function plugin_projectbridge_addSelect($itemtype, $key, $offset)
+{
     global $CFG_GLPI;
     $select = "";
 
@@ -809,7 +820,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4202) {
+            } elseif ($key == 4202) {
                 // url to ticket search for tickets in the entity that are not linked to a task
                 $ticket_search_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/ticket.php?is_deleted=0&criteria[0][field]=4214&criteria[0][searchtype]=contains&criteria[0][value]=Non&criteria[1][link]=AND&criteria[1][field]=80&criteria[1][searchtype]=equals&criteria[1][value]=';
 
@@ -860,7 +871,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4212) {
+            } elseif ($key == 4212) {
                 // project task
 
                 $task_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/projecttask.form.php?id=';
@@ -882,14 +893,14 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4213) {
+            } elseif ($key == 4213) {
                 // project task status
 
                 $select = "
                     GROUP_CONCAT(DISTINCT `glpi_projectstates`.`name` SEPARATOR '$$##$$')
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4214) {
+            } elseif ($key == 4214) {
                 // is the ticket linked to a task?
 
                 $select = "
@@ -930,7 +941,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4221) {
+            } elseif ($key == 4221) {
                 // project's name
 
                 $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
@@ -969,7 +980,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4232) {
+            } elseif ($key == 4232) {
                 // planned duration
 
                 $select = "
@@ -979,7 +990,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
                     )
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4233) {
+            } elseif ($key == 4233) {
                 // last task in the project?
 
                 $select = "
@@ -996,7 +1007,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
-            } else if ($key == 4234) {
+            } elseif ($key == 4234) {
                 // project status
 
                 $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
@@ -1020,8 +1031,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
-            }
-            else if ($key == 4235) {
+            } elseif ($key == 4235) {
                 // project status
 
                 $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
@@ -1065,7 +1075,8 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset) {
  * @param array $already_link_tables
  * @return string
  */
-function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $linkfield, $already_link_tables) {
+function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $linkfield, $already_link_tables)
+{
     $left_join = "";
 
     switch ($new_table) {
@@ -1083,8 +1094,7 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
             $onlypublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
             $wherePrivateCondition = '';
             $tableName= Ticket::getTable();
-            if ( !Session::haveRight("task", CommonITILTask::SEEPRIVATE) || $onlypublicTasks) {    
-                
+            if (!Session::haveRight("task", CommonITILTask::SEEPRIVATE) || $onlypublicTasks) {
                 $tableName = TicketTask::getTable();
                 $wherePrivateCondition = ' AND `'.$tableName.'`.`is_private` = 0 ';
             }
@@ -1109,7 +1119,7 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                     ) AS `unlinked_ticket_actiontimes`
                         ON (`unlinked_ticket_actiontimes`.`entities_id` = `" . $ref_table . "`.`id`)
                 ";
-            } else if ($itemtype == 'projecttask') {
+            } elseif ($itemtype == 'projecttask') {
                 $left_join = "
                     LEFT JOIN (
                         SELECT
@@ -1255,7 +1265,8 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
  * @param  string $searchtype Type of search (contains, equals, ...)
  * @return string
  */
-function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $searchtype) {
+function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $searchtype)
+{
     $where = "";
 
     switch ($itemtype) {
@@ -1275,14 +1286,14 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                 if ($key == 4211) {
                     // project name
                     $where = $link . "`glpi_projects`.`name` " . Search::makeTextSearch($val);
-                } else if ($key == 4212) {
+                } elseif ($key == 4212) {
                     // project task
                     //$where = $link . "(`glpi_projecttasks`.`name` " . Search::makeTextSearch($val)." OR `glpi_projecttasks`.`id`=".$val." )";
                     $where = $link . "(`glpi_projecttasks`.`id`=".$val." )";
-                } else if ($key == 4213) {
+                } elseif ($key == 4213) {
                     // project task status
                     $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
-                } else if ($key == 4214) {
+                } elseif ($key == 4214) {
                     // linked to a task?
 
                     $searching_yes = (stripos('Oui', $val) !== false);
@@ -1325,7 +1336,7 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     }
 
                     $where = $link . "(" . implode(' OR ', $where_parts) . ")";
-                } else if ($key == 4221) {
+                } elseif ($key == 4221) {
                     // project task status
 
                     $where_parts = [
@@ -1349,9 +1360,9 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
             if ($searchtype == 'contains') {
                 if ($key == 4231) {
                     $where = $link . "`ticket_actiontimes`.`actiontime_sum` " . Search::makeTextSearch($val);
-                } else if ($key == 4232) {
+                } elseif ($key == 4232) {
                     $where = $link . " ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2) " . Search::makeTextSearch($val);
-                } else if ($key == 4233) {
+                } elseif ($key == 4233) {
                     $searching_yes = (stripos('Oui', $val) !== false);
                     $searching_no = (stripos('Non', $val) !== false);
                     $searching_not_available = (stripos(NOT_AVAILABLE, $val) !== false);
@@ -1378,7 +1389,7 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     }
 
                     $where = $link . "(" . implode(' OR ', $where_parts) . ")";
-                } else if ($key == 4234) {
+                } elseif ($key == 4234) {
                     $where_parts = [
                       "(
                             `glpi_projecttasks`.`projects_id` IS NOT NULL
@@ -1427,7 +1438,8 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
  * @param  string $type
  * @return array
  */
-function plugin_projectbridge_MassiveActions($type) {
+function plugin_projectbridge_MassiveActions($type)
+{
     $massive_actions = [];
 
     switch ($type) {
@@ -1446,14 +1458,15 @@ function plugin_projectbridge_MassiveActions($type) {
     return $massive_actions;
 }
 
-function plugin_projectbridge_giveItem($type, $ID, $data, $num) {
-   global $CFG_GLPI, $DB;
-   if($num == "projecttask_4235"){
-       $projectTaskId = $data['raw']['id'];
-       // calcul nombre tickets associés à la tâche de projet
-       $pluginProjectbridgeContract = new PluginProjectbridgeContract();
-       $nbTickets = $pluginProjectbridgeContract->getNbTicketsAssociateToProjectTask($projectTaskId);
-       $ticket_search_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/ticket.php?is_deleted=0&criteria[0][field]=4212&criteria[0][searchtype]=contains&criteria[0][value]='.$projectTaskId.'';
-       return '<a href="'.$ticket_search_link.'">'.$nbTickets.'</a>';
-   }
+function plugin_projectbridge_giveItem($type, $ID, $data, $num)
+{
+    global $CFG_GLPI, $DB;
+    if ($num == "projecttask_4235") {
+        $projectTaskId = $data['raw']['id'];
+        // calcul nombre tickets associés à la tâche de projet
+        $pluginProjectbridgeContract = new PluginProjectbridgeContract();
+        $nbTickets = $pluginProjectbridgeContract->getNbTicketsAssociateToProjectTask($projectTaskId);
+        $ticket_search_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/ticket.php?is_deleted=0&criteria[0][field]=4212&criteria[0][searchtype]=contains&criteria[0][value]='.$projectTaskId.'';
+        return '<a href="'.$ticket_search_link.'">'.$nbTickets.'</a>';
+    }
 }

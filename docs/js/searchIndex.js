@@ -8,12 +8,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\getPostDataFromField\u0028\u0029",
             "name": "getPostDataFromField",
-            "summary": "",
+            "summary": "get\u0020value\u0020of\u0020POST\u0020variable",
             "url": "namespaces/default.html#function_getPostDataFromField"
         },                {
             "fqsen": "\\getPostDataFromFields\u0028\u0029",
             "name": "getPostDataFromFields",
-            "summary": "",
+            "summary": "filter\u0020POST",
             "url": "namespaces/default.html#function_getPostDataFromFields"
         },                {
             "fqsen": "\\plugin_projectbridge_install\u0028\u0029",
@@ -108,22 +108,22 @@ Search.appendIndex(
         },                {
             "fqsen": "\\PluginProjectbridgeConfig\u003A\u003AgetRecipientIds\u0028\u0029",
             "name": "getRecipientIds",
-            "summary": "",
+            "summary": "Get\u0020all\u0020Recipients\u0020IDS",
             "url": "classes/PluginProjectbridgeConfig.html#method_getRecipientIds"
         },                {
             "fqsen": "\\PluginProjectbridgeConfig\u003A\u003AgetConfByName\u0028\u0029",
             "name": "getConfByName",
-            "summary": "",
+            "summary": "get\u0020conf\u0020entry\u0020by\u0020name",
             "url": "classes/PluginProjectbridgeConfig.html#method_getConfByName"
         },                {
             "fqsen": "\\PluginProjectbridgeConfig\u003A\u003AgetConfValueByName\u0028\u0029",
             "name": "getConfValueByName",
-            "summary": "",
+            "summary": "get\u0020value\u0020of\u0020a\u0020conf\u0020entry\u0020by\u0020name",
             "url": "classes/PluginProjectbridgeConfig.html#method_getConfValueByName"
         },                {
             "fqsen": "\\PluginProjectbridgeConfig\u003A\u003AupdateConfValue\u0028\u0029",
             "name": "updateConfValue",
-            "summary": "",
+            "summary": "update\u0020value\u0020of\u0020a\u0020conf,\u0020if\u0020not\u0020exist,\u0020insert\u0020it",
             "url": "classes/PluginProjectbridgeConfig.html#method_updateConfValue"
         },                {
             "fqsen": "\\PluginProjectbridgeConfig\u003A\u003Anotify\u0028\u0029",
@@ -178,12 +178,12 @@ Search.appendIndex(
         },                {
             "fqsen": "\\PluginProjectbridgeContract\u003A\u003AgetTicketsTotalActionTime\u0028\u0029",
             "name": "getTicketsTotalActionTime",
-            "summary": "",
+            "summary": "clacul\u0020the\u0020totale\u0020ticket\u0020actiontime",
             "url": "classes/PluginProjectbridgeContract.html#method_getTicketsTotalActionTime"
         },                {
             "fqsen": "\\PluginProjectbridgeContract\u003A\u003AgetNbTicketsAssociateToProjectTask\u0028\u0029",
             "name": "getNbTicketsAssociateToProjectTask",
-            "summary": "",
+            "summary": "Get\u0020nb\u0020tickets\u0020associate\u0020ton\u0020one\u0020projectTask",
             "url": "classes/PluginProjectbridgeContract.html#method_getNbTicketsAssociateToProjectTask"
         },                {
             "fqsen": "\\PluginProjectbridgeContract\u003A\u003A_getPostShowHoursHtml\u0028\u0029",
@@ -333,7 +333,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\PluginProjectbridgeItemForm\u003A\u003AgetEntityContractsSelector\u0028\u0029",
             "name": "getEntityContractsSelector",
-            "summary": "",
+            "summary": "List\u0020contract\u0020associate\u0020to\u0020one\u0020entity",
             "url": "classes/PluginProjectbridgeItemForm.html#method_getEntityContractsSelector"
         },                {
             "fqsen": "\\PluginProjectbridgeItemForm\u003A\u003ApostItemForm\u0028\u0029",
@@ -398,7 +398,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\PluginProjectbridgeTask\u003A\u003AcloseTaskAndCreateExcessTicket\u0028\u0029",
             "name": "closeTaskAndCreateExcessTicket",
-            "summary": "",
+            "summary": "close\u0020all\u0020open\u0020tasks\u0020and\u0020create\u0020excess\u0020ticket",
             "url": "classes/PluginProjectbridgeTask.html#method_closeTaskAndCreateExcessTicket"
         },                {
             "fqsen": "\\PluginProjectbridgeTask\u003A\u003AcloseTask\u0028\u0029",

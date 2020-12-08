@@ -5,13 +5,13 @@ include(GLPI_ROOT."/inc/includes.php");
 Html::header_nocache();
 echo "$(document).ready(function() {";
 echo "    console.log('projectbridge js');";
-if ( isset($_SESSION['glpiactiveprofile']) && $_SESSION['glpiactiveprofile']['interface']=="central" ) {
-    echo "$('.tab_cadrehov th a').each(function( index ) {" 
+if (isset($_SESSION['glpiactiveprofile']) && $_SESSION['glpiactiveprofile']['interface']=="central") {
+    echo "$('.tab_cadrehov th a').each(function( index ) {"
     ."var content = $(this).html();"
     //."console.log(content);"
-    ."var newcontent = content.replace('"._n('Plugin', 'Plugins', Session::getPluralNumber())." - ','');"        
+    ."var newcontent = content.replace('"._n('Plugin', 'Plugins', Session::getPluralNumber())." - ','');"
     //."console.log(newcontent);"
-    ."$(this).html(newcontent);"        
+    ."$(this).html(newcontent);"
     . "})";
 }
 echo " });";

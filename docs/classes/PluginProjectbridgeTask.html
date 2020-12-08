@@ -131,9 +131,9 @@ Recreate all not closed or solved tickets linked to the task</dd>
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/PluginProjectbridgeTask.html#method_closeTaskAndCreateExcessTicket">closeTaskAndCreateExcessTicket()</a>
     <span>
-                        &nbsp;: mixed    </span>
+                        &nbsp;: <abbr title="\type">type</abbr>    </span>
 </dt>
-<dd></dd>
+<dd>close all open tasks and create excess ticket</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a href="classes/PluginProjectbridgeTask.html#method_createExcessTicket">createExcessTicket()</a>
@@ -240,7 +240,7 @@ Recreate all not closed or solved tickets linked to the task</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">8</span>
+    <span class="phpdocumentor-element-found-in__line">9</span>
 </aside>
 
     
@@ -275,7 +275,7 @@ Recreate all not closed or solved tickets linked to the task</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">15</span>
+    <span class="phpdocumentor-element-found-in__line">16</span>
 </aside>
 
         <p class="phpdocumentor-summary">Constructor</p>
@@ -320,7 +320,7 @@ Recreate all not closed or solved tickets linked to the task</dd>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">181</span>
+    <span class="phpdocumentor-element-found-in__line">194</span>
 </aside>
 
         <p class="phpdocumentor-summary">Close a task
@@ -374,37 +374,41 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">140</span>
+    <span class="phpdocumentor-element-found-in__line">154</span>
 </aside>
 
-    
+        <p class="phpdocumentor-summary">close all open tasks and create excess ticket</p>
+
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                <span class="phpdocumentor-signature__name">closeTaskAndCreateExcessTicket</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tasks</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fromCronTask</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                <span class="phpdocumentor-signature__name">closeTaskAndCreateExcessTicket</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tasks</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fromCronTask</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><abbr title="\type">type</abbr></span></code>
 
-    
+        <section class="phpdocumentor-description"></section>
+
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$tasks</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"></section>
+
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$fromCronTask</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
                  = <span class="phpdocumentor-signature__argument__default-value">true</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                
+                    <section class="phpdocumentor-description"></section>
+
             </dd>
             </dl>
 
     
 
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">mixed</span>
+    <span class="phpdocumentor-signature__response_type"><abbr title="\type">type</abbr></span>
             &mdash;
             <section class="phpdocumentor-description"></section>
 
@@ -423,7 +427,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">454</span>
+    <span class="phpdocumentor-element-found-in__line">469</span>
 </aside>
 
         <p class="phpdocumentor-summary">Create excess ticket</p>
@@ -476,7 +480,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">688</span>
+    <span class="phpdocumentor-element-found-in__line">707</span>
 </aside>
 
         <p class="phpdocumentor-summary">Cron action to alert on contracts to renew</p>
@@ -523,7 +527,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">67</span>
+    <span class="phpdocumentor-element-found-in__line">73</span>
 </aside>
 
         <p class="phpdocumentor-summary">Give cron information</p>
@@ -570,7 +574,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">98</span>
+    <span class="phpdocumentor-element-found-in__line">105</span>
 </aside>
 
         <p class="phpdocumentor-summary">Cron action to process tasks (close if expired or quota reached)</p>
@@ -617,7 +621,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">491</span>
+    <span class="phpdocumentor-element-found-in__line">507</span>
 </aside>
 
         <p class="phpdocumentor-summary">Cron action to process tasks (close if expired or quota reached)</p>
@@ -664,7 +668,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">591</span>
+    <span class="phpdocumentor-element-found-in__line">609</span>
 </aside>
 
         <p class="phpdocumentor-summary">Customize the duration columns in a list of project tasks</p>
@@ -709,7 +713,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">62</span>
 </aside>
 
     
@@ -741,7 +745,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">49</span>
 </aside>
 
         <p class="phpdocumentor-summary">Add menu content</p>
@@ -775,7 +779,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">35</span>
+    <span class="phpdocumentor-element-found-in__line">38</span>
 </aside>
 
     
@@ -807,7 +811,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">31</span>
+    <span class="phpdocumentor-element-found-in__line">33</span>
 </aside>
 
         <p class="phpdocumentor-summary">Type name for cron</p>
@@ -852,7 +856,7 @@ Recreate all not closed or solved tickets linked to the task</p>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="inc/task.class.php"><a href="files/inc-task-class.html"><abbr title="inc/task.class.php">task.class.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">532</span>
+    <span class="phpdocumentor-element-found-in__line">549</span>
 </aside>
 
         <p class="phpdocumentor-summary">Update the progress percentage of tasks linked to a ticket</p>
