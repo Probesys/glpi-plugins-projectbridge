@@ -1,7 +1,7 @@
 <?php
 
-class PluginProjectbridgeTicket extends CommonDBTM {
-
+class PluginProjectbridgeTicket extends CommonDBTM
+{
     private $_ticket;
     private $_project_id;
     public static $table_name = 'glpi_plugin_projectbridge_tickets';
@@ -11,7 +11,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      *
      * @param Ticket $ticket
      */
-    public function __construct(Ticket $ticket = null) {
+    public function __construct(Ticket $ticket = null)
+    {
         $this->_ticket = $ticket;
     }
 
@@ -21,7 +22,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param void
      * @return integer|null
      */
-    public function getProjectId() {
+    public function getProjectId()
+    {
         if ($this->_project_id === null) {
             $result = $this->getFromDBByCrit(['ticket_id' => $this->_ticket->getId()]);
 
@@ -39,8 +41,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param  Ticket $ticket
      * @return void
      */
-    public static function postShow(Ticket $ticket) {
-        
+    public static function postShow(Ticket $ticket)
+    {
         global $CFG_GLPI;
 
         $project_list = PluginProjectbridgeTicket::_getProjectList();
@@ -66,8 +68,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                 if (!isset($project_list[$project_id])) {
                     // project does not exist anymore
                     $project_id = null;
-                } 
-                if($project_id) {
+                }
+                if ($project_id) {
                     // save link between ticket and project in DB
                     $bridge_ticket->add([
                         'project_id' => $project_id,
@@ -79,7 +81,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
             }
         }
 
-        if ( empty($project_id) || !isset($project_list[$project_id]) ) {
+        if (empty($project_id) || !isset($project_list[$project_id])) {
             $project_id = null;
         }
 
@@ -159,7 +161,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      *
      * @return array
      */
-    private static function _getProjectList() {
+    private static function _getProjectList()
+    {
         $search_filters = ['is_deleted' => 0];
 
         if (!empty($_SESSION['glpiactiveentities'])) {
@@ -167,7 +170,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
         }
 
         $project = new Project();
-        $project_results = $project->find( $search_filters);
+        $project_results = $project->find($search_filters);
         $project_list = [
           null => Dropdown::EMPTY_VALUE,
         ];
@@ -187,7 +190,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param  ProjectTask $project_task
      * @return void
      */
-    public static function postShowTask(ProjectTask $project_task) {
+    public static function postShowTask(ProjectTask $project_task)
+    {
         global $CFG_GLPI;
         $onlypublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
 
@@ -292,7 +296,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param  int $ticket_id
      * @return void
      */
-    public static function deleteProjectLinks($ticket_id) {
+    public static function deleteProjectLinks($ticket_id)
+    {
         global $DB;
 
         // use a query as ProjectTask_Ticket can only get one item and does not return the number
@@ -306,7 +311,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
 
         $result = $DB->query($get_nb_links_query);
 
-        if ( $result && $DB->numrows($result) ) {
+        if ($result && $DB->numrows($result)) {
             $results = $DB->fetch_assoc($result);
             $nb_links = (int) $results['nb_links'];
         } else {
@@ -341,8 +346,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param  MassiveAction $ma
      * @return boolean
      */
-    public static function showMassiveActionsSubForm(MassiveAction $ma) {
-        
+    public static function showMassiveActionsSubForm(MassiveAction $ma)
+    {
         $return = false;
         global $DB;
         
@@ -410,12 +415,11 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                     if ($row = $req2->next()) {
                         $projectId= $row['project_id'];
                         $tasks = $pluginProjectbridgeContract::getAllActiveProjectTasksForProject($projectId);
-                        if(count($tasks)){
+                        if (count($tasks)) {
                             $projectTaskId = $tasks[0]['id'];
                             $project_task_config['value'] = $projectTaskId;
-                          }
+                        }
                     }
-                    
                 }
                 
                 Dropdown::showFromArray('projectbridge_projecttask_id', $project_task_list, $project_task_config);
@@ -428,7 +432,7 @@ class PluginProjectbridgeTicket extends CommonDBTM {
             default:
             // nothing to do
         }
-        if(!$return) {
+        if (!$return) {
             return parent::showMassiveActionsSubForm($ma);
         }
         
@@ -443,7 +447,8 @@ class PluginProjectbridgeTicket extends CommonDBTM {
      * @param  array         $ids Item ids
      * @return void
      */
-    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids) {
+    public static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item, array $ids)
+    {
         $caseFinded = false;
         switch ($ma->getAction()) {
             case 'deleteProjectLink':
@@ -472,7 +477,6 @@ class PluginProjectbridgeTicket extends CommonDBTM {
                     $project = new Project();
 
                     if ($project->getFromDB($project_id) && PluginProjectbridgeContract::getProjectTaskOject($project_id)) {
-
                         $task_id = PluginProjectbridgeContract::getProjectTaskFieldValue($project_id, false, 'id');
 
                         foreach ($ids as $ticket_id) {
@@ -541,10 +545,9 @@ class PluginProjectbridgeTicket extends CommonDBTM {
             default:
             // nothing to do
         }
-        if(!$caseFinded) {
+        if (!$caseFinded) {
             parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
         }
         return;
     }
-
 }

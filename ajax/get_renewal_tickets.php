@@ -8,7 +8,6 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty($_POST['contract_id'])) {
-
     $contract_id = (int) $_POST['contract_id'];
     $task_id = (int) $_POST['task_id'];
 
@@ -131,7 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
     Html::closeForm();
 }
 
-function createRenewalTicket($contract_id) {
+function createRenewalTicket($contract_id)
+{
     // récupération des tâches de projets ouvertes avant la création de la nouvelle
     $contract = new Contract();
     $contract->getFromDB($contract_id);
@@ -155,8 +155,7 @@ function createRenewalTicket($contract_id) {
             $timediff = $action_time - $task_data['planned_duration'];
         }
 
-        if ($expired || ( $timediff >= 0 && $action_time !== null )) {
-
+        if ($expired || ($timediff >= 0 && $action_time !== null)) {
             $brige_task = new PluginProjectbridgeTask($task_data['id']);
             if ($timediff > 0) {
                 $brige_task->createExcessTicket($timediff, $task_data['entities_id']);

@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['ticket_ids']) && is_a
         $totalActiontime = 0;
         $whereConditionsArray = ['tickets_id' => $ticketID];
         //if ($onlypublicTasks) {
-        if ( !Session::haveRight("task", CommonITILTask::SEEPRIVATE) || $onlypublicTasks) {    
+        if (!Session::haveRight("task", CommonITILTask::SEEPRIVATE) || $onlypublicTasks) {
             $whereConditionsArray['is_private'] = 0;
         }
 

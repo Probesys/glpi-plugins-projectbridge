@@ -1,6 +1,7 @@
 <?php
 
-class PluginProjectbridgeTask extends CommonDBTM {
+class PluginProjectbridgeTask extends CommonDBTM
+{
 
     /**
      * @var ProjectTask
@@ -12,7 +13,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
      *
      * @param int|null $task_id
      */
-    public function __construct($task_id = null) {
+    public function __construct($task_id = null)
+    {
         if (!empty($task_id)) {
             $task = new ProjectTask();
 
@@ -28,12 +30,14 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param  integer $nb
      * @return string
      */
-    public static function getTypeName($nb = 0) {
+    public static function getTypeName($nb = 0)
+    {
         return 'ProjectBridge';
     }
 
-    static function getMenuName() {
-        //return __('ProjectBridge project tasks', 'projectbridge');  
+    public static function getMenuName()
+    {
+        //return __('ProjectBridge project tasks', 'projectbridge');
         return 'ProjectBridge';
     }
 
@@ -42,7 +46,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
      *
      * @return array
      */
-    public static function getMenuContent() {
+    public static function getMenuContent()
+    {
         $menu = parent::getMenuContent();
 
         $menu = [
@@ -54,7 +59,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
         return $menu;
     }
 
-    static function getIcon() {
+    public static function getIcon()
+    {
         return "fa fa-tasks";
     }
 
@@ -64,7 +70,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param $name string Cron name
      * @return array of information
      */
-    public static function cronInfo($name) {
+    public static function cronInfo($name)
+    {
         $return = [];
         switch ($name) {
             case 'ProcessTasks':
@@ -95,7 +102,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param CronTask|null $cron_task for log, if NULL display (default NULL)
      * @return integer 1 if an action was done, 0 if not
      */
-    public static function cronProcessTasks($cron_task = null) {
+    public static function cronProcessTasks($cron_task = null)
+    {
         if (class_exists('PluginProjectbridgeConfig')) {
             $plugin = new Plugin();
 
@@ -136,8 +144,15 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
         return ($nb_successes > 0) ? 1 : 0;
     }
-
-    public function closeTaskAndCreateExcessTicket($tasks, $fromCronTask = true) {
+    
+    /**
+     * close all open tasks and create excess ticket
+     * @param array $tasks
+     * @param boolean $fromCronTask
+     * @return type
+     */
+    public function closeTaskAndCreateExcessTicket($tasks, $fromCronTask = true)
+    {
         $nb_successes = 0;
         $newTicketIds = [];
         foreach ($tasks as $task_data) {
@@ -145,8 +160,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
             $timediff = 0;
             $action_time = null;
 
-            if (!empty($task_data['plan_end_date']) && time() >= strtotime($task_data['plan_end_date'])
-            ) {
+            if (!empty($task_data['plan_end_date']) && time() >= strtotime($task_data['plan_end_date'])) {
                 $expired = true;
             }
 
@@ -155,8 +169,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
                 $timediff = $action_time - $task_data['planned_duration'];
             }
 
-            if ($expired || ( $timediff >= 0 && $action_time !== null )) {
-
+            if ($expired || ($timediff >= 0 && $action_time !== null)) {
                 $brige_task = new PluginProjectbridgeTask($task_data['id']);
                 //$nb_successes += $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0, $fromCronTask);
                 $newTicketIds = array_merge($newTicketIds, $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0, $fromCronTask));
@@ -178,8 +191,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param integer $action_time
      * @return int
      */
-    public function closeTask($expired = false, $action_time = 0) {
-
+    public function closeTask($expired = false, $action_time = 0)
+    {
         $newTicketIds = [];
 
         echo 'Fermeture de la tâche ' . $this->_task->getId() . "<br />\n";
@@ -214,8 +227,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
                 foreach ($ticket_links as $ticket_link) {
                     $ticket = new Ticket();
 
-                    if ($ticket->getFromDB($ticket_link['tickets_id']) && !in_array($ticket->fields['status'], $ticket_states_to_ignore) && $ticket->fields['is_deleted'] == 0
-                    ) {
+                    if ($ticket->getFromDB($ticket_link['tickets_id']) && !in_array($ticket->fields['status'], $ticket_states_to_ignore) && $ticket->fields['is_deleted'] == 0) {
                         // use only not deleted not resolved not closed tickets
                         // close the ticket
                         $ticket_fields = $ticket->fields;
@@ -225,7 +237,6 @@ class PluginProjectbridgeTask extends CommonDBTM {
                         ]);
 
                         if ($closed) {
-
                             // clone the old ticket into a new one WITHOUT the link to the project task
                             $old_ticket_id = $ticket->getId();
                             $ticket_fields = array_diff_key($ticket_fields, $ticket_fields_to_ignore);
@@ -328,10 +339,11 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                 // add documents
                                 $document_item = new Document_Item();
                                 $ticket_document_items = $document_item->find(
-                                        [
+                                    [
                                             'items_id' => $old_ticket_id,
                                             'itemtype' => 'Ticket'
-                                ]);
+                                ]
+                                );
 
                                 foreach ($ticket_document_items as $ticket_document_item_data) {
                                     $ticket_new_document_item_data = array_diff_key($ticket_document_item_data, ['id' => null, 'date_mod' => null]);
@@ -370,11 +382,14 @@ class PluginProjectbridgeTask extends CommonDBTM {
                                 // add solution
                                 $log = new Log();
                                 $solutions = $log->find(
-                                        [
+                                    [
                                             'items_id' => $old_ticket_id,
                                             'id_search_option' => 24,
                                             'itemtype' => 'Ticket'
-                                        ], ['id' => 'DESC'], 1);
+                                        ],
+                                    ['id' => 'DESC'],
+                                    1
+                                );
 
 
                                 if (!empty($solutions)) {
@@ -451,7 +466,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param int $entities_id
      * @return void
      */
-    public function createExcessTicket($timediff, $entities_id) {
+    public function createExcessTicket($timediff, $entities_id)
+    {
         $ticket_request_type = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
 
         $ticket_fields = [
@@ -488,7 +504,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param CronTask|null $cron_task for log, if NULL display (default NULL)
      * @return integer 1 if an action was done, 0 if not
      */
-    public static function cronUpdateProgressPercent($cron_task = null) {
+    public static function cronUpdateProgressPercent($cron_task = null)
+    {
         if (class_exists('PluginProjectbridgeConfig')) {
             $plugin = new Plugin();
 
@@ -529,7 +546,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param  integer $timediff
      * @return integer
      */
-    public static function updateProgressPercent($ticket_id, $timediff = 0) {
+    public static function updateProgressPercent($ticket_id, $timediff = 0)
+    {
         static $task_list;
         $nb_successes = 0;
 
@@ -563,7 +581,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
                     if ($target_percent > 100) {
                         $target_percent = 100;
-                    } else if ($target_percent < 0) {
+                    } elseif ($target_percent < 0) {
                         $target_percent = 0;
                     }
 
@@ -588,7 +606,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param  Project $project
      * @return void
      */
-    public static function customizeDurationColumns(Project $project) {
+    public static function customizeDurationColumns(Project $project)
+    {
         $task = new ProjectTask();
         $tasks = $task->find(['projects_id' => $project->getId()]);
 
@@ -685,7 +704,8 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param CronTask|null $task for log, if NULL display (default NULL)
      * @return integer 1 if an action was done, 0 if not
      */
-    public static function cronAlertContractsToRenew($task = null) {
+    public static function cronAlertContractsToRenew($task = null)
+    {
         if (class_exists('PluginProjectbridgeConfig')) {
             $plugin = new Plugin();
 
@@ -786,5 +806,4 @@ class PluginProjectbridgeTask extends CommonDBTM {
 
         return ($nb_successes > 0) ? 1 : 0;
     }
-
 }

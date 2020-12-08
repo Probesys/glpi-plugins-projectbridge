@@ -29,10 +29,11 @@
 
 /**
  * Summary of PluginProjectbridgeItemForm
- * 
+ *
  * @see http://glpi-developer-documentation.rtfd.io/en/master/plugins/hooks.html#items-display-related
  * */
-class PluginProjectbridgeItemForm {
+class PluginProjectbridgeItemForm
+{
 
     /**
      * Display contents at the begining of item forms.
@@ -41,11 +42,12 @@ class PluginProjectbridgeItemForm {
      *
      * @return void
      */
-    static public function preItemForm($params) {
+    public static function preItemForm($params)
+    {
         $item = $params['item'];
         $options = $params['options'];
         $out = "";
-        if( !substr_count($_SERVER['SCRIPT_NAME'], 'helpdesk.public.php') && PluginProjectbridgeConfig::getConfValueByName('AddContractSelectorOnCreatingTicketForm') ) {
+        if (!substr_count($_SERVER['SCRIPT_NAME'], 'helpdesk.public.php') && PluginProjectbridgeConfig::getConfValueByName('AddContractSelectorOnCreatingTicketForm')) {
             // only for create new ticket form
             if ($item::getType() == Ticket::getType() && $options['id'] == 0) {
                 // récupération entité courante
@@ -56,8 +58,15 @@ class PluginProjectbridgeItemForm {
 
         echo $out;
     }
-
-    private static function getEntityContractsSelector($entityID) {
+    
+    /**
+     * List contract associate to one entity
+     * @global type $DB
+     * @param type $entityID
+     * @return string
+     */
+    private static function getEntityContractsSelector($entityID)
+    {
         global $DB;
         // récupération du contrat par défaut
         $entity = new Entity();
@@ -112,7 +121,7 @@ class PluginProjectbridgeItemForm {
 
             ],
             'WHERE' => [
-                $entity->getTable().'.id' =>  $entityID,    
+                $entity->getTable().'.id' =>  $entityID,
                 $contract->getTable().'.is_deleted' => 0,
                 $contract->getTable().'.is_template' => 0,
                 $projectTask->getTable().'.projectstates_id' => [$state_in_progress_value, $state_renewal_value],
@@ -153,7 +162,7 @@ class PluginProjectbridgeItemForm {
 
             ],
             'WHERE' => [
-                $entity->getTable().'.id' =>  $entitiesIDS, 
+                $entity->getTable().'.id' =>  $entitiesIDS,
                 $contract->getTable().'.is_deleted' => 0,
                 $contract->getTable().'.is_template' => 0,
                 $contract->getTable().'.is_recursive' => 1,
@@ -185,7 +194,7 @@ class PluginProjectbridgeItemForm {
 
         $html_parts = Dropdown::showFromArray('projectbridge_contract_id', $contract_list, $config);
         $requiredSpan = '';
-        if(count($contract_datas)) {
+        if (count($contract_datas)) {
             // if at least one contract was found, add required attribute
             $html_parts = str_replace('<select', '<select required', $html_parts);
             $requiredSpan = '<span class="required">*</span>';
@@ -209,7 +218,8 @@ class PluginProjectbridgeItemForm {
      *
      * @return void
      */
-    static public function postItemForm($params) {
+    public static function postItemForm($params)
+    {
         $item = $params['item'];
         $options = $params['options'];
 
@@ -217,5 +227,4 @@ class PluginProjectbridgeItemForm {
 
         echo $out;
     }
-
 }

@@ -5,10 +5,10 @@ define('PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION', '9.4');
 define('PLUGIN_PROJECTBRIDGE_MAX_GLPI_VERSION', '9.6');
 
 if (!defined("PLUGIN_PROJECTBRIDGE_DIR")) {
-   define('PLUGIN_PROJECTBRIDGE_DIR', Plugin::getPhpDir("projectbridge"));
+    define('PLUGIN_PROJECTBRIDGE_DIR', Plugin::getPhpDir("projectbridge"));
 }
 if (!defined("PLUGIN_PROJECTBRIDGE_WEB_DIR")) {
-   define("PLUGIN_PROJECTBRIDGE_WEB_DIR", Plugin::getWebDir("projectbridge"));
+    define("PLUGIN_PROJECTBRIDGE_WEB_DIR", Plugin::getWebDir("projectbridge"));
 }
 
 if (!class_exists('PluginProjectbridgeConfig')) {
@@ -20,7 +20,8 @@ if (!class_exists('PluginProjectbridgeConfig')) {
  *
  * @return boolean
  */
-function plugin_version_projectbridge() {
+function plugin_version_projectbridge()
+{
     return [
         'name' => 'Projectbridge',
         'version' => PLUGIN_PROJECTBRIDGE_VERSION,
@@ -34,7 +35,7 @@ function plugin_version_projectbridge() {
          ],
          'php'    => [
             'min' => '7.0'
-         ] 
+         ]
         ]
     ];
 }
@@ -44,7 +45,8 @@ function plugin_version_projectbridge() {
  *
  * @return boolean
  */
-function plugin_init_projectbridge() {
+function plugin_init_projectbridge()
+{
     global $PLUGIN_HOOKS;
 
     $PLUGIN_HOOKS['csrf_compliant'][PluginProjectbridgeConfig::NAMESPACE] = true;
@@ -79,18 +81,19 @@ function plugin_init_projectbridge() {
  *
  * @return boolean
  */
-function plugin_projectbridge_check_prerequisites() {
+function plugin_projectbridge_check_prerequisites()
+{
     $prerequisites_check_ok = false;
 
-   try {
-      if (version_compare(GLPI_VERSION, PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION, '<')) {
-          throw new Exception('This plugin requires GLPI >= ' . PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION);
-      }
+    try {
+        if (version_compare(GLPI_VERSION, PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION, '<')) {
+            throw new Exception('This plugin requires GLPI >= ' . PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION);
+        }
 
-         $prerequisites_check_ok = true;
-   } catch (Exception $e) {
-       echo $e->getMessage();
-   }
+        $prerequisites_check_ok = true;
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
 
     return $prerequisites_check_ok;
 }
@@ -100,7 +103,8 @@ function plugin_projectbridge_check_prerequisites() {
  *
  * @return boolean
  */
-function plugin_projectbridge_check_config() {
+function plugin_projectbridge_check_config()
+{
     // nothing to do
     return true;
 }
