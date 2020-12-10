@@ -1447,7 +1447,7 @@ function plugin_projectbridge_MassiveActions($type)
             $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'deleteProjectLink'] = __('Delete the link with any project task', 'projectbridge');
 //            $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectLink'] = __('Link to a project', 'projectbridge');
 //            $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectTaskLink'] = __('Force link to a project task', 'projectbridge');
-            $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectTaskLink'] = __('Force to a contract', 'projectbridge');
+            $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectTaskLink'] = __('Force link to a project task', 'projectbridge');
            
             break;
 
