@@ -630,10 +630,10 @@ class PluginProjectbridgeContract extends CommonDBTM
         foreach ($DB->request(
             'glpi_projecttasks',
             [
-                    "projects_id" => $project_id,
-                    "projectstates_id" => [$state_in_progress_value, $state_renewal_value],
-                    'ORDER' => ['plan_start_date DESC']
-                ]
+                "projects_id" => $project_id,
+                "projectstates_id" => [$state_in_progress_value, $state_renewal_value],
+                'ORDER' => ['plan_start_date DESC']
+            ]
         ) as $data) {
             $tasks[] = $data;
         }
