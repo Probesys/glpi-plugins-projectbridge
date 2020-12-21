@@ -3,7 +3,7 @@
    <name>ProjectBridge</name>
    <key>projectbridge</key>
    <state>stable</state>
-   <logo>https://avatars2.githubusercontent.com/u/1265671</logo>
+   <logo>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/pics/logo.png</logo>
    <description>
       <short>
          <fr><![CDATA[ProjectBridge : ajout de liens entre les tickets et les contrats pour en décompter le temps]]></fr>
