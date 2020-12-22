@@ -143,7 +143,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         $haveToBeRenewed = false;
         if (!empty($_SESSION['glpiactiveentities'])) {
-            $search_filters['entities_id'] = ['IN', implode(', ', $_SESSION['glpiactiveentities'])];
+            $search_filters['entities_id'] = $_SESSION['glpiactiveentities'];
         }
 
         $bridge_contract = new PluginProjectbridgeContract($contract);
@@ -151,6 +151,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         $project = new Project();
         $project_results = $project->find($search_filters);
+
         $project_list = [
             null => Dropdown::EMPTY_VALUE,
         ];
