@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
 
     $html = '';
 
-    $html .= '<form method="post" action="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php">' . "\n";
+    $html .= '<form method="post" id="renewal_tickets_form" action="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php">' . "\n";
     $html .= '<input type="hidden" name="entities_id" value="' . $task->fields['entities_id'] . '" />' . "\n";
     $html .= '<input type="hidden" name="id" value="' . $contract_id . '" />' . "\n";
     $html .= '<h2 style="text-align: center">';
@@ -69,9 +69,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
     $html .= '</p>' . "\n";
     $html .= '<table class="tab_cadrehov">' . "\n";
     $html .= '<tr class="tab_bg_2">' . "\n";
-    $html .= '<th>';
-    $html .= '&nbsp;';
-    $html .= '</th>' . "\n";
+    $html .= '<th class=""><div class="form-group-checkbox">
+                  <input title="Tout cocher" type="checkbox" class="new_checkbox" name="_checkall_1702981631" id="checkall_1702981631" onclick="if ( checkAsCheckboxes(\'checkall_1702981631\', \'renewal_tickets_form\')) {return true;}">
+                  <label class="label-checkbox" for="checkall_1702981631" title="Tout cocher">
+                     <span class="check"></span>
+                     <span class="box"></span>
+                  </label>
+               </div>
+               <script type="text/javascript">
+            //<![CDATA[
+            $(function() {$(\'#renewal_tickets_form input[type="checkbox"]\').shiftSelectable();});
+            //]]>
+            </script></th>'. "\n";
     $html .= '<th>';
     $html .= __('Name');
     $html .= '</th>' . "\n";
