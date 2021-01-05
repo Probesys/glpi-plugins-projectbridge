@@ -134,8 +134,6 @@ function plugin_projectbridge_install()
     
     // clean old crontask
     if (version_compare(PLUGIN_PROJECTBRIDGE_VERSION, '2.2.3', '>')) {
-        //$update_crontask_table = "UPDATE ".Crontask::getTable()." SET itemtype='PluginProjectbridgeTask' WHERE itemtype='PluginProjectbridgeContract' AND name='AlertContractsToRenew'";
-        //$DB->query($update_crontask_table) or die($DB->error());
         $delete_crontask_table = "DELETE FROM ".Crontask::getTable()."  WHERE itemtype='PluginProjectbridgeContract' AND name='AlertContractsToRenew'";
         $DB->query($delete_crontask_table) or die($DB->error());
     }
@@ -217,10 +215,7 @@ function plugin_projectbridge_post_show_item(array $post_show_data)
  */
 function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false)
 {
-    if ((
-        $force === true || $entity->canUpdate()
-    ) && isset($entity->input['projectbridge_contract_id'])
-    ) {
+    if (($force === true || $entity->canUpdate()) && isset($entity->input['projectbridge_contract_id'])) {
         if (empty($entity->input['projectbridge_contract_id'])) {
             $selected_contract_id = 0;
         } else {
@@ -252,20 +247,16 @@ function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false)
  */
 function plugin_projectbridge_pre_contract_update(Contract $contract)
 {
-    if ($contract->canUpdate() && isset($contract->input['update']) && isset($contract->input['projectbridge_project_id'])
-    ) {
+    if ($contract->canUpdate() && isset($contract->input['update']) && isset($contract->input['projectbridge_project_id'])) {
         if ($contract->input['update'] != 'Lier les tickets au renouvellement') {
             // update contract
-
             $nb_hours = 0;
 
             if (empty($contract->input['projectbridge_project_id'])) {
                 $selected_project_id = 0;
             } else {
                 $selected_project_id = (int) $contract->input['projectbridge_project_id'];
-
-                if (!empty($contract->input['projectbridge_project_hours']) && $contract->input['projectbridge_project_hours'] > 0
-                ) {
+                if (!empty($contract->input['projectbridge_project_hours']) && $contract->input['projectbridge_project_hours'] > 0) {
                     $nb_hours = (int) $contract->input['projectbridge_project_hours'];
                 }
             }
@@ -273,7 +264,6 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
             if ($selected_project_id > 0) {
                 $bridge_contract = new PluginProjectbridgeContract($contract);
                 $project_id = $bridge_contract->getProjectId();
-
                 $post_data = [
                   'contract_id' => $contract->getId(),
                   'project_id' => $selected_project_id,
@@ -289,13 +279,10 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
             }
         } else {
             // renew the task of the project linked to the contract
-
-            if (empty($contract->input['_projecttask_begin_date']) || empty($contract->input['_projecttask_end_date']) || empty($contract->input['projectbridge_nb_hours_to_use'])
-            ) {
-                Session::addMessageAfterRedirect('Veuillez remplir tous les champs de renouvellement.', false, ERROR);
+            if (empty($contract->input['_projecttask_begin_date']) || empty($contract->input['_projecttask_end_date']) || empty($contract->input['projectbridge_nb_hours_to_use'])) {
+                Session::addMessageAfterRedirect(__('Please complete all renewal fields', 'projectbridge'), false, ERROR);
                 return false;
             }
-
             $bridge_contract = new PluginProjectbridgeContract($contract);
             $bridge_contract->renewProjectTask();
         }
@@ -311,35 +298,28 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
  */
 function plugin_projectbridge_contract_add(Contract $contract, $force = false)
 {
-    if ($force === true || (
-        $contract->canUpdate() && isset($contract->input['projectbridge_create_project']) && $contract->input['projectbridge_create_project']
-    )
-    ) {
+    if ($force === true || ($contract->canUpdate() && isset($contract->input['projectbridge_create_project']) && $contract->input['projectbridge_create_project'])) {
         $nb_hours = 0;
 
-        if (!empty($contract->input['projectbridge_project_hours']) && $contract->input['projectbridge_project_hours'] > 0
-        ) {
+        if (!empty($contract->input['projectbridge_project_hours']) && $contract->input['projectbridge_project_hours'] > 0) {
             $nb_hours = (int) $contract->input['projectbridge_project_hours'];
         }
 
         $date_creation = '';
         $begin_date = '';
 
-        if (!empty($contract->fields['begin_date']) && $contract->fields['begin_date'] != 'NULL'
-        ) {
+        if (!empty($contract->fields['begin_date']) && $contract->fields['begin_date'] != 'NULL') {
             $begin_date = date('Y-m-d H:i:s', strtotime($contract->fields['begin_date']));
         }
 
         if (empty($begin_date)) {
-            Session::addMessageAfterRedirect('Le contrat n\'a pas de date de début. Le projet n\'a pas pu être créé.', false, ERROR);
+            Session::addMessageAfterRedirect(__('The contract has no start date. The project could not be created', 'projectbridge'), false, ERROR);
             return false;
         }
 
-        if (!empty($contract->fields['date_creation']) && $contract->fields['date_creation'] != 'NULL'
-        ) {
+        if (!empty($contract->fields['date_creation']) && $contract->fields['date_creation'] != 'NULL') {
             $date_creation = $contract->fields['date_creation'];
-        } elseif (!empty($contract->fields['date']) && $contract->fields['date'] != 'NULL'
-        ) {
+        } elseif (!empty($contract->fields['date']) && $contract->fields['date'] != 'NULL') {
             $date_creation = $contract->fields['date'];
         } else {
             $date_creation = $begin_date;
@@ -381,7 +361,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
 
         if (empty($state_in_progress_value)) {
-            Session::addMessageAfterRedirect('La correspondance pour le statut "En cours" n\'a pas été définie. Le projet n\'a pas pu être créé.', false, ERROR);
+            Session::addMessageAfterRedirect(__('The correspondence for the status "In progress" has not been defined. The project could not be created', 'projectbridge'), false, ERROR);
             return false;
         }
 
@@ -410,8 +390,8 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
               'plan_start_date' => $begin_date,
               'plan_end_date' => (
                   !empty($begin_date) && !empty($contract->fields['duration']) ? date('Y-m-d H:i:s', strtotime(
-                  Infocom::getWarrantyExpir($begin_date, $contract->fields['duration']) . ' - 1 day'
-              )) : ''
+                      Infocom::getWarrantyExpir($begin_date, $contract->fields['duration']) . ' - 1 day'
+                  )) : ''
               ),
               'planned_duration' => $nb_hours * 3600, // in seconds
               'projectstates_id' => $state_in_progress_value, // "in progress"
@@ -537,8 +517,7 @@ function plugin_projectbridge_ticketask_add(TicketTask $ticket_task)
  */
 function plugin_projectbridge_ticketask_update(TicketTask $ticket_task)
 {
-    if (isset($ticket_task->fields['actiontime']) && isset($ticket_task->input['actiontime'])
-    ) {
+    if (isset($ticket_task->fields['actiontime']) && isset($ticket_task->input['actiontime'])) {
         $timediff = $ticket_task->input['actiontime'] - $ticket_task->fields['actiontime'];
         PluginProjectbridgeTask::updateProgressPercent((int) $ticket_task->fields['tickets_id'], (int) $timediff);
     }
@@ -552,11 +531,8 @@ function plugin_projectbridge_ticketask_update(TicketTask $ticket_task)
  */
 function plugin_projectbridge_post_show_tab(array $tab_data)
 {
-    if (!empty($tab_data['item']) && is_object($tab_data['item']) && !empty($tab_data['options']['itemtype'])
-    ) {
-        if ($tab_data['options']['itemtype'] == 'Projecttask_Ticket' || $tab_data['options']['itemtype'] == 'ProjectTask_Ticket'
-        // naming is not uniform: https://github.com/glpi-project/glpi/issues/4177
-        ) {
+    if (!empty($tab_data['item']) && is_object($tab_data['item']) && !empty($tab_data['options']['itemtype'])) {
+        if ($tab_data['options']['itemtype'] == 'Projecttask_Ticket' || $tab_data['options']['itemtype'] == 'ProjectTask_Ticket') {
             if ($tab_data['item'] instanceof Ticket) {
                 // add a line to allow linking ticket to a project task
                 PluginProjectbridgeTicket::postShow($tab_data['item']);
@@ -564,11 +540,9 @@ function plugin_projectbridge_post_show_tab(array $tab_data)
                 // add data to the list of tickets linked to a project task
                 PluginProjectbridgeTicket::postShowTask($tab_data['item']);
             }
-        } elseif ($tab_data['options']['itemtype'] == 'ProjectTask' && $tab_data['item'] instanceof Project
-        ) {
+        } elseif ($tab_data['options']['itemtype'] == 'ProjectTask' && $tab_data['item'] instanceof Project) {
             // add a link to the linked contract after showing the list of tasks in a project
             PluginProjectbridgeContract::postShowProject($tab_data['item']);
-
             // customize the duration columns
             PluginProjectbridgeTask::customizeDurationColumns($tab_data['item']);
         }
@@ -597,7 +571,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'table' => PluginProjectbridgeEntity::$table_name,
               // trick GLPI search into thinking we want the contract id so the addSelect function is called
               'field' => 'contract_id',
-              'name' => 'Contrat par défaut',
+              'name' => __('Default contract', 'projectbridge'),
               'massiveaction' => false,
             ];
 
@@ -605,7 +579,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4202,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => 'Temps non affecté à une tâche (heures)',
+              'name' => __('Time not affected to a project task (hours)', 'projectbridge'),
               'massiveaction' => false,
             ];
             break;
@@ -616,76 +590,39 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'name' => 'ProjectBridge',
             ];
 
-            $options[] = [
-              'id' => 4211,
-              'table' => PluginProjectbridgeTicket::$table_name,
-              'field' => 'project_id',
-              'name' => 'Projet',
-              'massiveaction' => false,
-            ];
+//            $options[] = [
+//              'id' => 4211,
+//              'table' => PluginProjectbridgeTicket::$table_name,
+//              'field' => 'project_id',
+//              'name' => 'Projet',
+//              'massiveaction' => false,
+//            ];
 
             $options[] = [
               'id' => 4212,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => 'Tâche de projet',
+              'name' => __('Project tasks', 'projectbridge'),
               'massiveaction' => false,
+              'datatype' => 'text'
             ];
 
             $options[] = [
               'id' => 4213,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => 'Statut de tâche',
+              'name' => __('ProjectTask status', 'projectbridge'),
               'massiveaction' => false,
             
-            ];
-
-            $options[] = [
-              'id' => 4202,
-              'table' => PluginProjectbridgeTicket::$table_name,
-              'field' => 'project_id',
-              'name' => 'Temps non affecté à une tâche (heures)',
-              'massiveaction' => false,
-            ];
-            break;
-
-        case 'Ticket':
-            $options[] = [
-              'id' => 4210,
-              'name' => 'ProjectBridge',
-            ];
-
-            $options[] = [
-              'id' => 4211,
-              'table' => PluginProjectbridgeTicket::$table_name,
-              'field' => 'project_id',
-              'name' => 'Projet',
-              'massiveaction' => false,
-            ];
-
-            $options[] = [
-              'id' => 4212,
-              'table' => PluginProjectbridgeTicket::$table_name,
-              'field' => 'project_id',
-              'name' => 'Tâche de projet',
-              'massiveaction' => false,
-            ];
-
-            $options[] = [
-              'id' => 4213,
-              'table' => PluginProjectbridgeTicket::$table_name,
-              'field' => 'project_id',
-              'name' => 'Statut de tâche',
-              'massiveaction' => false,
             ];
 
             $options[] = [
               'id' => 4214,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => 'Lié à une tâche ?',
+              'name' => __('Is link to a project task', 'projectbridge').' ?',
               'massiveaction' => false,
+              'datatype' => 'bool'
             ];
 
             break;
@@ -700,7 +637,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4221,
               'table' => PluginProjectbridgeContract::$table_name,
               'field' => 'project_id',
-              'name' => 'Nom du projet',
+              'name' => __('Project name', 'projectbridge'),
               'massiveaction' => false,
             ];
 
@@ -708,7 +645,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4222,
               'table' => PluginProjectbridgeContract::$table_name,
               'field' => 'project_id',
-              'name' => 'Tâche de projet',
+              'name' => __('ProjectBridge project tasks', 'projectbridge'),
               'massiveaction' => false,
             ];
             break;
@@ -723,7 +660,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4231,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => 'Durée effective (heures)',
+              'name' => __('Effective duration (hours)', 'projectbridge'),
               'massiveaction' => false,
             ];
 
@@ -731,7 +668,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4232,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => 'Durée planifiée (heures)',
+              'name' => __('Planned duration (hours)', 'projectbridge'),
               'massiveaction' => false,
             ];
 
@@ -739,7 +676,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4233,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => 'Dernière tâche ?',
+              'name' => __('Last project task ?', 'projectbridge'),
               'massiveaction' => false,
             ];
 
@@ -747,14 +684,14 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4234,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => 'Statut du projet',
+              'name' => __('Project status', 'projectbridge'),
               'massiveaction' => false,
             ];
             $options[] = [
               'id' => 4235,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => 'Tickets associés',
+              'name' => __('Associate tickets', 'projectbridge'),
               'massiveaction' => false,
             ];
 
@@ -770,7 +707,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4231,
               'table' => PluginProjectbridgeContract::$table_name,
               'field' => 'project_id',
-              'name' => 'Nombre de tâches',
+              'name' => __('Number of project tasks tickets', 'projectbridge'),
               'massiveaction' => false,
             ];
 
@@ -822,7 +759,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 ";
             } elseif ($key == 4202) {
                 // url to ticket search for tickets in the entity that are not linked to a task
-                $ticket_search_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/ticket.php?is_deleted=0&criteria[0][field]=4214&criteria[0][searchtype]=contains&criteria[0][value]=Non&criteria[1][link]=AND&criteria[1][field]=80&criteria[1][searchtype]=equals&criteria[1][value]=';
+                $ticket_search_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/ticket.php?is_deleted=0&criteria[0][field]=4214&criteria[0][searchtype]=equals&criteria[0][value]=0&criteria[1][link]=AND&criteria[1][field]=80&criteria[1][searchtype]=equals&criteria[1][value]=';
 
                 $select = "
                     CONCAT(
@@ -906,9 +843,9 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 $select = "
                     (CASE WHEN `glpi_projecttasks_tickets`.`tickets_id` = `glpi_tickets`.`id`
                     THEN
-                        'Oui'
+                        '1'
                     ELSE
-                        'Non'
+                        '0'
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
@@ -996,11 +933,11 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 $select = "
                     (CASE WHEN `glpi_projecttasks`.`id` = `last_tasks`.`id`
                     THEN
-                        'Oui'
+                        '".__('Yes')."'
                     ELSE
                         CASE WHEN `glpi_projecttasks`.`plan_end_date` IS NOT NULL
                         THEN
-                            'Non'
+                            '".__('No')."'
                         ELSE
                             '" . NOT_AVAILABLE . "'
                         END
@@ -1288,16 +1225,16 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     $where = $link . "`glpi_projects`.`name` " . Search::makeTextSearch($val);
                 } elseif ($key == 4212) {
                     // project task
-                    //$where = $link . "(`glpi_projecttasks`.`name` " . Search::makeTextSearch($val)." OR `glpi_projecttasks`.`id`=".$val." )";
-                    $where = $link . "(`glpi_projecttasks`.`id`=".$val." )";
+                    $where = $link . "(`glpi_projecttasks`.`name` " . Search::makeTextSearch($val)." OR `glpi_projecttasks`.`id`=".$val." )";
                 } elseif ($key == 4213) {
                     // project task status
                     $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
-                } elseif ($key == 4214) {
-                    // linked to a task?
-
-                    $searching_yes = (stripos('Oui', $val) !== false);
-                    $searching_no = (stripos('Non', $val) !== false);
+                }
+            }
+            if ($searchtype == 'equals') {
+                if ($key == 4214) {
+                    $searching_yes = (stripos('1', $val) !== false);
+                    $searching_no = (stripos('0', $val) !== false);
 
                     $where_parts = [];
 
@@ -1363,8 +1300,8 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                 } elseif ($key == 4232) {
                     $where = $link . " ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2) " . Search::makeTextSearch($val);
                 } elseif ($key == 4233) {
-                    $searching_yes = (stripos('Oui', $val) !== false);
-                    $searching_no = (stripos('Non', $val) !== false);
+                    $searching_yes = (stripos(__('Yes'), $val) !== false);
+                    $searching_no = (stripos(__('No'), $val) !== false);
                     $searching_not_available = (stripos(NOT_AVAILABLE, $val) !== false);
 
                     $where_parts = [];
