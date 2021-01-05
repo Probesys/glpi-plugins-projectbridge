@@ -223,6 +223,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                 ];
 
                 $ticket_request_type = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
+                $elementsAssociateToExcessTicket = PluginProjectbridgeConfig::getConfValueByName('ElementsAssociateToExcessTicket')?:[];
 
                 foreach ($ticket_links as $ticket_link) {
                     $ticket = new Ticket();
@@ -257,54 +258,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     'id' => $ticket->getId(),
                                     'users_id_recipient' => $ticket_fields['users_id_recipient'],
                                 ]);
-
-                                // link groups (requesters, observers, technicians)
-                                $group_ticket = new Group_Ticket();
-
-                                $ticket_groups = $group_ticket->find(['tickets_id' => $old_ticket_id]);
-
-
-                                foreach ($ticket_groups as $ticket_group_data) {
-                                    $group = new Group();
-
-                                    if ($group->getFromDB($ticket_group_data['groups_id'])) {
-                                        $group_ticket = new Group_Ticket();
-                                        $group_ticket->add([
-                                            'tickets_id' => $ticket->getId(),
-                                            'groups_id' => $ticket_group_data['groups_id'],
-                                            'type' => $ticket_group_data['type'],
-                                        ]);
-                                    }
-                                }
-
-                                // link users (requesters, observers, technicians)
-                                $ticket_user = new Ticket_User();
-                                $ticket_users = $ticket_user->find(['tickets_id' => $old_ticket_id]);
-
-                                foreach ($ticket_users as $ticket_user_data) {
-                                    $ticket_user = new Ticket_User();
-                                    $ticket_user->add([
-                                        'tickets_id' => $ticket->getId(),
-                                        'users_id' => $ticket_user_data['users_id'],
-                                        'type' => $ticket_user_data['type'],
-                                        'use_notification' => $ticket_user_data['use_notification'],
-                                        'alternative_email' => $ticket_user_data['alternative_email'],
-                                    ]);
-                                }
-
-                                // reproduce links to other tickets
-                                $ticket_link = new Ticket_Ticket();
-                                $ticket_links = $ticket_link->find(['tickets_id_1' => $old_ticket_id]);
-
-                                foreach ($ticket_links as $ticket_link_data) {
-                                    $ticket_link = new Ticket_Ticket();
-                                    $ticket_link->add([
-                                        'tickets_id_1' => $ticket->getId(),
-                                        'tickets_id_2' => $ticket_link_data['tickets_id_2'],
-                                        'link' => $ticket_link_data['link'],
-                                    ]);
-                                }
-
+                                
                                 // link the clone to the old ticket
                                 $ticket_link = new Ticket_Ticket();
                                 $ticket_link->add([
@@ -312,106 +266,158 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     'tickets_id_2' => $old_ticket_id,
                                     'link' => Ticket_Ticket::LINK_TO,
                                 ]);
+                                // @TODO : Limiter l'ajout selon le type de group / conf
+                                if (in_array('requester_groups', $elementsAssociateToExcessTicket) || in_array('assign_groups', $elementsAssociateToExcessTicket) || in_array('watcher_group', $elementsAssociateToExcessTicket)) {
+                                    // link groups (requesters, observers, technicians)
+                                    $group_ticket = new Group_Ticket();
+                                    $ticket_groups = $group_ticket->find(['tickets_id' => $old_ticket_id]);
+                                    foreach ($ticket_groups as $ticket_group_data) {
+                                        $group = new Group();
+                                        if ($group->getFromDB($ticket_group_data['groups_id'])) {
+                                            $group_ticket = new Group_Ticket();
+                                            $group_ticket->add([
+                                            'tickets_id' => $ticket->getId(),
+                                            'groups_id' => $ticket_group_data['groups_id'],
+                                            'type' => $ticket_group_data['type'],
+                                        ]);
+                                        }
+                                    }
+                                }
+                                // @TODO : Limiter l'ajout selon le type de user / conf
+                                if (in_array('requester', $elementsAssociateToExcessTicket) || in_array('assign_technician', $elementsAssociateToExcessTicket) || in_array('watcher_user', $elementsAssociateToExcessTicket)) {
+                                    // link users (requesters, observers, technicians)
+                                    $ticket_user = new Ticket_User();
+                                    $ticket_users = $ticket_user->find(['tickets_id' => $old_ticket_id]);
+                                    foreach ($ticket_users as $ticket_user_data) {
+                                        $ticket_user = new Ticket_User();
+                                        $ticket_user->add([
+                                            'tickets_id' => $ticket->getId(),
+                                            'users_id' => $ticket_user_data['users_id'],
+                                            'type' => $ticket_user_data['type'],
+                                            'use_notification' => $ticket_user_data['use_notification'],
+                                            'alternative_email' => $ticket_user_data['alternative_email'],
+                                        ]);
+                                    }
+                                }
+                                
+                                if (in_array('tickets', $elementsAssociateToExcessTicket)) {
+                                    // reproduce links to other tickets
+                                    $ticket_link = new Ticket_Ticket();
+                                    $ticket_links = $ticket_link->find(['tickets_id_1' => $old_ticket_id]);
+                                    foreach ($ticket_links as $ticket_link_data) {
+                                        $ticket_link = new Ticket_Ticket();
+                                        $ticket_link->add([
+                                            'tickets_id_1' => $ticket->getId(),
+                                            'tickets_id_2' => $ticket_link_data['tickets_id_2'],
+                                            'link' => $ticket_link_data['link'],
+                                        ]);
+                                    }
+                                }
 
-                                // add followups
-                                $ticket_followup = new ITILFollowup();
-                                $ticket_followups = $ticket_followup->find(['tickets_id' => $old_ticket_id]);
-
-                                foreach ($ticket_followups as $ticket_followup_data) {
-                                    $ticket_new_followup_data = array_diff_key($ticket_followup_data, ['id' => null]);
-                                    $ticket_new_followup_data['tickets_id'] = $ticket->getId();
-                                    $ticket_new_followup_data['content'] = str_replace("'", "\'", $ticket_new_followup_data['content']);
-                                    $ticket_new_followup_data['content'] = str_replace('"', '\"', $ticket_new_followup_data['content']);
-
+                                
+                                
+                                if (in_array('followups', $elementsAssociateToExcessTicket)) {
+                                    // add followups
                                     $ticket_followup = new ITILFollowup();
-                                    $ticket_followup_id = $ticket_followup->add($ticket_new_followup_data);
+                                    $ticket_followups = $ticket_followup->find(['tickets_id' => $old_ticket_id]);
+                                    foreach ($ticket_followups as $ticket_followup_data) {
+                                        $ticket_new_followup_data = array_diff_key($ticket_followup_data, ['id' => null]);
+                                        $ticket_new_followup_data['tickets_id'] = $ticket->getId();
+                                        $ticket_new_followup_data['content'] = str_replace("'", "\'", $ticket_new_followup_data['content']);
+                                        $ticket_new_followup_data['content'] = str_replace('"', '\"', $ticket_new_followup_data['content']);
 
-                                    if ($ticket_followup_id) {
-                                        $ticket_followup->update([
-                                            'id' => $ticket_followup_id,
-                                            'date' => $ticket_followup_data['date'],
-                                            'date_mod' => $ticket_followup_data['date_mod'],
-                                            'date_creation' => $ticket_followup_data['date_creation'],
-                                        ]);
+                                        $ticket_followup = new ITILFollowup();
+                                        $ticket_followup_id = $ticket_followup->add($ticket_new_followup_data);
+
+                                        if ($ticket_followup_id) {
+                                            $ticket_followup->update([
+                                                'id' => $ticket_followup_id,
+                                                'date' => $ticket_followup_data['date'],
+                                                'date_mod' => $ticket_followup_data['date_mod'],
+                                                'date_creation' => $ticket_followup_data['date_creation'],
+                                            ]);
+                                        }
                                     }
                                 }
-
-                                // add documents
-                                $document_item = new Document_Item();
-                                $ticket_document_items = $document_item->find(
-                                    [
-                                            'items_id' => $old_ticket_id,
-                                            'itemtype' => 'Ticket'
-                                ]
-                                );
-
-                                foreach ($ticket_document_items as $ticket_document_item_data) {
-                                    $ticket_new_document_item_data = array_diff_key($ticket_document_item_data, ['id' => null, 'date_mod' => null]);
-                                    $ticket_new_document_item_data['items_id'] = $ticket->getId();
-
+                                
+                                if (in_array('documents', $elementsAssociateToExcessTicket)) {
+                                    // add documents
                                     $document_item = new Document_Item();
-                                    $document_item_id = $document_item->add($ticket_new_document_item_data);
+                                    $ticket_document_items = $document_item->find(
+                                        [
+                                                'items_id' => $old_ticket_id,
+                                                'itemtype' => 'Ticket'
+                                    ]
+                                    );
+                                    foreach ($ticket_document_items as $ticket_document_item_data) {
+                                        $ticket_new_document_item_data = array_diff_key($ticket_document_item_data, ['id' => null, 'date_mod' => null]);
+                                        $ticket_new_document_item_data['items_id'] = $ticket->getId();
 
-                                    if ($document_item_id) {
-                                        $glpi_time_before = $_SESSION['glpi_currenttime'];
-                                        $_SESSION['glpi_currenttime'] = $ticket_document_item_data['date_mod'];
+                                        $document_item = new Document_Item();
+                                        $document_item_id = $document_item->add($ticket_new_document_item_data);
 
-                                        $document_item->update([
-                                            'id' => $document_item_id,
-                                            'date_mod' => $ticket_document_item_data['date_mod'],
-                                        ]);
+                                        if ($document_item_id) {
+                                            $glpi_time_before = $_SESSION['glpi_currenttime'];
+                                            $_SESSION['glpi_currenttime'] = $ticket_document_item_data['date_mod'];
 
-                                        $_SESSION['glpi_currenttime'] = $glpi_time_before;
+                                            $document_item->update([
+                                                'id' => $document_item_id,
+                                                'date_mod' => $ticket_document_item_data['date_mod'],
+                                            ]);
+
+                                            $_SESSION['glpi_currenttime'] = $glpi_time_before;
+                                        }
                                     }
                                 }
-
-                                // add tasks
-                                $ticket_task = new TicketTask();
-                                $ticket_tasks = $ticket_task->find(['tickets_id' => $old_ticket_id]);
-
-                                foreach ($ticket_tasks as $ticket_task_data) {
-                                    $ticket_new_task_data = array_diff_key($ticket_task_data, ['id' => null, 'actiontime' => null, 'begin' => null, 'end' => null]);
-                                    $ticket_new_task_data['tickets_id'] = $ticket->getId();
-                                    $ticket_new_task_data['content'] = str_replace("'", "\'", $ticket_new_task_data['content']);
-                                    $ticket_new_task_data['content'] = str_replace('"', '\"', $ticket_new_task_data['content']);
-
+                                
+                                if (in_array('tasks', $elementsAssociateToExcessTicket)) {
+                                    // add tasks
                                     $ticket_task = new TicketTask();
-                                    $ticket_task->add($ticket_new_task_data);
+                                    $ticket_tasks = $ticket_task->find(['tickets_id' => $old_ticket_id]);
+                                    foreach ($ticket_tasks as $ticket_task_data) {
+                                        $ticket_new_task_data = array_diff_key($ticket_task_data, ['id' => null, 'actiontime' => null, 'begin' => null, 'end' => null]);
+                                        $ticket_new_task_data['tickets_id'] = $ticket->getId();
+                                        $ticket_new_task_data['content'] = str_replace("'", "\'", $ticket_new_task_data['content']);
+                                        $ticket_new_task_data['content'] = str_replace('"', '\"', $ticket_new_task_data['content']);
+
+                                        $ticket_task = new TicketTask();
+                                        $ticket_task->add($ticket_new_task_data);
+                                    }
                                 }
+                                
+                                if (in_array('slutions', $elementsAssociateToExcessTicket)) {
+                                    // add solution
+                                    $log = new Log();
+                                    $solutions = $log->find(
+                                        [
+                                                'items_id' => $old_ticket_id,
+                                                'id_search_option' => 24,
+                                                'itemtype' => 'Ticket'
+                                            ],
+                                        ['id' => 'DESC'],
+                                        1
+                                    );
+                                    if (!empty($solutions)) {
+                                        $ticket_new_solution_data = array_diff_key(current($solutions), ['id' => null,]);
+                                        $ticket_new_solution_data['items_id'] = $ticket->getId();
+                                        $ticket_new_solution_data['user_name'] = str_replace("'", "\'", $ticket_new_solution_data['user_name']);
+                                        $ticket_new_solution_data['user_name'] = str_replace('"', '\"', $ticket_new_solution_data['user_name']);
+                                        $ticket_new_solution_data['new_value'] = str_replace("'", "\'", $ticket_new_solution_data['new_value']);
+                                        $ticket_new_solution_data['new_value'] = str_replace('"', '\"', $ticket_new_solution_data['new_value']);
 
-                                // add solution
-                                $log = new Log();
-                                $solutions = $log->find(
-                                    [
-                                            'items_id' => $old_ticket_id,
-                                            'id_search_option' => 24,
-                                            'itemtype' => 'Ticket'
-                                        ],
-                                    ['id' => 'DESC'],
-                                    1
-                                );
+                                        $log_id = $log->add($ticket_new_solution_data);
 
+                                        if ($log_id) {
+                                            $glpi_time_before = $_SESSION['glpi_currenttime'];
+                                            $_SESSION['glpi_currenttime'] = $ticket_new_solution_data['date_mod'];
 
-                                if (!empty($solutions)) {
-                                    $ticket_new_solution_data = array_diff_key(current($solutions), ['id' => null,]);
-                                    $ticket_new_solution_data['items_id'] = $ticket->getId();
-                                    $ticket_new_solution_data['user_name'] = str_replace("'", "\'", $ticket_new_solution_data['user_name']);
-                                    $ticket_new_solution_data['user_name'] = str_replace('"', '\"', $ticket_new_solution_data['user_name']);
-                                    $ticket_new_solution_data['new_value'] = str_replace("'", "\'", $ticket_new_solution_data['new_value']);
-                                    $ticket_new_solution_data['new_value'] = str_replace('"', '\"', $ticket_new_solution_data['new_value']);
+                                            $log->update([
+                                                'id' => $log_id,
+                                                'date_mod' => $ticket_new_solution_data['date_mod'],
+                                            ]);
 
-                                    $log_id = $log->add($ticket_new_solution_data);
-
-                                    if ($log_id) {
-                                        $glpi_time_before = $_SESSION['glpi_currenttime'];
-                                        $_SESSION['glpi_currenttime'] = $ticket_new_solution_data['date_mod'];
-
-                                        $log->update([
-                                            'id' => $log_id,
-                                            'date_mod' => $ticket_new_solution_data['date_mod'],
-                                        ]);
-
-                                        $_SESSION['glpi_currenttime'] = $glpi_time_before;
+                                            $_SESSION['glpi_currenttime'] = $glpi_time_before;
+                                        }
                                     }
                                 }
                                 array_push($newTicketIds, $ticket->getId());

@@ -75,7 +75,8 @@ if ($can_update) {
       'projectbridge_add_recipient',
       'projectbridge_add_recipient_submit',
       'projectbridge_config_countOnlyPublicTasks',
-      'projectbridge_config_addContractSelectorOnCreatingTicketForm'
+      'projectbridge_config_addContractSelectorOnCreatingTicketForm',
+      'projectbridge_config_elementsAssociateToExcessTicket'
     ];
 
     $post_data = getPostDataFromFields($post_fields);
@@ -373,6 +374,64 @@ if ($can_update) {
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
     
+    // select elements wich is copy during creating excess ticket
+    $possibleElements = [
+        'tasks'     => _n('Task', 'Tasks', 2),
+        'followups' => _n('Followup', 'Followup', 2),
+        'documents' => _n('Document', 'Documents', 2),
+        'solutions' => _n('Solution', 'Solutions', 2),
+        'tickets'   => _n('Ticket', 'Tickets', 2),
+        'requester_groups'    => _n('Requester group', 'Requester groups', 2),
+        'requester'     => __('Requester user'),
+        'assign_groups' => __('Group in charge of the ticket'),
+        'assign_technician' => __('Assigned to technicians'),
+        'watcher_user' => __('Watcher user'),
+        'watcher_group' => _n('Watcher group', 'Watcher groups', 2),
+     ];
+    $elementsAssociateToExcessTicket = PluginProjectbridgeConfig::getConfValueByName('ElementsAssociateToExcessTicket');
+    
+    if (!$elementsAssociateToExcessTicket) {
+        // empty conf, populate with all values
+        $elementsAssociateToExcessTicket = array_keys($possibleElements);
+        PluginProjectbridgeConfig::updateConfValue('ElementsAssociateToExcessTicket', $elementsAssociateToExcessTicket);
+    }
+    if (isset($post_data['projectbridge_config_elementsAssociateToExcessTicket']) && is_array($post_data['projectbridge_config_elementsAssociateToExcessTicket'])) {
+        $elementsAssociateToExcessTicket = $post_data['projectbridge_config_elementsAssociateToExcessTicket'];
+        PluginProjectbridgeConfig::updateConfValue('ElementsAssociateToExcessTicket', $elementsAssociateToExcessTicket);
+    }
+    echo '<tr">' . "\n";
+    echo '<td>'.__('Elements have to be associate to the renewall ticket from the previoux ticket', 'projectbridge').'' . "\n";
+    echo '</td>' . "\n";
+    echo '<td>' . "\n";
+    echo '<select name="projectbridge_config_elementsAssociateToExcessTicket[]" id="projectbridge_config_elementsAssociateToExcessTicket" class="select2" multiple>'. "\n";
+    foreach ($possibleElements as $key => $value) {
+        $select = in_array($key, $elementsAssociateToExcessTicket)?'selected':'';
+        echo '<option value="'.$key.'" '.$select.'>'.$value.'</option>';
+    }
+    echo '</select>'. "\n";
+    echo "<script type='text/javascript'>
+    //<![CDATA[
+    $(function() {
+             $('#projectbridge_config_elementsAssociateToExcessTicket').select2({
+
+                width: '100%',
+                dropdownAutoWidth: true,
+                quietMillis: 100,
+                minimumResultsForSearch: 3,
+
+                templateResult: templateResult,
+                templateSelection: templateSelection,
+             })
+             .bind('setValue', function(e, value) {
+                $('#projectbridge_config_elementsAssociateToExcessTicket').val(value).trigger('change');
+             })
+             $('label[for=projectbridge_config_elementsAssociateToExcessTicket]').on('click', function(){ $('#dropdown_projectbridge_config_elementsAssociateToExcessTicket1180093597').select2('open'); });
+          });
+
+    //]]>
+    </script>";
+    echo '</td>' . "\n";
+    echo '</tr>' . "\n";
     
     echo '</tbody>' . "\n";
     echo '</table>' . "\n";
