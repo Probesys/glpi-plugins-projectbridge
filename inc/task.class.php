@@ -266,37 +266,47 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     'tickets_id_2' => $old_ticket_id,
                                     'link' => Ticket_Ticket::LINK_TO,
                                 ]);
-                                // @TODO : Limiter l'ajout selon le type de group / conf
+                                
                                 if (in_array('requester_groups', $elementsAssociateToExcessTicket) || in_array('assign_groups', $elementsAssociateToExcessTicket) || in_array('watcher_group', $elementsAssociateToExcessTicket)) {
                                     // link groups (requesters, observers, technicians)
                                     $group_ticket = new Group_Ticket();
                                     $ticket_groups = $group_ticket->find(['tickets_id' => $old_ticket_id]);
                                     foreach ($ticket_groups as $ticket_group_data) {
-                                        $group = new Group();
-                                        if ($group->getFromDB($ticket_group_data['groups_id'])) {
-                                            $group_ticket = new Group_Ticket();
-                                            $group_ticket->add([
-                                            'tickets_id' => $ticket->getId(),
-                                            'groups_id' => $ticket_group_data['groups_id'],
-                                            'type' => $ticket_group_data['type'],
-                                        ]);
+                                        if ((in_array('requester_groups', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::REQUESTER)
+                                            || (in_array('assign_groups', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::ASSIGN)
+                                            || (in_array('watcher_group', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::OBSERVER)
+                                           ) {
+                                            $group = new Group();
+                                            if ($group->getFromDB($ticket_group_data['groups_id'])) {
+                                                $group_ticket = new Group_Ticket();
+                                                $group_ticket->add([
+                                                    'tickets_id' => $ticket->getId(),
+                                                    'groups_id' => $ticket_group_data['groups_id'],
+                                                    'type' => $ticket_group_data['type'],
+                                            ]);
+                                            }
                                         }
                                     }
                                 }
-                                // @TODO : Limiter l'ajout selon le type de user / conf
+                                
                                 if (in_array('requester', $elementsAssociateToExcessTicket) || in_array('assign_technician', $elementsAssociateToExcessTicket) || in_array('watcher_user', $elementsAssociateToExcessTicket)) {
                                     // link users (requesters, observers, technicians)
                                     $ticket_user = new Ticket_User();
                                     $ticket_users = $ticket_user->find(['tickets_id' => $old_ticket_id]);
                                     foreach ($ticket_users as $ticket_user_data) {
-                                        $ticket_user = new Ticket_User();
-                                        $ticket_user->add([
-                                            'tickets_id' => $ticket->getId(),
-                                            'users_id' => $ticket_user_data['users_id'],
-                                            'type' => $ticket_user_data['type'],
-                                            'use_notification' => $ticket_user_data['use_notification'],
-                                            'alternative_email' => $ticket_user_data['alternative_email'],
-                                        ]);
+                                        if ((in_array('requester', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::REQUESTER)
+                                            || (in_array('assign_technician', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::ASSIGN)
+                                            || (in_array('watcher_user', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::OBSERVER)
+                                          ) {
+                                            $ticket_user = new Ticket_User();
+                                            $ticket_user->add([
+                                                'tickets_id' => $ticket->getId(),
+                                                'users_id' => $ticket_user_data['users_id'],
+                                                'type' => $ticket_user_data['type'],
+                                                'use_notification' => $ticket_user_data['use_notification'],
+                                                'alternative_email' => $ticket_user_data['alternative_email'],
+                                            ]);
+                                        }
                                     }
                                 }
                                 

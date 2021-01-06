@@ -75,7 +75,9 @@ function plugin_projectbridge_install()
         $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
             (1, 'RecipientIds', '[]'),
             (2, 'CountOnlyPublicTasks', '1')
-            (3, 'AddContractSelectorOnCreatingTicketForm', '0');";
+            (3, 'AddContractSelectorOnCreatingTicketForm', '0')
+            (4, 'ElementsAssociateToExcessTicket', '[\"tasks\",\"followups\",\"documents\",\"solutions\",\"requester_groups\",\"requester\",\"assign_groups\",\"assign_technician\",\"watcher_user\",\"watcher_group\",\"tickets\"]');
+            ;";
         $DB->query($insert_table_query) or die($DB->error());
     } else {
         // test if old version of glpi_plugin_projectbridge_configs
@@ -112,6 +114,16 @@ function plugin_projectbridge_install()
         if (!count($req)) {
             $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
             (3, 'AddContractSelectorOnCreatingTicketForm', '0');";
+            $DB->query($insert_table_query) or die($DB->error());
+        }
+        // test if config ElementsAssociateToExcessTicket is present
+        $req = $DB->request([
+          'FROM' => PluginProjectbridgeConfig::$table_name,
+          'WHERE' => ['name'=> 'ElementsAssociateToExcessTicket']
+        ]);
+        if (!count($req)) {
+            $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
+            (4, 'ElementsAssociateToExcessTicket', '[\"tasks\",\"followups\",\"documents\",\"solutions\",\"requester_groups\",\"requester\",\"assign_groups\",\"assign_technician\",\"watcher_user\",\"watcher_group\",\"tickets\"]');";
             $DB->query($insert_table_query) or die($DB->error());
         }
     }
