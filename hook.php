@@ -64,7 +64,7 @@ function plugin_projectbridge_install()
             (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `name` VARCHAR(50) NOT NULL ,
-                `value` VARCHAR(50) NOT NULL,
+                `value` VARCHAR(250) NOT NULL,
                 PRIMARY KEY (`id`)
             )
             COLLATE='utf8_unicode_ci'
@@ -75,7 +75,9 @@ function plugin_projectbridge_install()
         $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
             (1, 'RecipientIds', '[]'),
             (2, 'CountOnlyPublicTasks', '1')
-            (3, 'AddContractSelectorOnCreatingTicketForm', '0');";
+            (3, 'AddContractSelectorOnCreatingTicketForm', '0')
+            (4, 'ElementsAssociateToExcessTicket', '[\"tasks\",\"followups\",\"documents\",\"solutions\",\"requester_groups\",\"requester\",\"assign_groups\",\"assign_technician\",\"watcher_user\",\"watcher_group\",\"tickets\"]');
+            ;";
         $DB->query($insert_table_query) or die($DB->error());
     } else {
         // test if old version of glpi_plugin_projectbridge_configs
@@ -114,6 +116,16 @@ function plugin_projectbridge_install()
             (3, 'AddContractSelectorOnCreatingTicketForm', '0');";
             $DB->query($insert_table_query) or die($DB->error());
         }
+        // test if config ElementsAssociateToExcessTicket is present
+        $req = $DB->request([
+          'FROM' => PluginProjectbridgeConfig::$table_name,
+          'WHERE' => ['name'=> 'ElementsAssociateToExcessTicket']
+        ]);
+        if (!count($req)) {
+            $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
+            (4, 'ElementsAssociateToExcessTicket', '[\"tasks\",\"followups\",\"documents\",\"solutions\",\"requester_groups\",\"requester\",\"assign_groups\",\"assign_technician\",\"watcher_user\",\"watcher_group\",\"tickets\"]');";
+            $DB->query($insert_table_query) or die($DB->error());
+        }
     }
 
     if (!$DB->tableExists(PluginProjectbridgeState::$table_name)) {
@@ -136,6 +148,10 @@ function plugin_projectbridge_install()
     if (version_compare(PLUGIN_PROJECTBRIDGE_VERSION, '2.2.3', '>')) {
         $delete_crontask_table = "DELETE FROM ".Crontask::getTable()."  WHERE itemtype='PluginProjectbridgeContract' AND name='AlertContractsToRenew'";
         $DB->query($delete_crontask_table) or die($DB->error());
+    }
+    if (version_compare(PLUGIN_PROJECTBRIDGE_VERSION, '2.3', '>')) {
+        $update_structure_query = "ALTER TABLE `" . PluginProjectbridgeConfig::$table_name . "` CHANGE `value` `value` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;";
+        $DB->query($update_structure_query) or die($DB->error());
     }
 
     // cron for alerts
