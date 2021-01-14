@@ -8,7 +8,7 @@ Html::header(__('Project Tasks', 'projectbridge'), $_SERVER['PHP_SELF'], 'tools'
 
 // force GLPI to point to this page
 global $CFG_GLPI;
-$list_url = rtrim($CFG_GLPI['root_doc'], '/') . '/plugins/projectbridge/front/projecttask.php';
+$list_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/front/projecttask.php';
 $_GET['target'] = $list_url;
 
 Search::show('projecttask');
