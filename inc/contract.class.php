@@ -45,12 +45,19 @@ class PluginProjectbridgeContract extends CommonDBTM
      * @return integer|null
      */
     public function getNbHours()
-    {
-        if ($this->_nb_hours === null) {
-            $result = $this->getFromDBByCrit(['contract_id' => $this->_contract->getId()]);
-
-            if ($result) {
-                $this->_nb_hours = (int) $this->fields['nb_hours'];
+    {       
+        // get all activ projectTasks
+        $activeProjectTasks = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($this->_project_id);
+        if(count($activeProjectTasks)) {
+            // verification nombre d'heure actuelle liée aux tâches projets
+            $lastActiveProjectTask = $activeProjectTasks[0];
+            $this->_nb_hours = (int) $lastActiveProjectTask['planned_duration']/3600;
+        } else {
+            if ($this->_nb_hours === null) {
+                $result = $this->getFromDBByCrit(['contract_id' => $this->_contract->getId()]);
+                if ($result) {
+                    $this->_nb_hours = (int) $this->fields['nb_hours'];
+                }
             }
         }
 
