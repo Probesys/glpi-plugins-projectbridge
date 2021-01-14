@@ -400,7 +400,7 @@ if ($can_update) {
         PluginProjectbridgeConfig::updateConfValue('ElementsAssociateToExcessTicket', $elementsAssociateToExcessTicket);
     }
     echo '<tr">' . "\n";
-    echo '<td>'.__('Elements have to be associate to the renewall ticket from the previoux ticket', 'projectbridge').'' . "\n";
+    echo '<td>'.__('Elements from previous ticket to be associated with renewed ticket', 'projectbridge').'' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
     echo '<select name="projectbridge_config_elementsAssociateToExcessTicket[]" id="projectbridge_config_elementsAssociateToExcessTicket" class="select2" multiple>'. "\n";
