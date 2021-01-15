@@ -231,6 +231,8 @@ class PluginProjectbridgeTask extends CommonDBTM
                     if ($ticket->getFromDB($ticket_link['tickets_id']) && !in_array($ticket->fields['status'], $ticket_states_to_ignore) && $ticket->fields['is_deleted'] == 0) {
                         // use only not deleted not resolved not closed tickets
                         // close the ticket
+                        $old_status = $ticket->fields['status'];
+
                         $ticket_fields = $ticket->fields;
                         $closed = $ticket->update([
                             'id' => $ticket->getId(),
@@ -257,6 +259,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                 $ticket->update([
                                     'id' => $ticket->getId(),
                                     'users_id_recipient' => $ticket_fields['users_id_recipient'],
+                                    'status' => $old_status
                                 ]);
                                 
                                 // link the clone to the old ticket
