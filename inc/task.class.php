@@ -395,7 +395,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     }
                                 }
                                 
-                                if (in_array('slutions', $elementsAssociateToExcessTicket)) {
+                                if (in_array('solutions', $elementsAssociateToExcessTicket)) {
                                     // add solution
                                     $log = new Log();
                                     $solutions = $log->find(
