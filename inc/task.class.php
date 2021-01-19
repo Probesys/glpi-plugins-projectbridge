@@ -251,16 +251,18 @@ class PluginProjectbridgeTask extends CommonDBTM
                             $ticket_fields['content'] = str_replace('"', '\"', $ticket_fields['content']);
                             $ticket_fields['actiontime'] = 0;
                             $ticket_fields['requesttypes_id'] = $ticket_request_type;
+                            $ticket_fields['status'] = $old_status;
 
                             $ticket = new Ticket();
 
                             if ($ticket->add($ticket_fields)) {
                                 // force ticket update
-                                $ticket->update([
+                                if ($old_status  > 1) {
+                                    $ticket->update([
                                     'id' => $ticket->getId(),
                                     'users_id_recipient' => $ticket_fields['users_id_recipient'],
-                                    'status' => $old_status
-                                ]);
+                                    ]);
+                                }
                                 
                                 // link the clone to the old ticket
                                 $ticket_link = new Ticket_Ticket();
@@ -432,6 +434,15 @@ class PluginProjectbridgeTask extends CommonDBTM
                                             $_SESSION['glpi_currenttime'] = $glpi_time_before;
                                         }
                                     }
+                                }
+                                
+                                // special case when old status is new and the ticket have assignments
+                                if ($old_status  == 1) {
+                                    $ticket->update([
+                                        'id' => $ticket->getId(),
+                                        'users_id_recipient' => $ticket_fields['users_id_recipient'],
+                                        'status' => $old_status,
+                                    ]);
                                 }
                                 array_push($newTicketIds, $ticket->getId());
                                 //$nb_successes++;
