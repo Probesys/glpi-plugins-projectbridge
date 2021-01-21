@@ -640,6 +640,14 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'massiveaction' => false,
               'datatype' => 'bool'
             ];
+            $options[] = [
+              'id' => 4231,
+              'table' => PluginProjectbridgeTicket::$table_name,
+              'field' => 'project_id',
+              'name' => __('Effective duration (hours)', 'projectbridge'),
+              'massiveaction' => false,
+              'datatype' => 'decimal',
+            ];
 
             break;
 
@@ -748,7 +756,10 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
 {
     global $CFG_GLPI;
     $select = "";
-
+    $onlypublicTasks = false;
+    if (!Session::haveRight("task", CommonITILTask::SEEPRIVATE) || PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks')) {
+        $onlypublicTasks = true;
+    }
     switch ($itemtype) {
         case 'Entity':
             if ($key == 4201) {
@@ -804,9 +815,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
         case 'Ticket':
             if ($key == 4211) {
                 // project name
-
                 $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
-
                 $select = "
                     GROUP_CONCAT(
                         DISTINCT CONCAT(
@@ -826,9 +835,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 ";
             } elseif ($key == 4212) {
                 // project task
-
                 $task_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/projecttask.form.php?id=';
-
                 $select = "
                     GROUP_CONCAT(
                         DISTINCT CONCAT(
@@ -855,7 +862,6 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 ";
             } elseif ($key == 4214) {
                 // is the ticket linked to a task?
-
                 $select = "
                     (CASE WHEN `glpi_projecttasks_tickets`.`tickets_id` = `glpi_tickets`.`id`
                     THEN
@@ -865,6 +871,25 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                     END)
                     AS `ITEM_" . $offset . "`,
                 ";
+            } elseif ($key == 4231) {
+                // effective duration
+                $onlypublicTasks = 1;
+                $select = "
+                    COALESCE(
+                        ROUND(SUM( `glpi_tickettasks`.`actiontime`)/3600, 2),
+                        0
+                    )
+                    AS `ITEM_" . $offset . "`,
+                ";
+                if ($onlypublicTasks) {
+                    $select = "
+                    COALESCE(
+                        ROUND(SUM( CASE WHEN `glpi_tickettasks`.`is_private`= 0 THEN `glpi_tickettasks`.`actiontime` ELSE 0 END )/3600, 2),
+                        0
+                    )
+                    AS `ITEM_" . $offset . "`,
+                ";
+                }
             }
 
             break;
@@ -872,9 +897,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
         case 'Contract':
             if ($key == 4222) {
                 // last task's status
-
                 $task_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/projecttask.form.php?id=';
-
                 $select = "
                     (CASE WHEN `last_tasks`.`project_task_id` IS NOT NULL
                     THEN
@@ -896,9 +919,7 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 ";
             } elseif ($key == 4221) {
                 // project's name
-
                 $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
-
                 $select = "
                     (CASE WHEN `last_tasks`.`project_name` IS NOT NULL
                     THEN
@@ -925,7 +946,6 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
         case 'projecttask':
             if ($key == 4231) {
                 // effective duration
-
                 $select = "
                     COALESCE(
                         ROUND(`ticket_actiontimes`.`actiontime_sum`, 2),
@@ -935,7 +955,6 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 ";
             } elseif ($key == 4232) {
                 // planned duration
-
                 $select = "
                     COALESCE(
                         ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2),
@@ -1136,6 +1155,8 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
                         ON (`glpi_projecttasks`.`projects_id` = `glpi_projects`.`id`)
                     LEFT JOIN `glpi_projectstates`
                         ON (`glpi_projectstates`.`id` = `glpi_projecttasks`.`projectstates_id`)
+                    
+                        
                 ";
             }
 
