@@ -74,9 +74,9 @@ function plugin_projectbridge_install()
         $DB->query($create_tableConfig_query) or die($DB->error());
         $insert_table_query = "INSERT INTO `" . PluginProjectbridgeConfig::$table_name . "` (`id`, `name`, `value`) VALUES
             (1, 'RecipientIds', '[]'),
-            (2, 'CountOnlyPublicTasks', '1')
-            (3, 'AddContractSelectorOnCreatingTicketForm', '0')
-            (4, 'ElementsAssociateToExcessTicket', '[\"tasks\",\"followups\",\"documents\",\"solutions\",\"requester_groups\",\"requester\",\"assign_groups\",\"assign_technician\",\"watcher_user\",\"watcher_group\",\"tickets\"]');
+            (2, 'CountOnlyPublicTasks', '1'),
+            (3, 'AddContractSelectorOnCreatingTicketForm', '0'),
+            (4, 'ElementsAssociateToExcessTicket', '[\\\"tasks\\\",\\\"followups\\\",\\\"documents\\\",\\\"solutions\\\",\\\"requester_groups\\\",\\\"requester\\\",\\\"assign_groups\\\",\\\"assign_technician\\\",\\\"watcher_user\\\",\\\"watcher_group\\\",\\\"tickets\\\"]')
             ;";
         $DB->query($insert_table_query) or die($DB->error());
     } else {
