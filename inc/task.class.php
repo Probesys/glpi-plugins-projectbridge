@@ -142,11 +142,11 @@ class PluginProjectbridgeTask extends CommonDBTM
         $tasks = [];
         foreach ($DB->request([
             'SELECT' => 'pt.*',
-            'FROM' => $task->getTable().' AS pt',
+            'FROM' => $bridgeContract::getTable().' AS c',
             'INNER JOIN' => [
-                $bridgeContract::getTable() => [
+                $task->getTable().' AS pt' => [
                      'FKEY' => [
-                         $bridgeContract::getTable() => 'project_id',
+                         'c' => 'project_id',
                          'pt' => 'projects_id'
                      ]
                     ]
@@ -155,6 +155,8 @@ class PluginProjectbridgeTask extends CommonDBTM
             ]) as $data) {
             $tasks[] = $data;
         }
+//        print_r($tasks);
+//        die;
 
         $nb_successes += count(self::closeTaskAndCreateExcessTicket($tasks));
 
