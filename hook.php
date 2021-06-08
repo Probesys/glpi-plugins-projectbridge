@@ -263,13 +263,36 @@ function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false)
  */
 function plugin_projectbridge_pre_contract_update(Contract $contract)
 {
+    global $DB;
     if ($contract->canUpdate() && isset($contract->input['update']) && isset($contract->input['projectbridge_project_id'])) {
         if ($contract->input['update'] != 'Lier les tickets au renouvellement') {
             // update contract
             $nb_hours = 0;
-
+            
             if (empty($contract->input['projectbridge_project_id'])) {
                 $selected_project_id = 0;
+                // delete line in glpi_plugin_projectbridge_contracts
+                $bridge_contract = new PluginProjectbridgeContract($contract);
+                if ($bridge_contract && $bridge_contract->getID()) {
+                    $projectbridge_project_id = $bridge_contract->getProjectId();
+                    // delete line in glpi_plugin_projectbridge_contracts
+                    $DB->delete(
+                        $bridge_contract->getTable(),
+                        [
+                           'id' => $bridge_contract->getID()
+                        ]
+                    );
+                    if ($projectbridge_project_id) {
+                        // delete line in table  glpi_plugin_projectbridge_tickets where project_id = $projectbridge_project_id
+                        $bridge_ticket = new PluginProjectbridgeTicket();
+                        $DB->delete(
+                            $bridge_ticket->getTable(),
+                            [
+                               'project_id' => $projectbridge_project_id
+                            ]
+                        );
+                    }
+                }
             } else {
                 $selected_project_id = (int) $contract->input['projectbridge_project_id'];
                 if (!empty($contract->input['projectbridge_project_hours']) && $contract->input['projectbridge_project_hours'] > 0) {

@@ -104,6 +104,7 @@ class PluginProjectbridgeTask extends CommonDBTM
      */
     public static function cronProcessTasks($cron_task = null)
     {
+        global $DB;
         if (class_exists('PluginProjectbridgeConfig')) {
             $plugin = new Plugin();
 
@@ -133,10 +134,31 @@ class PluginProjectbridgeTask extends CommonDBTM
         }
 
         $task = new ProjectTask();
+        
 
-        $tasks = $task->find(['projectstates_id' => ['!=', $state_closed_value]]);
+        //$tasks = $task->find(['projectstates_id' => ['!=', $state_closed_value]]);
+        global $DB;
+        $bridgeContract = new PluginProjectbridgeContract();
+        $tasks = [];
+        foreach ($DB->request([
+            'SELECT' => 'pt.*',
+            'FROM' => $bridgeContract::getTable().' AS c',
+            'INNER JOIN' => [
+                $task->getTable().' AS pt' => [
+                     'FKEY' => [
+                         'c' => 'project_id',
+                         'pt' => 'projects_id'
+                     ]
+                    ]
+                ],
+            'WHERE' => ['projectstates_id' => ['!=', $state_closed_value] ]
+            ]) as $data) {
+            $tasks[] = $data;
+        }
+//        print_r($tasks);
+//        die;
+
         $nb_successes += count(self::closeTaskAndCreateExcessTicket($tasks));
-
 
         $cron_task->addVolume($nb_successes);
 
@@ -640,7 +662,6 @@ class PluginProjectbridgeTask extends CommonDBTM
     {
         $task = new ProjectTask();
         $tasks = $task->find(['projects_id' => $project->getId()]);
-
         if (!empty($tasks)) {
             $duration_data = [];
 
@@ -650,6 +671,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                 $duration_data[$task_data['id']] = [
                     'planned_duration' => round($task_data['planned_duration'] / 3600 * 100) / 100,
                     'effective_duration' => round($effective_duration / 3600 * 100) / 100,
+                    'percent' => round($effective_duration * $task_data['planned_duration'] / 100),
                 ];
             }
 
@@ -659,6 +681,8 @@ class PluginProjectbridgeTask extends CommonDBTM
                         duration_data = ' . json_encode($duration_data) . ',
                         table_rows = $(".glpi_tabs table tr:not(:last)")
                     ;
+                    
+                    console.log(duration_data);
 
                     if (table_rows.length > 1) {
                         var
@@ -678,6 +702,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                 cell_text == "Tâches de projet"
                                 || cell_text == "Durée planifiée"
                                 || cell_text == "Durée effective"
+                                || cell_text == "Pourcentage effectué"
                             ) {
                                 cells_map[cell_text] = idx + 1;
                             }
@@ -688,7 +713,8 @@ class PluginProjectbridgeTask extends CommonDBTM
                             task_link,
                             task_id,
                             planned_duration_cell,
-                            effective_duration_cell
+                            effective_duration_cell,
+                            percent_cell
                         ;
 
                         task_rows.each(function() {
@@ -710,6 +736,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                             ) {
                                 planned_duration_cell = $("td:nth-child(" + cells_map["Durée planifiée"] + ")", task_row);
                                 effective_duration_cell = $("td:nth-child(" + cells_map["Durée effective"] + ")", task_row);
+                                percent_cell = $("td:nth-child(" + cells_map["Pourcentage effectué"] + ")", task_row);
 
                                 if (planned_duration_cell.length) {
                                     planned_duration_cell.text(duration_data[task_id].planned_duration + " heure(s)");
@@ -717,6 +744,9 @@ class PluginProjectbridgeTask extends CommonDBTM
 
                                 if (effective_duration_cell.length) {
                                     effective_duration_cell.text(duration_data[task_id].effective_duration + " heure(s)");
+                                }
+                                if (percent_cell.length) {
+                                    percent_cell_cell.text(duration_data[task_id].percent + " %");
                                 }
                             }
                         });
