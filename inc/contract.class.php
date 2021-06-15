@@ -45,10 +45,10 @@ class PluginProjectbridgeContract extends CommonDBTM
      * @return integer|null
      */
     public function getNbHours()
-    {       
+    {
         // get all activ projectTasks
         $activeProjectTasks = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($this->_project_id);
-        if(count($activeProjectTasks)) {
+        if (count($activeProjectTasks)) {
             // verification nombre d'heure actuelle liée aux tâches projets
             $lastActiveProjectTask = $activeProjectTasks[0];
             $this->_nb_hours = (int) $lastActiveProjectTask['planned_duration']/3600;
@@ -955,15 +955,23 @@ class PluginProjectbridgeContract extends CommonDBTM
         global $DB;
 
         // todo: use Contract::find()
-        $get_contracts_query = "
-            SELECT
-                id
-            FROM
-                glpi_contracts
-            WHERE TRUE
-                AND is_deleted = 0
-                AND is_template = 0
-        ";
+//        $get_contracts_query = "
+//            SELECT
+//                id
+//            FROM
+//                glpi_contracts
+//            WHERE TRUE
+//                AND is_deleted = 0
+//                AND is_template = 0
+//        ";
+        $bridgeContract = new PluginProjectbridgeContract();
+        $contract =  new Contract();
+        $get_contracts_query = '
+            SELECT c.id
+            FROM '.$bridgeContract::getTable().' AS bc
+            INNER JOIN  '.$contract::getTable().' AS c ON bc.contract_id = c.id   
+            WHERE c.is_deleted = 0 AND c.is_template = 0    
+            ';
 
         $result = $DB->query($get_contracts_query);
         $contracts = [];
