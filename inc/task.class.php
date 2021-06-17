@@ -295,7 +295,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                 ]);
                                 
                                 if (in_array('requester_groups', $elementsAssociateToExcessTicket) || in_array('assign_groups', $elementsAssociateToExcessTicket) || in_array('watcher_group', $elementsAssociateToExcessTicket)) {
-                                    // link groups (requesters, observers, technicians)
+                                    // link groups (requester_groups, watcher_group, assign_groups)
                                     $group_ticket = new Group_Ticket();
                                     $ticket_groups = $group_ticket->find(['tickets_id' => $old_ticket_id]);
                                     foreach ($ticket_groups as $ticket_group_data) {
@@ -481,24 +481,39 @@ class PluginProjectbridgeTask extends CommonDBTM
 
             if (count($recipients)) {
                 global $CFG_GLPI;
-
+                
+                $contract = null;
+                $projectId = $this->_task->fields['projects_id'];
                 $project = new Project();
-                $project->getFromDB($this->_task->fields['projects_id']);
-
+                $project->getFromDB($projectId);
+                // search contract throw projectbridge_contracts
+                $bridgeContract = new PluginProjectbridgeContract();
+                $contractId = $bridgeContract->getFromDBByCrit(['project_id' => $projectId]);
+                if ($contractId) {
+                    $contract = (new Contract())->find($contractId);
+                }
+                
                 $subject = __('project Task') . ' "' . $project->fields['name'] . '" ' . __('closed');
 
                 $html_parts = [];
                 $html_parts[] = '<p>' . "\n";
-                $html_parts[] = __('Hello');
+                $html_parts[] = __('Hello', 'projectbridge');
                 $html_parts[] = '<br />';
-                $html_parts[] = __('The open task of the project', 'projectbridge') . ' <a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/project.form.php?id=' . $this->_task->getId() . '">' . $project->fields['name'] . '</a> ' . __('just closed', 'projectbridge');
+                $html_parts[] = __('The open task of the project', 'projectbridge') . ' <a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/projecttask.form.php?id=' . $this->_task->getId() . '">' . $project->fields['name'] . '</a> ' . __('just closed', 'projectbridge');
                 $html_parts[] = '<br />';
+                $html_parts[] = 'Client : ';
+                if ($contract) {
+                    $html_parts[] = '<br />';
+                    $html_parts[] = 'Numéro de contrat : '.$contract->getField('num');
+                    $html_parts[] = '<br />';
+                    $html_parts[] = 'URL du contrat =  :  <a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/contract.form.php?id=' . $contract->getField('id') . '">' . $contract->getField('name') . '</a>';
+                }
                 $html_parts[] = '<br />';
                 $html_parts[] = __('Reason', 'projectbridge') . '(s) :';
                 $html_parts[] = '<br />';
-                $html_parts[] = __('Expired') . ' : ' . ($expired ? __('yes') : __('no'));
+                $html_parts[] = __('Expired_period', 'projectbridge') . ' : ' . ($expired ? __('Yes') : __('No'));
                 $html_parts[] = '<br />';
-                $html_parts[] = __('Overtaking', 'projectbridge') . ' : ' . ($action_time > 0 ? __('yes') : __('no'));
+                $html_parts[] = __('Overtaking_minutes_credit', 'projectbridge') . ' : ' . ($action_time > 0 ? __('Yes') : __('No'));
 
                 $html_parts[] = '</p>' . "\n";
 
