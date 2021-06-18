@@ -773,7 +773,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         // close previous active project taks
         if ($allActiveTasks) {
-            // call crontask function ( projectTask ) to close previous project task and create a new tikcet with exeed time if necessary
+            // call crontask function ( projectTask ) to close previous project task and create a new ticket with exeed time if necessary
             $pluginProjectbridgeTask = new PluginProjectbridgeTask();
             $newTicketIds = $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks, false);
         }
@@ -1042,7 +1042,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                     if ($contract->getFromDB($contract_bridge_data['contract_id'])) {
                         $html_parts[] = '<a href="' . $contract_url . $contract->getId() . '" target="_blank">';
                         $html_parts[] = __('Access to linked contract', 'projectbridge') . ' "' . $contract->fields['name'] . '"';
-                        $html_parts[] = '</a>';
+                        $html_parts[] = '</a><br/>';
                     } else {
                         $html_parts[] = __('Link to contract nonexistent', 'projectbridge') . ' : ' . __('Access to linked contract', 'projectbridge') . ' n°' . $contract->getId();
                     }
