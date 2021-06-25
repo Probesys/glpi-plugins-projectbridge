@@ -136,7 +136,6 @@ class PluginProjectbridgeTask extends CommonDBTM
         $task = new ProjectTask();
         
 
-        //$tasks = $task->find(['projectstates_id' => ['!=', $state_closed_value]]);
         global $DB;
         $bridgeContract = new PluginProjectbridgeContract();
         $tasks = [];
@@ -155,10 +154,8 @@ class PluginProjectbridgeTask extends CommonDBTM
             ]) as $data) {
             $tasks[] = $data;
         }
-//        print_r($tasks);
-//        die;
-
-        $nb_successes += count(self::closeTaskAndCreateExcessTicket($tasks));
+        
+        $nb_successes += count(PluginProjectbridgeTask::closeTaskAndCreateExcessTicket($tasks));
 
         $cron_task->addVolume($nb_successes);
 
@@ -175,7 +172,6 @@ class PluginProjectbridgeTask extends CommonDBTM
      */
     public function closeTaskAndCreateExcessTicket($tasks, $fromCronTask = true)
     {
-        $nb_successes = 0;
         $newTicketIds = [];
         foreach ($tasks as $task_data) {
             $expired = false;
@@ -193,7 +189,6 @@ class PluginProjectbridgeTask extends CommonDBTM
 
             if ($expired || ($timediff >= 0 && $action_time !== null)) {
                 $brige_task = new PluginProjectbridgeTask($task_data['id']);
-                //$nb_successes += $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0, $fromCronTask);
                 $newTicketIds = array_merge($newTicketIds, $brige_task->closeTask($expired, ($action_time !== null) ? $timediff : 0, $fromCronTask));
 
                 if ($fromCronTask && $timediff > 0) {
@@ -586,13 +581,15 @@ class PluginProjectbridgeTask extends CommonDBTM
         $return = $ticket->add($ticket_fields);
 
         if ($return) {
+            $ticket_task = new TicketTask();
             $ticket_task_data = [
                 'actiontime' => $timediff,
                 'tickets_id' => $ticket->getId(),
                 'content' => addslashes(__('Adjustment task', 'projectbridge')),
+                'state' => 2 // fait
             ];
 
-            $ticket_task = new TicketTask();
+            
             $ticket_task->add($ticket_task_data);
 
             PluginProjectbridgeTicket::deleteProjectLinks($ticket->getId());

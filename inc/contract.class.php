@@ -970,7 +970,7 @@ class PluginProjectbridgeContract extends CommonDBTM
             SELECT c.id
             FROM '.$bridgeContract::getTable().' AS bc
             INNER JOIN  '.$contract::getTable().' AS c ON bc.contract_id = c.id   
-            WHERE c.is_deleted = 0 AND c.is_template = 0    
+            WHERE c.is_deleted = 0 AND c.is_template = 0 AND c.alert!=0   
             ';
 
         $result = $DB->query($get_contracts_query);
@@ -987,7 +987,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
                 $project->getFromDB($project_id);
                 //if ($project && $project->fields['projectstates_id'] != $state_closed_value && !self::getProjectTaskOject($project_id, false) && self::getProjectTaskOject($project_id, true) ) {
-                if ($project && $project->fields['projectstates_id'] != $state_closed_value) {
+                if ($project && array_key_exists('projectstates_id', $project->fields) && $project->fields['projectstates_id'] != $state_closed_value) {
                     $now = new DateTime();
                     $planEndDate = self::getContractPlanEndDate($contract);
                     $nb_hours = $bridge_contract->getNbHours();
