@@ -45,10 +45,10 @@ class PluginProjectbridgeContract extends CommonDBTM
      * @return integer|null
      */
     public function getNbHours()
-    {       
+    {
         // get all activ projectTasks
         $activeProjectTasks = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($this->_project_id);
-        if(count($activeProjectTasks)) {
+        if (count($activeProjectTasks)) {
             // verification nombre d'heure actuelle liée aux tâches projets
             $lastActiveProjectTask = $activeProjectTasks[0];
             $this->_nb_hours = (int) $lastActiveProjectTask['planned_duration']/3600;
@@ -773,7 +773,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         // close previous active project taks
         if ($allActiveTasks) {
-            // call crontask function ( projectTask ) to close previous project task and create a new tikcet with exeed time if necessary
+            // call crontask function ( projectTask ) to close previous project task and create a new ticket with exeed time if necessary
             $pluginProjectbridgeTask = new PluginProjectbridgeTask();
             $newTicketIds = $pluginProjectbridgeTask->closeTaskAndCreateExcessTicket($allActiveTasks, false);
         }
@@ -955,15 +955,23 @@ class PluginProjectbridgeContract extends CommonDBTM
         global $DB;
 
         // todo: use Contract::find()
-        $get_contracts_query = "
-            SELECT
-                id
-            FROM
-                glpi_contracts
-            WHERE TRUE
-                AND is_deleted = 0
-                AND is_template = 0
-        ";
+//        $get_contracts_query = "
+//            SELECT
+//                id
+//            FROM
+//                glpi_contracts
+//            WHERE TRUE
+//                AND is_deleted = 0
+//                AND is_template = 0
+//        ";
+        $bridgeContract = new PluginProjectbridgeContract();
+        $contract =  new Contract();
+        $get_contracts_query = '
+            SELECT c.id
+            FROM '.$bridgeContract::getTable().' AS bc
+            INNER JOIN  '.$contract::getTable().' AS c ON bc.contract_id = c.id   
+            WHERE c.is_deleted = 0 AND c.is_template = 0 AND c.alert!=0   
+            ';
 
         $result = $DB->query($get_contracts_query);
         $contracts = [];
@@ -979,7 +987,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
                 $project->getFromDB($project_id);
                 //if ($project && $project->fields['projectstates_id'] != $state_closed_value && !self::getProjectTaskOject($project_id, false) && self::getProjectTaskOject($project_id, true) ) {
-                if ($project && $project->fields['projectstates_id'] != $state_closed_value) {
+                if ($project && array_key_exists('projectstates_id', $project->fields) && $project->fields['projectstates_id'] != $state_closed_value) {
                     $now = new DateTime();
                     $planEndDate = self::getContractPlanEndDate($contract);
                     $nb_hours = $bridge_contract->getNbHours();
@@ -1034,7 +1042,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                     if ($contract->getFromDB($contract_bridge_data['contract_id'])) {
                         $html_parts[] = '<a href="' . $contract_url . $contract->getId() . '" target="_blank">';
                         $html_parts[] = __('Access to linked contract', 'projectbridge') . ' "' . $contract->fields['name'] . '"';
-                        $html_parts[] = '</a>';
+                        $html_parts[] = '</a><br/>';
                     } else {
                         $html_parts[] = __('Link to contract nonexistent', 'projectbridge') . ' : ' . __('Access to linked contract', 'projectbridge') . ' n°' . $contract->getId();
                     }
