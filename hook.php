@@ -479,8 +479,17 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
     if (array_key_exists('projectbridge_contract_id', $_POST)) {
         $contract_id = $_POST['projectbridge_contract_id'];
     }
+    
+    // test if contrat already associate to the ticket
+    $haveAlreadyContractAssociate = false;
+    $bridge_ticket = new PluginProjectbridgeTicket($ticket);
+    if ($bridge_ticket->getProjectId() > 0) {
+        $haveAlreadyContractAssociate = true;
+    }
+    // get ticket status
+    $ticketStatus = $ticket->getField('status');
 
-    if ($is_project_link_update || $contract_id) {
+    if ($ticketStatus!=Ticket::CLOSED && ($is_project_link_update || ($contract_id && !$haveAlreadyContractAssociate))) {
         // default contract for the entity found or update
 
         if (!$is_project_link_update) {
