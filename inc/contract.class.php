@@ -779,7 +779,8 @@ class PluginProjectbridgeContract extends CommonDBTM
         }
 
         $renewal_data = $this->getRenewalData($use_input_data = true);
-        $plan_end_date = date('Y-m-d  H:i:s', strtotime($renewal_data['begin_date'] . ' + ' . $renewal_data['duration'] . ' months - 1 days'));
+
+        //$plan_end_date = date('Y-m-d  H:i:s', strtotime($renewal_data['begin_date'] . ' + ' . $renewal_data['duration'] . ' months - 1 days'));
 
         $project_task_data = [
             // data from contract
@@ -791,7 +792,8 @@ class PluginProjectbridgeContract extends CommonDBTM
             'content' => addslashes($this->_contract->fields['comment']),
             'comment' => '',
             'plan_start_date' => date('Y-m-d H:i:s', strtotime($renewal_data['begin_date'])),
-            'plan_end_date' => $plan_end_date,
+            //'plan_end_date' => $plan_end_date,
+            'plan_end_date' => date('Y-m-d H:i:s', strtotime($renewal_data['end_date'])),
             'planned_duration' => $renewal_data['nb_hours_to_use'] * 3600, // in seconds
             'projectstates_id' => $state_in_progress_value, // "in progress"
             // standard data to bootstrap task
