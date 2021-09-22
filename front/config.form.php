@@ -259,8 +259,15 @@ if ($can_update) {
         $recipient_user_id = (int) $post_data['projectbridge_add_recipient'];
 
         if (!in_array($recipient_user_id, $recipientIds)) {
-            $recipientIds[] = $recipient_user_id;
-            PluginProjectbridgeConfig::updateConfValue('RecipientIds', $recipientIds);
+            // check if selected user have email address
+            $user = (new User())->getById($recipient_user_id);
+            
+            if (strlen($user->getDefaultEmail()) > 0) {
+                $recipientIds[] = $recipient_user_id;
+                PluginProjectbridgeConfig::updateConfValue('RecipientIds', $recipientIds);
+            } else {
+                echo '<div class="warning">'.__('The selected user have no default email adress configured', 'projectbridge').'</div>';
+            }
         }
     }
     $recipients = PluginProjectbridgeConfig::getRecipients();
