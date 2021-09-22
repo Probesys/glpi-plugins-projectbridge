@@ -134,27 +134,27 @@ class PluginProjectbridgeTask extends CommonDBTM
         }
 
         $task = new ProjectTask();
-        
 
         global $DB;
         $bridgeContract = new PluginProjectbridgeContract();
         $tasks = [];
         foreach ($DB->request([
             'SELECT' => 'pt.*',
-            'FROM' => $bridgeContract::getTable().' AS c',
+            'DISTINCT' => true,
+            'FROM' => $bridgeContract::getTable() . ' AS c',
             'INNER JOIN' => [
-                $task->getTable().' AS pt' => [
-                     'FKEY' => [
-                         'c' => 'project_id',
-                         'pt' => 'projects_id'
-                     ]
+                $task->getTable() . ' AS pt' => [
+                    'FKEY' => [
+                        'c' => 'project_id',
+                        'pt' => 'projects_id'
                     ]
-                ],
-            'WHERE' => ['projectstates_id' => ['!=', $state_closed_value] ]
-            ]) as $data) {
+                ]
+            ],
+            'WHERE' => ['projectstates_id' => ['!=', $state_closed_value]]
+        ]) as $data) {
             $tasks[] = $data;
         }
-        
+
         $nb_successes += count(PluginProjectbridgeTask::closeTaskAndCreateExcessTicket($tasks));
 
         $cron_task->addVolume($nb_successes);
@@ -163,7 +163,7 @@ class PluginProjectbridgeTask extends CommonDBTM
 
         return ($nb_successes > 0) ? 1 : 0;
     }
-    
+
     /**
      * close all open tasks and create excess ticket
      * @param array $tasks
@@ -240,7 +240,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                 ];
 
                 $ticket_request_type = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
-                $elementsAssociateToExcessTicket = PluginProjectbridgeConfig::getConfValueByName('ElementsAssociateToExcessTicket')?:[];
+                $elementsAssociateToExcessTicket = PluginProjectbridgeConfig::getConfValueByName('ElementsAssociateToExcessTicket') ?: [];
 
                 foreach ($ticket_links as $ticket_link) {
                     $ticket = new Ticket();
@@ -274,13 +274,13 @@ class PluginProjectbridgeTask extends CommonDBTM
 
                             if ($ticket->add($ticket_fields)) {
                                 // force ticket update
-                                if ($old_status  > 1) {
+                                if ($old_status > 1) {
                                     $ticket->update([
-                                    'id' => $ticket->getId(),
-                                    'users_id_recipient' => $ticket_fields['users_id_recipient'],
+                                        'id' => $ticket->getId(),
+                                        'users_id_recipient' => $ticket_fields['users_id_recipient'],
                                     ]);
                                 }
-                                
+
                                 // link the clone to the old ticket
                                 $ticket_link = new Ticket_Ticket();
                                 $ticket_link->add([
@@ -288,16 +288,14 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     'tickets_id_2' => $old_ticket_id,
                                     'link' => Ticket_Ticket::LINK_TO,
                                 ]);
-                                
+
                                 if (in_array('requester_groups', $elementsAssociateToExcessTicket) || in_array('assign_groups', $elementsAssociateToExcessTicket) || in_array('watcher_group', $elementsAssociateToExcessTicket)) {
                                     // link groups (requester_groups, watcher_group, assign_groups)
                                     $group_ticket = new Group_Ticket();
                                     $ticket_groups = $group_ticket->find(['tickets_id' => $old_ticket_id]);
                                     foreach ($ticket_groups as $ticket_group_data) {
-                                        if ((in_array('requester_groups', $elementsAssociateToExcessTicket) && $ticket_group_data['type'] == CommonITILActor::REQUESTER)
-                                            || (in_array('assign_groups', $elementsAssociateToExcessTicket) && $ticket_group_data['type'] == CommonITILActor::ASSIGN)
-                                            || (in_array('watcher_group', $elementsAssociateToExcessTicket) && $ticket_group_data['type'] == CommonITILActor::OBSERVER)
-                                           ) {
+                                        if ((in_array('requester_groups', $elementsAssociateToExcessTicket) && $ticket_group_data['type'] == CommonITILActor::REQUESTER) || (in_array('assign_groups', $elementsAssociateToExcessTicket) && $ticket_group_data['type'] == CommonITILActor::ASSIGN) || (in_array('watcher_group', $elementsAssociateToExcessTicket) && $ticket_group_data['type'] == CommonITILActor::OBSERVER)
+                                        ) {
                                             $group = new Group();
                                             if ($group->getFromDB($ticket_group_data['groups_id'])) {
                                                 $group_ticket = new Group_Ticket();
@@ -305,29 +303,27 @@ class PluginProjectbridgeTask extends CommonDBTM
                                                     'tickets_id' => $ticket->getId(),
                                                     'groups_id' => $ticket_group_data['groups_id'],
                                                     'type' => $ticket_group_data['type'],
-                                            ]);
+                                                ]);
                                             }
                                         }
                                     }
                                 }
-                                
+
                                 if (in_array('requester', $elementsAssociateToExcessTicket) || in_array('assign_technician', $elementsAssociateToExcessTicket) || in_array('watcher_user', $elementsAssociateToExcessTicket)) {
                                     // link users (requesters, observers, technicians)
                                     $ticket_user = new Ticket_User();
                                     $ticket_users = $ticket_user->find(['tickets_id' => $old_ticket_id]);
                                     foreach ($ticket_users as $ticket_user_data) {
-                                        if ((in_array('requester', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::REQUESTER)
-                                            || (in_array('assign_technician', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::ASSIGN)
-                                            || (in_array('watcher_user', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::OBSERVER)
-                                          ) {
-                                            
+                                        if ((in_array('requester', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::REQUESTER) || (in_array('assign_technician', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::ASSIGN) || (in_array('watcher_user', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::OBSERVER)
+                                        ) {
+
                                             // test if not exist aready in database
                                             $ticket_user_exist = $ticket_user->find(
                                                 [
-                                                'tickets_id' => $ticket->getId(),
-                                                'users_id' => $ticket_user_data['users_id'],
-                                                'type' => $ticket_user_data['type']
-                                                ]
+                                                        'tickets_id' => $ticket->getId(),
+                                                        'users_id' => $ticket_user_data['users_id'],
+                                                        'type' => $ticket_user_data['type']
+                                                    ]
                                             );
                                             if (!count($ticket_user_exist)) {
                                                 $ticket_user = new Ticket_User();
@@ -342,7 +338,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         }
                                     }
                                 }
-                                
+
                                 if (in_array('tickets', $elementsAssociateToExcessTicket)) {
                                     // reproduce links to other tickets
                                     $ticket_link = new Ticket_Ticket();
@@ -360,7 +356,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                 if (in_array('followups', $elementsAssociateToExcessTicket)) {
                                     // add followups
                                     $ticket_followup = new ITILFollowup();
-                                    $ticket_followups = $ticket_followup->find(['items_id' => $old_ticket_id, 'itemtype'=> 'Ticket']);
+                                    $ticket_followups = $ticket_followup->find(['items_id' => $old_ticket_id, 'itemtype' => 'Ticket']);
                                     foreach ($ticket_followups as $ticket_followup_data) {
                                         $ticket_new_followup_data = array_diff_key($ticket_followup_data, ['id' => null]);
                                         $ticket_new_followup_data['items_id'] = $ticket->getId();
@@ -381,7 +377,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         }
                                     }
                                 }
-                                
+
                                 if (in_array('documents', $elementsAssociateToExcessTicket)) {
                                     // add documents
                                     $document_item = new Document_Item();
@@ -389,7 +385,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         [
                                                 'items_id' => $old_ticket_id,
                                                 'itemtype' => 'Ticket'
-                                    ]
+                                            ]
                                     );
                                     foreach ($ticket_document_items as $ticket_document_item_data) {
                                         $ticket_new_document_item_data = array_diff_key($ticket_document_item_data, ['id' => null, 'date_mod' => null]);
@@ -411,7 +407,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         }
                                     }
                                 }
-                                
+
                                 if (in_array('tasks', $elementsAssociateToExcessTicket)) {
                                     // add tasks
                                     $ticket_task = new TicketTask();
@@ -427,11 +423,11 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         $ticket_task->add($ticket_new_task_data);
                                     }
                                 }
-                                
+
                                 if (in_array('solutions', $elementsAssociateToExcessTicket)) {
                                     // add solution
                                     $solution = new ITILSolution();
-                                    $solutions = $solution->find(['items_id' => $old_ticket_id, 'itemtype'=> 'Ticket']);
+                                    $solutions = $solution->find(['items_id' => $old_ticket_id, 'itemtype' => 'Ticket']);
                                     foreach ($solutions as $solution_data) {
                                         $ticket_new_solution_data = array_diff_key($solution_data, ['id' => null]);
                                         $ticket_new_solution_data['items_id'] = $ticket->getId();
@@ -452,7 +448,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         }
                                     }
                                 }
-                                
+
                                 if (in_array('logs', $elementsAssociateToExcessTicket)) {
                                     // add solution
                                     $log = new Log();
@@ -488,9 +484,9 @@ class PluginProjectbridgeTask extends CommonDBTM
                                         }
                                     }
                                 }
-                                
+
                                 // special case when old status is new and the ticket have assignments
-                                if ($old_status  == 1) {
+                                if ($old_status == 1) {
                                     $ticket->update([
                                         'id' => $ticket->getId(),
                                         'users_id_recipient' => $ticket_fields['users_id_recipient'],
@@ -506,53 +502,54 @@ class PluginProjectbridgeTask extends CommonDBTM
             }
         }
 
-        if (count($newTicketIds) > 0) {
-            $recipients = PluginProjectbridgeConfig::getRecipients();
-            echo __('find', 'projectbridge') . count($recipients) . ' ' . __('person(s) to alert', 'projectbridge') . "<br />\n";
+        //if (count($newTicketIds) > 0) {
+        // envoi des notifications
+        $recipients = PluginProjectbridgeConfig::getRecipients();
+        echo __('find', 'projectbridge') . count($recipients) . ' ' . __('person(s) to alert', 'projectbridge') . "<br />\n";
 
-            if (count($recipients)) {
-                global $CFG_GLPI;
-                
-                $contract = null;
-                $projectId = $this->_task->fields['projects_id'];
-                $project = new Project();
-                $project->getFromDB($projectId);
-                // search contract throw projectbridge_contracts
-                $bridgeContract = new PluginProjectbridgeContract();
-                $contractId = $bridgeContract->getFromDBByCrit(['project_id' => $projectId]);
-                if ($contractId) {
-                    $contract = (new Contract())->find($contractId);
-                }
-                
-                $subject = __('project Task') . ' "' . $project->fields['name'] . '" ' . __('closed');
+        if (count($recipients)) {
+            global $CFG_GLPI;
 
-                $html_parts = [];
-                $html_parts[] = '<p>' . "\n";
-                $html_parts[] = __('Hello', 'projectbridge');
-                $html_parts[] = '<br />';
-                $html_parts[] = __('The open task of the project', 'projectbridge') . ' <a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/projecttask.form.php?id=' . $this->_task->getId() . '">' . $project->fields['name'] . '</a> ' . __('just closed', 'projectbridge');
-                $html_parts[] = '<br />';
-                $html_parts[] = 'Client : ';
-                if ($contract) {
-                    $html_parts[] = '<br />';
-                    $html_parts[] = 'Numéro de contrat : '.$contract->getField('num');
-                    $html_parts[] = '<br />';
-                    $html_parts[] = 'URL du contrat =  :  <a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/contract.form.php?id=' . $contract->getField('id') . '">' . $contract->getField('name') . '</a>';
-                }
-                $html_parts[] = '<br />';
-                $html_parts[] = __('Reason', 'projectbridge') . '(s) :';
-                $html_parts[] = '<br />';
-                $html_parts[] = __('Expired_period', 'projectbridge') . ' : ' . ($expired ? __('Yes') : __('No'));
-                $html_parts[] = '<br />';
-                $html_parts[] = __('Overtaking_minutes_credit', 'projectbridge') . ' : ' . ($action_time > 0 ? __('Yes') : __('No'));
+            $contract = null;
+            $projectId = $this->_task->fields['projects_id'];
+            $project = new Project();
+            $project->getFromDB($projectId);
+            // search contract throw projectbridge_contracts
+            $bridgeContract = new PluginProjectbridgeContract();
+            $contractId = $bridgeContract->getFromDBByCrit(['project_id' => $projectId]);
+            if ($contractId) {
+                $contract = (new Contract())->find($contractId);
+            }
 
-                $html_parts[] = '</p>' . "\n";
+            $subject = __('Project task') . ' "' . $project->fields['name'] . '" ' . __('Closed');
 
-                foreach ($recipients as $recipient) {
-                    PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
-                }
+            $html_parts = [];
+            $html_parts[] = '<p>' . "\n";
+            $html_parts[] = __('Hello', 'projectbridge');
+            $html_parts[] = ',<br />';
+            $html_parts[] = __('The open task of the project', 'projectbridge') . ' <a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/projecttask.form.php?id=' . $this->_task->getId() . '">' . $project->fields['name'] . '</a> ' . __('just closed', 'projectbridge');
+            $html_parts[] = '<br />';
+            $html_parts[] = 'Client : ';
+            if ($contract) {
+                $html_parts[] = '<br />';
+                $html_parts[] = 'Numéro de contrat : ' . $contract->getField('num');
+                $html_parts[] = '<br />';
+                $html_parts[] = 'URL du contrat =  :  <a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/contract.form.php?id=' . $contract->getField('id') . '">' . $contract->getField('name') . '</a>';
+            }
+            $html_parts[] = '<br />';
+            $html_parts[] = __('Reason', 'projectbridge') . '(s) :';
+            $html_parts[] = '<br />';
+            $html_parts[] = __('Expired_period', 'projectbridge') . ' : ' . ($expired ? __('Yes') : __('No'));
+            $html_parts[] = '<br />';
+            $html_parts[] = __('Overtaking_minutes_credit', 'projectbridge') . ' : ' . ($action_time > 0 ? __('Yes') : __('No'));
+
+            $html_parts[] = '</p>' . "\n";
+
+            foreach ($recipients as $recipient) {
+                PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
             }
         }
+        //}
 
         return $newTicketIds;
     }
@@ -589,7 +586,6 @@ class PluginProjectbridgeTask extends CommonDBTM
                 'state' => 2 // fait
             ];
 
-            
             $ticket_task->add($ticket_task_data);
 
             PluginProjectbridgeTicket::deleteProjectLinks($ticket->getId());
