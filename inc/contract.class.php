@@ -292,7 +292,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
                 $html_parts[] = '<tr>' . "\n";
                 $html_parts[] = '<td>';
-                $html_parts[] = __('Duration') . ' (' . _n('Month', 'Months', 2) . ')';
+                $html_parts[] = __('Duration') . ' (' . _n('month', 'months', 2) . ')';
                 $html_parts[] = '</td>' . "\n";
                 $html_parts[] = '<td>';
                 $html_parts[] = '<input type="number" min="0" max="12" name="projectbridge_duration" value="' . $renewal_data['duration'] . '" style="width: 50px" step="any" />';
