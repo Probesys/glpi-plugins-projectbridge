@@ -518,7 +518,7 @@ class PluginProjectbridgeTask extends CommonDBTM
             $bridgeContract = new PluginProjectbridgeContract();
             $contractId = $bridgeContract->getFromDBByCrit(['project_id' => $projectId]);
             if ($contractId) {
-                $contract = (new Contract())->find($contractId);
+                $contract = (new Contract())->getById($contractId);
             }
 
             $subject = __('Project task') . ' "' . $project->fields['name'] . '" ' . __('Closed');
