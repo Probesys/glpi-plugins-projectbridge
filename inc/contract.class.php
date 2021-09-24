@@ -403,13 +403,14 @@ class PluginProjectbridgeContract extends CommonDBTM
                         var strDate = $("input[name=projecttask_begin_date]").val().split("-");
                         var begin_Date = new Date(parseInt(strDate[0]), parseInt(strDate[1])-1, parseInt(strDate[2]));
                         var end_date = add_months(begin_Date, $("input[name=projectbridge_duration]").val()).toISOString().slice(0,10);
+                        
                         var data_to_add_to_modal = {
                             projectbridge_project_id: $("[id^=dropdown_projectbridge_project_id]").val(),
                             _projecttask_begin_date: $("input[name=projecttask_begin_date]").val(),
                             //_projecttask_end_date: $("input[name=_projecttask_end_date]").val(),
                             _projecttask_end_date: end_date,
                             projectbridge_duration: $("input[name=projectbridge_duration]").val(),
-                            projectbridge_nb_hours_to_use: $("input[name=projectbridge_nb_hours_to_use]").val()
+                            projectbridge_nb_hours_to_use: $("input[name=projectbridge_nb_hours_to_use]").val(),
                         };
 
                         var html_to_add_to_modal = "";
@@ -835,7 +836,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         // mise a jour date de début contrat et durée
         $this->_contract->input['begin_date'] = $renewal_data['begin_date'];
-        $this->_contract->input['duration'] = $renewal_data['planned_duration'];
+        $this->_contract->input['duration'] = $renewal_data['projectbridge_duration'];
 
         $DB->update(
             $this->getTable(),
@@ -923,6 +924,12 @@ class PluginProjectbridgeContract extends CommonDBTM
         }
 
         $duration = $this->_contract->getField('duration');
+        
+        if (!empty($this->_contract->input['projectbridge_duration'])) {
+            $projectbridge_duration = $this->_contract->input['projectbridge_duration'];
+        } else {
+            $projectbridge_duration = $duration;
+        }
 
         $renewal_data = [
             'begin_date' => $task_start_date,
@@ -930,7 +937,8 @@ class PluginProjectbridgeContract extends CommonDBTM
             'nb_hours_to_use' => $nb_hours_to_use,
             'delta_hours_to_use' => $delta_hours_to_use,
             'duration' => $duration,
-            'consumption' => $consumption
+            'consumption' => $consumption,
+            'projectbridge_duration' => $projectbridge_duration
         ];
 
         return $renewal_data;
