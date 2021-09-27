@@ -515,10 +515,10 @@ class PluginProjectbridgeTask extends CommonDBTM
             $project = new Project();
             $project->getFromDB($projectId);
             // search contract throw projectbridge_contracts
-            $bridgeContract = new PluginProjectbridgeContract();
-            $contractId = $bridgeContract->getFromDBByCrit(['project_id' => $projectId]);
-            if ($contractId) {
-                $contract = (new Contract())->getById($contractId);
+//            $bridgeContract = new PluginProjectbridgeContract();
+            $bridgeContracts = (new PluginProjectbridgeContract())->find(['project_id' => $projectId]);
+            foreach ($bridgeContracts as $bridgeContract) {
+                $contract = (new Contract())->getById($bridgeContract['contract_id']);
             }
 
             $subject = __('Project task') . ' "' . $project->fields['name'] . '" ' . __('Closed');
@@ -529,7 +529,7 @@ class PluginProjectbridgeTask extends CommonDBTM
             $html_parts[] = ',<br />';
             $html_parts[] = __('The open task of the project', 'projectbridge') . ' <a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/projecttask.form.php?id=' . $this->_task->getId() . '">' . $project->fields['name'] . '</a> ' . __('just closed', 'projectbridge');
             $html_parts[] = '<br />';
-            $html_parts[] = 'Client : ';
+            //$html_parts[] = 'Client : ';
             if ($contract) {
                 $html_parts[] = '<br />';
                 $html_parts[] = 'Numéro de contrat : ' . $contract->getField('num');
@@ -550,7 +550,10 @@ class PluginProjectbridgeTask extends CommonDBTM
             }
         }
         //}
-
+        // exec update percent crontask
+        self::cronUpdateProgressPercent();
+        
+        
         return $newTicketIds;
     }
 
@@ -618,19 +621,23 @@ class PluginProjectbridgeTask extends CommonDBTM
 
         $ticket_task = new TicketTask();
         $ticket_tasks = $ticket_task->find(['actiontime' => ['>' => 0]]);
-
-        echo __('find') . ' ' . count($ticket_tasks) . ' ' . __('tasks with time', 'projectbridge') . "<br />\n";
+        if ($cron_task) {
+            echo __('find') . ' ' . count($ticket_tasks) . ' ' . __('tasks with time', 'projectbridge') . "<br />\n";
+        }
 
         foreach ($ticket_tasks as $ticket_task_data) {
-            echo __('re-calculuation for ticket task', 'projectbridge') . ' ' . $ticket_task_data['tickets_id'] . "<br />\n";
+            if ($cron_task) {
+                echo __('re-calculuation for ticket task', 'projectbridge') . ' ' . $ticket_task_data['tickets_id'] . "<br />\n";
+            }
 
             // use the existing time to force an update of the percent_done in the tasks linked to the tickets
             $nb_successes += PluginProjectbridgeTask::updateProgressPercent($ticket_task_data['tickets_id']);
         }
+        if ($cron_task) {
+            $cron_task->addVolume($nb_successes);
 
-        $cron_task->addVolume($nb_successes);
-
-        echo __('Finish') . "<br />\n";
+            echo __('Finish') . "<br />\n";
+        }
 
         return ($nb_successes > 0) ? 1 : 0;
     }
