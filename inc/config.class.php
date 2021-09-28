@@ -1,7 +1,7 @@
 <?php
 
-class PluginProjectbridgeConfig extends CommonDBTM {
-
+class PluginProjectbridgeConfig extends CommonDBTM
+{
     const NAMESPACE = 'projectbridge';
 
     public static $table_name = 'glpi_plugin_projectbridge_configs';
@@ -11,8 +11,8 @@ class PluginProjectbridgeConfig extends CommonDBTM {
      *
      * @return array
      */
-    public static function getRecipients() {
-
+    public static function getRecipients()
+    {
         $recipients = [];
         $recipientIds = self::getRecipientIds();
 
@@ -35,13 +35,25 @@ class PluginProjectbridgeConfig extends CommonDBTM {
         return $recipients;
     }
 
-    public static function getRecipientIds() {
-        return self::getConfValueByName('RecipientIds')?self::getConfValueByName('RecipientIds'):[]; 
+    /**
+     * Get all Recipients IDS
+     * @return type
+     */
+    public static function getRecipientIds()
+    {
+        return self::getConfValueByName('RecipientIds')?self::getConfValueByName('RecipientIds'):[];
     }
     
-    public static function getConfByName($name) {
+    /**
+     * get conf entry by name
+     * @global type $DB
+     * @param string $name
+     * @return type
+     */
+    public static function getConfByName($name)
+    {
         global $DB;
-        
+        $conf = null;
         $req = $DB->request([
           'SELECT' => ['*'],
           'FROM' => PluginProjectbridgeConfig::$table_name,
@@ -54,29 +66,50 @@ class PluginProjectbridgeConfig extends CommonDBTM {
         return $conf;
     }
     
-    public static function getConfValueByName($name) {
-       
+    /**
+     * get value of a conf entry by name
+     * @param type $name
+     * @return type
+     */
+    public static function getConfValueByName($name)
+    {
         $value = false;
         $conf = self::getConfByName($name);
         if ($conf) {
             $value = json_decode($conf['value']);
         }
         
-        return $value;  
-        
+        return $value;
     }
     
-    public static function updateConfValue($name, $newValue){
+    /**
+     * update value of a conf, if not exist, insert it
+     * @global type $DB
+     * @param type $name
+     * @param type $newValue
+     */
+    public static function updateConfValue($name, $newValue)
+    {
         global $DB;
         $conf = self::getConfByName($name);
-        if($conf){
+        if ($conf) {
             $DB->update(
-                PluginProjectbridgeConfig::$table_name, [
+                PluginProjectbridgeConfig::$table_name,
+                [
                    'value'      => json_encode($newValue)
-                ], [
+                ],
+                [
                    'id' => (int) $conf['id']
                 ]
-             );
+            );
+        } else {
+            $DB->insert(
+                PluginProjectbridgeConfig::$table_name,
+                [
+                   'value'      => json_encode($newValue),
+                   'name'      => $name
+                ]
+            );
         }
     }
 
@@ -89,7 +122,8 @@ class PluginProjectbridgeConfig extends CommonDBTM {
      * @param  string $subject
      * @return boolean
      */
-    public static function notify($html_content, $recepient_email, $recepient_name, $subject) {
+    public static function notify($html_content, $recepient_email, $recepient_name, $subject)
+    {
         global $CFG_GLPI;
 
         $mailer = new GLPIMailer();
@@ -108,5 +142,4 @@ class PluginProjectbridgeConfig extends CommonDBTM {
 
         return $mailer->Send();
     }
-
 }

@@ -3,7 +3,7 @@
    <name>ProjectBridge</name>
    <key>projectbridge</key>
    <state>stable</state>
-   <logo>https://avatars2.githubusercontent.com/u/1265671</logo>
+   <logo>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/pics/logo.png</logo>
    <description>
       <short>
          <fr><![CDATA[ProjectBridge : ajout de liens entre les tickets et les contrats pour en décompter le temps]]></fr>
@@ -51,12 +51,17 @@
          <num>2.2</num>
          <compatibility>~9.5.1</compatibility>
          <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.2.0/glpi-plugin-projectbridge-2.2.0.tar.bz2</download_url>
-      </version> 
+      </version>
       <version>
          <num>2.3RC2</num>
          <compatibility>~9.5.1</compatibility>
          <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.3RC2/glpi-plugin-projectbridge-v2.3RC2.tar.bz2</download_url>
-      </version> 
+      </version>
+      <version>
+         <num>2.4</num>
+         <compatibility>~9.5.6</compatibility>
+         <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.4/glpi-plugin-projectbridge-v2.4.tar.bz2</download_url>
+      </version>
    </versions>
    <langs>
       <lang>fr_FR</lang>

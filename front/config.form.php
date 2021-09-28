@@ -2,7 +2,13 @@
 
 include('../../../inc/includes.php');
 
-function getPostDataFromField($post_field) {
+/**
+ * get value of POST variable
+ * @param string $post_field
+ * @return type
+ */
+function getPostDataFromField($post_field)
+{
     $value = null;
 
     if (isset($_POST[$post_field])) {
@@ -16,7 +22,13 @@ function getPostDataFromField($post_field) {
     return $value;
 }
 
-function getPostDataFromFields(array $post_fields) {
+/**
+ * filter POST
+ * @param array $post_fields
+ * @return type
+ */
+function getPostDataFromFields(array $post_fields)
+{
     $post_data = [];
 
     foreach ($post_fields as $post_field) {
@@ -62,7 +74,9 @@ if ($can_update) {
       'projectbridge_delete_recipient',
       'projectbridge_add_recipient',
       'projectbridge_add_recipient_submit',
-      'projectbridge_config_countOnlyPublicTasks'
+      'projectbridge_config_countOnlyPublicTasks',
+      'projectbridge_config_addContractSelectorOnCreatingTicketForm',
+      'projectbridge_config_elementsAssociateToExcessTicket'
     ];
 
     $post_data = getPostDataFromFields($post_fields);
@@ -228,6 +242,9 @@ if ($can_update) {
 
     // recipients config
     $recipientIds = PluginProjectbridgeConfig::getConfValueByName('RecipientIds');
+    if (!$recipientIds) {
+        $recipientIds = [];
+    }
 
     if (!empty($post_data['projectbridge_delete_recipient']) && is_array($post_data['projectbridge_delete_recipient'])
     ) {
@@ -237,13 +254,20 @@ if ($can_update) {
             $recipientIds = array_diff($recipientIds, [$row_id]);
             PluginProjectbridgeConfig::updateConfValue('RecipientIds', $recipientIds);
         }
-    } else if (!empty($post_data['projectbridge_add_recipient']) && !empty($post_data['projectbridge_add_recipient_submit']) && !isset($post_data[(int) $post_data['projectbridge_add_recipient']])
+    } elseif (!empty($post_data['projectbridge_add_recipient']) && !empty($post_data['projectbridge_add_recipient_submit']) && !isset($post_data[(int) $post_data['projectbridge_add_recipient']])
     ) {
         $recipient_user_id = (int) $post_data['projectbridge_add_recipient'];
 
         if (!in_array($recipient_user_id, $recipientIds)) {
-            $recipientIds[] = $recipient_user_id;
-            PluginProjectbridgeConfig::updateConfValue('RecipientIds', $recipientIds);
+            // check if selected user have email address
+            $user = (new User())->getById($recipient_user_id);
+            
+            if (strlen($user->getDefaultEmail()) > 0) {
+                $recipientIds[] = $recipient_user_id;
+                PluginProjectbridgeConfig::updateConfValue('RecipientIds', $recipientIds);
+            } else {
+                echo '<div class="warning">'.__('The selected user have no default email adress configured', 'projectbridge').'</div>';
+            }
         }
     }
     $recipients = PluginProjectbridgeConfig::getRecipients();
@@ -315,11 +339,7 @@ if ($can_update) {
     echo '</table>' . "\n";
     Html::closeForm();
     
-    $countOnlyPublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
-    if (isset($post_data['projectbridge_config_countOnlyPublicTasks']) ){
-        $countOnlyPublicTasks = $post_data['projectbridge_config_countOnlyPublicTasks'];
-        PluginProjectbridgeConfig::updateConfValue('CountOnlyPublicTasks', $countOnlyPublicTasks);
-    }
+    
     echo '<h2>'.__('General config', 'projectbridge').'</h2>';
     echo '<form method="post" action="">' . "\n";
     echo '<table>' . "\n";
@@ -333,13 +353,93 @@ if ($can_update) {
     echo '</th>' . "\n";
     echo '</tr>' . "\n";
     echo '<tbody>' . "\n";
+    
+    $countOnlyPublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
+    if (isset($post_data['projectbridge_config_countOnlyPublicTasks'])) {
+        $countOnlyPublicTasks = $post_data['projectbridge_config_countOnlyPublicTasks'];
+        PluginProjectbridgeConfig::updateConfValue('CountOnlyPublicTasks', $countOnlyPublicTasks);
+    }
     echo '<tr">' . "\n";
     echo '<td>'.__('Count only public tasks in project', 'projectbridge').'' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
-    Dropdown::showYesNo('projectbridge_config_countOnlyPublicTasks',$countOnlyPublicTasks,[]);
+    Dropdown::showYesNo('projectbridge_config_countOnlyPublicTasks', $countOnlyPublicTasks, []);
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
+    
+    // AddContractSelectorOnCreatingTicketForm
+    $addContractSelectorOnCreatingTicketForm = PluginProjectbridgeConfig::getConfValueByName('AddContractSelectorOnCreatingTicketForm');
+    if (isset($post_data['projectbridge_config_addContractSelectorOnCreatingTicketForm'])) {
+        $addContractSelectorOnCreatingTicketForm = $post_data['projectbridge_config_addContractSelectorOnCreatingTicketForm'];
+        PluginProjectbridgeConfig::updateConfValue('AddContractSelectorOnCreatingTicketForm', $addContractSelectorOnCreatingTicketForm);
+    }
+    echo '<tr">' . "\n";
+    echo '<td>'.__('Add contract selector on creating ticket form', 'projectbridge').'' . "\n";
+    echo '</td>' . "\n";
+    echo '<td>' . "\n";
+    Dropdown::showYesNo('projectbridge_config_addContractSelectorOnCreatingTicketForm', $addContractSelectorOnCreatingTicketForm, []);
+    echo '</td>' . "\n";
+    echo '</tr>' . "\n";
+    
+    // select elements wich is copy during creating excess ticket
+    $possibleElements = [
+        'tasks'     => _n('Task', 'Tasks', 2),
+        'followups' => _n('Followup', 'Followup', 2),
+        'documents' => _n('Document', 'Documents', 2),
+        'solutions' => _n('Solution', 'Solutions', 2),
+        'tickets'   => _n('Ticket', 'Tickets', 2),
+        'requester_groups'    => _n('Requester group', 'Requester groups', 2),
+        'requester'     => __('Requester user'),
+        'assign_groups' => __('Group in charge of the ticket'),
+        'assign_technician' => __('Assigned to technicians'),
+        'watcher_user' => __('Watcher user'),
+        'watcher_group' => _n('Watcher group', 'Watcher groups', 2),
+     ];
+    $elementsAssociateToExcessTicket = PluginProjectbridgeConfig::getConfValueByName('ElementsAssociateToExcessTicket');
+    
+    if (!$elementsAssociateToExcessTicket) {
+        // empty conf, populate with all values
+        $elementsAssociateToExcessTicket = array_keys($possibleElements);
+        PluginProjectbridgeConfig::updateConfValue('ElementsAssociateToExcessTicket', $elementsAssociateToExcessTicket);
+    }
+    if (isset($post_data['projectbridge_config_elementsAssociateToExcessTicket']) && is_array($post_data['projectbridge_config_elementsAssociateToExcessTicket'])) {
+        $elementsAssociateToExcessTicket = $post_data['projectbridge_config_elementsAssociateToExcessTicket'];
+        PluginProjectbridgeConfig::updateConfValue('ElementsAssociateToExcessTicket', $elementsAssociateToExcessTicket);
+    }
+    echo '<tr">' . "\n";
+    echo '<td>'.__('Elements from previous ticket to be associated with renewed ticket', 'projectbridge').'' . "\n";
+    echo '</td>' . "\n";
+    echo '<td>' . "\n";
+    echo '<select name="projectbridge_config_elementsAssociateToExcessTicket[]" id="projectbridge_config_elementsAssociateToExcessTicket" class="select2" multiple>'. "\n";
+    foreach ($possibleElements as $key => $value) {
+        $select = in_array($key, $elementsAssociateToExcessTicket)?'selected':'';
+        echo '<option value="'.$key.'" '.$select.'>'.$value.'</option>';
+    }
+    echo '</select>'. "\n";
+    echo "<script type='text/javascript'>
+    //<![CDATA[
+    $(function() {
+             $('#projectbridge_config_elementsAssociateToExcessTicket').select2({
+
+                width: '100%',
+                dropdownAutoWidth: true,
+                quietMillis: 100,
+                minimumResultsForSearch: 3,
+
+                templateResult: templateResult,
+                templateSelection: templateSelection,
+             })
+             .bind('setValue', function(e, value) {
+                $('#projectbridge_config_elementsAssociateToExcessTicket').val(value).trigger('change');
+             })
+             $('label[for=projectbridge_config_elementsAssociateToExcessTicket]').on('click', function(){ $('#dropdown_projectbridge_config_elementsAssociateToExcessTicket1180093597').select2('open'); });
+          });
+
+    //]]>
+    </script>";
+    echo '</td>' . "\n";
+    echo '</tr>' . "\n";
+    
     echo '</tbody>' . "\n";
     echo '</table>' . "\n";
     echo '<input type="submit" class="submit" name="projectbridge_save_general_config" value="' . __('Save') . '" />';
