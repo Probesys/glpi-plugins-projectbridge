@@ -51,7 +51,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         if (count($activeProjectTasks)) {
             // verification nombre d'heure actuelle liée aux tâches projets
             $lastActiveProjectTask = $activeProjectTasks[0];
-            $this->_nb_hours = (int) $lastActiveProjectTask['planned_duration']/3600;
+            $this->_nb_hours = (int) $lastActiveProjectTask['planned_duration'] / 3600;
         } else {
             if ($this->_nb_hours === null) {
                 $result = $this->getFromDBByCrit(['contract_id' => $this->_contract->getId()]);
@@ -289,7 +289,6 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '</td>' . "\n";
                 $html_parts[] = '</tr>' . "\n";
 
-
                 $html_parts[] = '<tr>' . "\n";
                 $html_parts[] = '<td>';
                 $html_parts[] = __('Duration') . ' (' . _n('Month', 'Months', 2) . ')';
@@ -480,7 +479,6 @@ class PluginProjectbridgeContract extends CommonDBTM
             'WHERE' => $whereConditionsArray
         ]);
 
-
         if ($row = $iterator->next()) {
             return $row['duration'] ? $row['duration'] : 0;
         }
@@ -512,7 +510,6 @@ class PluginProjectbridgeContract extends CommonDBTM
             ],
             'WHERE' => $whereConditionsArray
         ]);
-
 
         if ($row = $iterator->next()) {
             return $row['nb'];
@@ -638,10 +635,10 @@ class PluginProjectbridgeContract extends CommonDBTM
         foreach ($DB->request(
             'glpi_projecttasks',
             [
-                "projects_id" => $project_id,
-                "projectstates_id" => [$state_in_progress_value, $state_renewal_value],
-                'ORDER' => ['plan_start_date DESC']
-            ]
+                    "projects_id" => $project_id,
+                    "projectstates_id" => [$state_in_progress_value, $state_renewal_value],
+                    'ORDER' => ['plan_start_date DESC']
+                ]
         ) as $data) {
             $tasks[] = $data;
         }
@@ -762,7 +759,6 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
 
-
         if (empty($state_in_progress_value)) {
             Session::addMessageAfterRedirect(__('The match for the status "In progress" has not been defined. The contract could not be renewed.', 'projectbridge'), false, ERROR);
             return false;
@@ -838,10 +834,10 @@ class PluginProjectbridgeContract extends CommonDBTM
         $DB->update(
             $this->getTable(),
             [
-            'nb_hours' => $renewal_data['nb_hours_to_use']
+                    'nb_hours' => $renewal_data['nb_hours_to_use']
                 ],
             [
-            'id' => $this->getID()
+                    'id' => $this->getID()
                 ]
         );
     }
@@ -965,11 +961,11 @@ class PluginProjectbridgeContract extends CommonDBTM
 //                AND is_template = 0
 //        ";
         $bridgeContract = new PluginProjectbridgeContract();
-        $contract =  new Contract();
+        $contract = new Contract();
         $get_contracts_query = '
             SELECT c.id
-            FROM '.$bridgeContract::getTable().' AS bc
-            INNER JOIN  '.$contract::getTable().' AS c ON bc.contract_id = c.id   
+            FROM ' . $bridgeContract::getTable() . ' AS bc
+            INNER JOIN  ' . $contract::getTable() . ' AS c ON bc.contract_id = c.id   
             WHERE c.is_deleted = 0 AND c.is_template = 0 AND c.alert!=0   
             ';
 
@@ -991,7 +987,6 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $now = new DateTime();
                     $planEndDate = self::getContractPlanEndDate($contract);
                     $nb_hours = $bridge_contract->getNbHours();
-
 
                     // search open projectTask
                     $projectTask = self::getProjectTaskOject($project_id, false);
@@ -1055,6 +1050,54 @@ class PluginProjectbridgeContract extends CommonDBTM
 
             echo implode(' ', $html_parts);
         }
+    }
+
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    {
+        switch ($item::getType()) {
+            case Contract::getType():
+                return __('ProjectBridge', 'projectbridge');
+                break;
+        }
+        return '';
+    }
+
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    {
+        if ($item->getType() == Contract::getType()) {
+            $config = new self();
+            $config->showConfigFormForContract($item);
+        }
+    }
+    public function showConfigFormForContract(Contract $entity)
+    {
+        $ID = $entity->getField('id');
+
+        echo "<div class='spaced'>";
+
+        echo "<form method='post' name=form action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
+
+
+        echo "<table class='tab_cadre_fixe'>";
+        echo "<tr><th colspan='2'>".__('ProjectBridge Configurations', 'projectbridge')."</th></tr>";
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td>".__('Percentage gap to send alert notification', 'projectbridge')."</td>";
+        echo "<td>";
+        $elements = range(0, 100, 5);
+        Dropdown::showFromArray('percentage_gap', $elements);
+        echo '</td></tr>';
+
+        echo "<tr>";
+        echo "<td class='tab_bg_2 center' colspan='4'>";
+        echo "<input type='hidden' name='id' value='".$entity->fields["id"]."'>";
+        echo "<input type='submit' name='update' value=\""._sx('button', 'Save')."\" class='submit'>";
+        echo "</td></tr>";
+        echo "</table>";
+        Html::closeForm();
+
+
+        echo "</div>";
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 
-define('PLUGIN_PROJECTBRIDGE_VERSION', '2.4RC6');
+define('PLUGIN_PROJECTBRIDGE_VERSION', '2.5RC1');
 
 define('PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION', '9.4');
 define('PLUGIN_PROJECTBRIDGE_MAX_GLPI_VERSION', '9.6');
@@ -76,6 +76,15 @@ function plugin_init_projectbridge()
         'tools' => 'PluginProjectbridgeTask',
     ];
     $PLUGIN_HOOKS['add_javascript'][PluginProjectbridgeConfig::NAMESPACE] = 'js/projectbridge.js.php';
+
+    Plugin::registerClass(
+        'PluginProjectbridgeContract',
+        [
+      'addtabon' => [
+         'Contract'
+      ]
+   ]
+    );
 }
 
 /**
