@@ -65,7 +65,6 @@ echo '</h1>' . "\n";
 echo '<hr />' . "\n";
 
 if ($can_update) {
-    global $CFG_GLPI;
     $post_fields = [
       'projectbridge_state_in_progress',
       'projectbridge_state_closed',
@@ -76,7 +75,8 @@ if ($can_update) {
       'projectbridge_add_recipient_submit',
       'projectbridge_config_countOnlyPublicTasks',
       'projectbridge_config_addContractSelectorOnCreatingTicketForm',
-      'projectbridge_config_elementsAssociateToExcessTicket'
+      'projectbridge_config_elementsAssociateToExcessTicket',
+      'projectbridge_config_globalContractGapAlert'
     ];
 
     $post_data = getPostDataFromFields($post_fields);
@@ -331,8 +331,8 @@ if ($can_update) {
 
     echo '</table>' . "\n";
     Html::closeForm();
-    
-    
+
+
     echo '<h2>'.__('General config', 'projectbridge').'</h2>';
     echo '<form method="post" action="">' . "\n";
     echo '<table>' . "\n";
@@ -346,7 +346,7 @@ if ($can_update) {
     echo '</th>' . "\n";
     echo '</tr>' . "\n";
     echo '<tbody>' . "\n";
-    
+
     $countOnlyPublicTasks = PluginProjectbridgeConfig::getConfValueByName('CountOnlyPublicTasks');
     if (isset($post_data['projectbridge_config_countOnlyPublicTasks'])) {
         $countOnlyPublicTasks = $post_data['projectbridge_config_countOnlyPublicTasks'];
@@ -359,7 +359,7 @@ if ($can_update) {
     Dropdown::showYesNo('projectbridge_config_countOnlyPublicTasks', $countOnlyPublicTasks, []);
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
-    
+
     // AddContractSelectorOnCreatingTicketForm
     $addContractSelectorOnCreatingTicketForm = PluginProjectbridgeConfig::getConfValueByName('AddContractSelectorOnCreatingTicketForm');
     if (isset($post_data['projectbridge_config_addContractSelectorOnCreatingTicketForm'])) {
@@ -373,7 +373,21 @@ if ($can_update) {
     Dropdown::showYesNo('projectbridge_config_addContractSelectorOnCreatingTicketForm', $addContractSelectorOnCreatingTicketForm, []);
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
-    
+
+    // projectbridge_config_globalContractGapAlert
+    $globalContractGapAlert = PluginProjectbridgeConfig::getConfValueByName('globalContractGapAlert ');
+    if (isset($post_data['projectbridge_config_globalContractGapAlert'])) {
+        $globalContractGapAlert = $post_data['projectbridge_config_globalContractGapAlert'];
+        PluginProjectbridgeConfig::updateConfValue('globalContractGapAlert', $globalContractGapAlert);
+    }
+    echo '<tr">' . "\n";
+    echo '<td>'.__('Global percentage gap to send alert notification', 'projectbridge').'' . "\n";
+    echo '</td>' . "\n";
+    echo '<td>' . "\n";
+    Dropdown::showFromArray('projectbridge_config_globalContractGapAlert', range(0, 100), ['value'=>$globalContractGapAlert]);
+    echo '</td>' . "\n";
+    echo '</tr>' . "\n";
+
     // select elements wich is copy during creating excess ticket
     $possibleElements = [
         'tasks'     => _n('Task', 'Tasks', 2),
@@ -389,7 +403,7 @@ if ($can_update) {
         'watcher_group' => _n('Watcher group', 'Watcher groups', 2),
      ];
     $elementsAssociateToExcessTicket = PluginProjectbridgeConfig::getConfValueByName('ElementsAssociateToExcessTicket');
-    
+
     if (!$elementsAssociateToExcessTicket) {
         // empty conf, populate with all values
         $elementsAssociateToExcessTicket = array_keys($possibleElements);
@@ -405,7 +419,7 @@ if ($can_update) {
     echo '<td>' . "\n";
     echo '<select name="projectbridge_config_elementsAssociateToExcessTicket[]" id="projectbridge_config_elementsAssociateToExcessTicket" class="select2" multiple>'. "\n";
     foreach ($possibleElements as $key => $value) {
-        $select = in_array($key, $elementsAssociateToExcessTicket)?'selected':'';
+        $select = in_array($key, $elementsAssociateToExcessTicket) ? 'selected' : '';
         echo '<option value="'.$key.'" '.$select.'>'.$value.'</option>';
     }
     echo '</select>'. "\n";
@@ -432,7 +446,7 @@ if ($can_update) {
     </script>";
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
-    
+
     echo '</tbody>' . "\n";
     echo '</table>' . "\n";
     echo '<input type="submit" class="submit" name="projectbridge_save_general_config" value="' . __('Save') . '" />';

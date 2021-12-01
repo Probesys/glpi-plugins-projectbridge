@@ -16,6 +16,9 @@ if (!defined("PLUGIN_PROJECTBRIDGE_WEB_DIR")) {
 if (!class_exists('PluginProjectbridgeConfig')) {
     require_once(__DIR__.'/inc/config.class.php');
 }
+if (!class_exists('PluginProjectbridgeContractGapAlert')) {
+    require_once(__DIR__.'/inc/contractGapAlert.class.php');
+}
 
 /**
  * Plugin description
@@ -80,10 +83,8 @@ function plugin_init_projectbridge()
     Plugin::registerClass(
         'PluginProjectbridgeContract',
         [
-      'addtabon' => [
-         'Contract'
-      ]
-   ]
+            'addtabon' => ['Contract']
+        ]
     );
 }
 

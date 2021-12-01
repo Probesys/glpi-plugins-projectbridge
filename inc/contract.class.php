@@ -1069,14 +1069,20 @@ class PluginProjectbridgeContract extends CommonDBTM
             $config->showConfigFormForContract($item);
         }
     }
-    public function showConfigFormForContract(Contract $entity)
+    public function showConfigFormForContract(Contract $entity, $selectedValue = 0)
     {
-        $ID = $entity->getField('id');
+        $contractId = $entity->getField('id');
+
+        // get contractGapAlert in database if exist
+        $contractGapAlertObject = new PluginProjectbridgeContractGapAlert();
+        $contractGapAlert = $contractGapAlertObject::getContractGapAlertByContractID($contractId);
+        if ($contractGapAlert) {
+            $selectedValue = $contractGapAlert['gapAlert'];
+        }
 
         echo "<div class='spaced'>";
 
-        echo "<form method='post' name=form action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
-
+        echo "<form method='post' name='form' action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
 
         echo "<table class='tab_cadre_fixe'>";
         echo "<tr><th colspan='2'>".__('ProjectBridge Configurations', 'projectbridge')."</th></tr>";
@@ -1084,13 +1090,12 @@ class PluginProjectbridgeContract extends CommonDBTM
         echo "<tr class='tab_bg_1'>";
         echo "<td>".__('Percentage gap to send alert notification', 'projectbridge')."</td>";
         echo "<td>";
-        $elements = range(0, 100, 5);
-        Dropdown::showFromArray('percentage_gap', $elements);
+        Dropdown::showFromArray('percentage_gap', range(0, 100), ['value'=>$selectedValue]);
         echo '</td></tr>';
 
         echo "<tr>";
         echo "<td class='tab_bg_2 center' colspan='4'>";
-        echo "<input type='hidden' name='id' value='".$entity->fields["id"]."'>";
+        echo "<input type='hidden' name='id' value='".$contractId."'>";
         echo "<input type='submit' name='update' value=\""._sx('button', 'Save')."\" class='submit'>";
         echo "</td></tr>";
         echo "</table>";

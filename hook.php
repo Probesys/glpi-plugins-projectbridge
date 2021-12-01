@@ -84,7 +84,7 @@ function plugin_projectbridge_install()
         $fields = $DB->list_fields(PluginProjectbridgeConfig::$table_name);
         if (array_key_exists('user_id', $fields)) {
             // save old values of user_id
-            
+
             $userIds = [];
             $req = $DB->request([
               'SELECT' => ['user_id'],
@@ -143,7 +143,22 @@ function plugin_projectbridge_install()
         ";
         $DB->query($create_table_query) or die($DB->error());
     }
-    
+
+    if (!$DB->tableExists(PluginProjectbridgeContractGapAlert::$table_name)) {
+        $create_table_query = "
+            CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeContractGapAlert::$table_name . "`
+            (
+                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `contract_id` INT(11) NOT NULL,
+                `gapAlert` INT(11) NOT NULL,
+                PRIMARY KEY (`id`)
+            )
+            COLLATE='utf8_unicode_ci'
+            ENGINE=InnoDB
+        ";
+        $DB->query($create_table_query) or die($DB->error());
+    }
+
     // clean old crontask
     if (version_compare(PLUGIN_PROJECTBRIDGE_VERSION, '2.2.3', '>')) {
         $delete_crontask_table = "DELETE FROM ".Crontask::getTable()."  WHERE itemtype='PluginProjectbridgeContract' AND name='AlertContractsToRenew'";
@@ -174,7 +189,7 @@ function plugin_projectbridge_install()
 function plugin_projectbridge_uninstall()
 {
     global $DB;
-    
+
     // clean crontasks infos
     $clear_crontaksInfos_query = "DELETE FROM ".CronTask::getTable()." WHERE itemtype LIKE 'PluginProjectbridge%'";
     $DB->query($clear_crontaksInfos_query) or die($DB->error());
@@ -186,6 +201,7 @@ function plugin_projectbridge_uninstall()
       PluginProjectbridgeTicket::$table_name,
       PluginProjectbridgeConfig::$table_name,
       PluginProjectbridgeState::$table_name,
+      PluginProjectbridgeContractGapAlert::$table_name,
     ];
 
     $drop_table_query = "DROP TABLE IF EXISTS `" . implode('`, `', $tables_to_drop) . "`";
@@ -268,7 +284,7 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
         if ($contract->input['update'] != 'Lier les tickets au renouvellement') {
             // update contract
             $nb_hours = 0;
-            
+
             if (empty($contract->input['projectbridge_project_id'])) {
                 $selected_project_id = 0;
                 // delete line in glpi_plugin_projectbridge_contracts
@@ -475,11 +491,11 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
         $bridge_entity = new PluginProjectbridgeEntity($entity);
         $contract_id = $bridge_entity->getContractId();
     }
-    
+
     if (array_key_exists('projectbridge_contract_id', $_POST)) {
         $contract_id = $_POST['projectbridge_contract_id'];
     }
-    
+
     // test if contrat already associate to the ticket
     $haveAlreadyContractAssociate = false;
     $bridge_ticket = new PluginProjectbridgeTicket($ticket);
@@ -513,7 +529,7 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
               'projecttasks_id' => $task_id,
               'tickets_id' => $ticket->getId(),
             ]);
-            
+
             $bridge_ticket = new PluginProjectbridgeTicket($ticket);
 
             if ($is_project_link_update) {
@@ -661,7 +677,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'field' => 'project_id',
               'name' => __('ProjectTask status', 'projectbridge'),
               'massiveaction' => false,
-            
+
             ];
 
             $options[] = [
@@ -1454,7 +1470,7 @@ function plugin_projectbridge_MassiveActions($type)
 //            $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectLink'] = __('Link to a project', 'projectbridge');
 //            $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectTaskLink'] = __('Force link to a project task', 'projectbridge');
             $massive_actions['PluginProjectbridgeTicket' . MassiveAction::CLASS_ACTION_SEPARATOR . 'addProjectTaskLink'] = __('Force link to a project task', 'projectbridge');
-           
+
             break;
 
         default:
