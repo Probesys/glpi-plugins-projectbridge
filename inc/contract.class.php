@@ -1012,7 +1012,8 @@ class PluginProjectbridgeContract extends CommonDBTM
 
     public function getContractsOverQuota()
     {
-        $quota = PluginProjectbridgeConfig::getConfValueByName('globalContractQuotaAlert');
+        global $DB;
+        $quota = intval(PluginProjectbridgeConfig::getConfValueByName('globalContractQuotaAlert'));
 
         $bridgeContract = new PluginProjectbridgeContract();
         $contract = new Contract();
@@ -1051,15 +1052,27 @@ class PluginProjectbridgeContract extends CommonDBTM
                     if ($projectTask) {
                         $consumption = self::getTicketsTotalActionTime($projectTask->getField('id')) / 3600;
                     }
-
-                    // récupération d'un quota spécique sur le contrat
-                    $contractQuotaAlertObject = PluginProjectbridgeContractQuotaAlert::getContractQuotaAlertByContractID($row['id']);
-                    if ($contractQuotaAlertObject) {
+                    $isOverQuota = false;
+                    $ratio = 0;
+                    if ($consumption) {
+                        // récupération d'un quota spécique sur le contrat
+                        $contractQuotaAlertObject = PluginProjectbridgeContractQuotaAlert::getContractQuotaAlertByContractID($row['id']);
+                        if ($contractQuotaAlertObject) {
+                            $quota = intval($contractQuotaAlertObject['quotaAlert']);
+                        }
+                        // calul ration conso
+                        $ratio = round(($consumption*100)/$nb_hours);
+                        if ($ratio >= $quota) {
+                            $isOverQuota = true;
+                        }
                     }
 
-                    if ($consumption >= $nb_hours || $planEndDate <= $now) {
+                    if ($isOverQuota && $planEndDate >= $now) {
                         $contracts[$contract->getId()] = [
                             'contract' => $contract,
+                            'ratio' => $ratio,
+                            'consumption' => $consumption,
+                            'nb_hours' => $nb_hours
                         ];
                     }
                 }

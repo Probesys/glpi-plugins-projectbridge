@@ -939,19 +939,49 @@ class PluginProjectbridgeTask extends CommonDBTM
         if (count($recipients)) {
             // récupération des contrat en cours
             $contracts = PluginProjectbridgeContract::getContractsOverQuota();
-            $contracts = [];
             $subject = count($contracts) . ' ' . __('contract(s) over limit quota alert', 'projectbridge');
 
             $html_parts = [];
+            $html_parts[] = '<p>' . "\n";
+            $html_parts[] = count($contracts) . ' ' . __('contract(s) over limit quota alert', 'projectbridge') . ' :';
+            $html_parts[] = '</p>' . "\n";
 
-            foreach ($recipients as $recipient) {
-                $success = PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
+            $html_parts[] = '<ol>' . "\n";
 
-                if ($success) {
-                    $nb_successes++;
-                    $task->addVolume(count($contracts));
+            global $CFG_GLPI;
+
+            foreach ($contracts as $contract_id => $contract_data) {
+                $html_parts[] = '<li>' . "\n";
+
+                $html_parts[] = '<strong>' . __('Name') . '</strong> : ';
+                $html_parts[] = '<a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/contract.form.php?id=' . $contract_id . '">';
+                $html_parts[] = $contract_data['contract']->fields['name'];
+                $html_parts[] = '</a>';
+                $html_parts[] = '<br />' . "\n";
+
+                $html_parts[] = '<strong>' . __('Quota', 'projectbridge') . '</strong> : ';
+                $html_parts[] = $contract_data['ratio'] .'% ('.round($contract_data['consumption']).'/'.$contract_data['nb_hours'].')' ;
+                $html_parts[] = '<br />' . "\n";
+
+                $entity = new Entity();
+                $entity->getFromDB($contract_data['contract']->fields['entities_id']);
+                $html_parts[] = '<strong>' . __('Entity') . '</strong> : ';
+                $html_parts[] = $entity->fields['name'];
+                $html_parts[] = '<br />' . "\n";
+                $html_parts[] = '</li>' . "\n";
+            }
+            $html_parts[] = '</ol>' . "\n";
+
+            if (count($contracts)) {
+                foreach ($recipients as $recipient) {
+                    $success = PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
+
+                    if ($success) {
+                        $nb_successes++;
+                    }
                 }
             }
+            $task->addVolume(count($contracts));
         }
 
         echo __('Finish') . "<br />\n";
