@@ -1010,6 +1010,65 @@ class PluginProjectbridgeContract extends CommonDBTM
         return $contracts;
     }
 
+    public function getContractsOverQuota()
+    {
+        $quota = PluginProjectbridgeConfig::getConfValueByName('globalContractQuotaAlert');
+
+        $bridgeContract = new PluginProjectbridgeContract();
+        $contract = new Contract();
+        $get_contracts_query = '
+            SELECT c.id
+            FROM ' . $bridgeContract::getTable() . ' AS bc
+            INNER JOIN  ' . $contract::getTable() . ' AS c ON bc.contract_id = c.id   
+            WHERE c.is_deleted = 0 AND c.is_template = 0 AND c.alert!=0   
+            ';
+
+        $result = $DB->query($get_contracts_query);
+        $contracts = [];
+        if ($result) {
+            while ($row = $DB->fetch_assoc($result)) {
+                $contract = new Contract();
+                $contract->getFromDB($row['id']);
+
+                $bridge_contract = new PluginProjectbridgeContract($contract);
+                $project_id = $bridge_contract->getProjectId();
+                $project = new Project();
+                $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
+                $project->getFromDB($project_id);
+                //if ($project && $project->fields['projectstates_id'] != $state_closed_value && !self::getProjectTaskOject($project_id, false) && self::getProjectTaskOject($project_id, true) ) {
+                if ($project && array_key_exists('projectstates_id', $project->fields) && $project->fields['projectstates_id'] != $state_closed_value) {
+                    $now = new DateTime();
+                    $planEndDate = self::getContractPlanEndDate($contract);
+                    $nb_hours = $bridge_contract->getNbHours();
+
+                    // search open projectTask
+                    $projectTask = self::getProjectTaskOject($project_id, false);
+                    // search close projecttask
+                    if (!$projectTask) {
+                        $projectTask = self::getProjectTaskOject($project_id, true);
+                    }
+                    $consumption = 0;
+                    if ($projectTask) {
+                        $consumption = self::getTicketsTotalActionTime($projectTask->getField('id')) / 3600;
+                    }
+
+                    // récupération d'un quota spécique sur le contrat
+                    $contractQuotaAlertObject = PluginProjectbridgeContractQuotaAlert::getContractQuotaAlertByContractID($row['id']);
+                    if ($contractQuotaAlertObject) {
+                    }
+
+                    if ($consumption >= $nb_hours || $planEndDate <= $now) {
+                        $contracts[$contract->getId()] = [
+                            'contract' => $contract,
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $contracts;
+    }
+
     /**
      * Display HTML after project has been shown
      *
@@ -1073,11 +1132,11 @@ class PluginProjectbridgeContract extends CommonDBTM
     {
         $contractId = $entity->getField('id');
 
-        // get contractGapAlert in database if exist
-        $contractGapAlertObject = new PluginProjectbridgeContractGapAlert();
-        $contractGapAlert = $contractGapAlertObject::getContractGapAlertByContractID($contractId);
-        if ($contractGapAlert) {
-            $selectedValue = $contractGapAlert['gapAlert'];
+        // get contractQuotaAlert in database if exist
+        $contractQuotaAlertObject = new PluginProjectbridgeContractQuotaAlert();
+        $contractQuotaAlert = $contractQuotaAlertObject::getContractQuotaAlertByContractID($contractId);
+        if ($contractQuotaAlert) {
+            $selectedValue = $contractQuotaAlert['quotaAlert'];
         }
 
         echo "<div class='spaced'>";
@@ -1088,9 +1147,9 @@ class PluginProjectbridgeContract extends CommonDBTM
         echo "<tr><th colspan='2'>".__('ProjectBridge Configurations', 'projectbridge')."</th></tr>";
 
         echo "<tr class='tab_bg_1'>";
-        echo "<td>".__('Percentage gap to send alert notification', 'projectbridge')."</td>";
+        echo "<td>".__('Percentage quota to send alert notification', 'projectbridge')."</td>";
         echo "<td>";
-        Dropdown::showFromArray('percentage_gap', range(0, 100), ['value'=>$selectedValue]);
+        Dropdown::showFromArray('percentage_quota', range(0, 100), ['value'=>$selectedValue]);
         echo '</td></tr>';
 
         echo "<tr>";

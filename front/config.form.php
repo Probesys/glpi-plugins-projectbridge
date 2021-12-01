@@ -76,7 +76,7 @@ if ($can_update) {
       'projectbridge_config_countOnlyPublicTasks',
       'projectbridge_config_addContractSelectorOnCreatingTicketForm',
       'projectbridge_config_elementsAssociateToExcessTicket',
-      'projectbridge_config_globalContractGapAlert'
+      'projectbridge_config_globalContractQuotaAlert'
     ];
 
     $post_data = getPostDataFromFields($post_fields);
@@ -374,17 +374,17 @@ if ($can_update) {
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
 
-    // projectbridge_config_globalContractGapAlert
-    $globalContractGapAlert = PluginProjectbridgeConfig::getConfValueByName('globalContractGapAlert ');
-    if (isset($post_data['projectbridge_config_globalContractGapAlert'])) {
-        $globalContractGapAlert = $post_data['projectbridge_config_globalContractGapAlert'];
-        PluginProjectbridgeConfig::updateConfValue('globalContractGapAlert', $globalContractGapAlert);
+    // projectbridge_config_globalContractQuotaAlert
+    $globalContractQuotaAlert = PluginProjectbridgeConfig::getConfValueByName('globalContractQuotaAlert');
+    if (isset($post_data['projectbridge_config_globalContractQuotaAlert'])) {
+        $globalContractQuotaAlert = $post_data['projectbridge_config_globalContractQuotaAlert'];
+        PluginProjectbridgeConfig::updateConfValue('globalContractQuotaAlert', $globalContractQuotaAlert);
     }
     echo '<tr">' . "\n";
-    echo '<td>'.__('Global percentage gap to send alert notification', 'projectbridge').'' . "\n";
+    echo '<td>'.__('Global percentage quota to send alert notification', 'projectbridge').'' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
-    Dropdown::showFromArray('projectbridge_config_globalContractGapAlert', range(0, 100), ['value'=>$globalContractGapAlert]);
+    Dropdown::showFromArray('projectbridge_config_globalContractQuotaAlert', range(0, 100), ['value'=>$globalContractQuotaAlert]);
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
 

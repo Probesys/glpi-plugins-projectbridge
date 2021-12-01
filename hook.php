@@ -144,13 +144,13 @@ function plugin_projectbridge_install()
         $DB->query($create_table_query) or die($DB->error());
     }
 
-    if (!$DB->tableExists(PluginProjectbridgeContractGapAlert::$table_name)) {
+    if (!$DB->tableExists(PluginProjectbridgeContractQuotaAlert::$table_name)) {
         $create_table_query = "
-            CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeContractGapAlert::$table_name . "`
+            CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeContractQuotaAlert::$table_name . "`
             (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `contract_id` INT(11) NOT NULL,
-                `gapAlert` INT(11) NOT NULL,
+                `quotaAlert` INT(11) NOT NULL,
                 PRIMARY KEY (`id`)
             )
             COLLATE='utf8_unicode_ci'
@@ -178,6 +178,9 @@ function plugin_projectbridge_install()
     // cron to update the percent_done counter in tasks
     CronTask::Register('PluginProjectbridgeTask', 'UpdateProgressPercent', DAY_TIMESTAMP);
 
+    // cron for alert when consumntion of contract is over quota defined globally or on the contract
+    CronTask::Register('PluginProjectbridgeTask', 'AlertContractsOverQuota', DAY_TIMESTAMP);
+
     return true;
 }
 
@@ -201,7 +204,7 @@ function plugin_projectbridge_uninstall()
       PluginProjectbridgeTicket::$table_name,
       PluginProjectbridgeConfig::$table_name,
       PluginProjectbridgeState::$table_name,
-      PluginProjectbridgeContractGapAlert::$table_name,
+      PluginProjectbridgeContractQuotaAlert::$table_name,
     ];
 
     $drop_table_query = "DROP TABLE IF EXISTS `" . implode('`, `', $tables_to_drop) . "`";

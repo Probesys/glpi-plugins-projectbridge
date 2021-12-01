@@ -1,10 +1,10 @@
 <?php
 
-class PluginProjectbridgeContractGapAlert extends CommonDBTM
+class PluginProjectbridgeContractQuotaAlert extends CommonDBTM
 {
     private $_contract;
-    private $gapalert;
-    public static $table_name = 'glpi_plugin_projectbridge_contracts_gapAlert';
+    private $quotaalert;
+    public static $table_name = 'glpi_plugin_projectbridge_contracts_quotaAlert';
     //put your code here
 
     /**
@@ -17,7 +17,7 @@ class PluginProjectbridgeContractGapAlert extends CommonDBTM
         if ($contract !== null || $contract instanceof Contract) {
             $this->_contract = $contract;
         }
-        $this->gapalert = 0;
+        $this->quotaalert = 0;
     }
 
     /**
@@ -26,15 +26,15 @@ class PluginProjectbridgeContractGapAlert extends CommonDBTM
      * @param type $name
      * @param type $newValue
      */
-    public static function updateContractGapAlert($contractId, $gap)
+    public static function updateContractQuotaAlert($contractId, $quota)
     {
         global $DB;
-        $contractGapAlert = self::getContractGapAlertByContractID($contractId);
-        if ($contractGapAlert) {
+        $contractQuotaAlert = self::getContractQuotaAlertByContractID($contractId);
+        if ($contractQuotaAlert) {
             $DB->update(
-                PluginProjectbridgeContractGapAlert::$table_name,
+                PluginProjectbridgeContractQuotaAlert::$table_name,
                 [
-                   'gapAlert'    => (int) $gap
+                   'quotaAlert'    => (int) $quota
                 ],
                 [
                    'contract_id' => (int) $contractId
@@ -42,9 +42,9 @@ class PluginProjectbridgeContractGapAlert extends CommonDBTM
             );
         } else {
             $DB->insert(
-                PluginProjectbridgeContractGapAlert::$table_name,
+                PluginProjectbridgeContractQuotaAlert::$table_name,
                 [
-                   'gapAlert'    => (int) $gap,
+                   'quotaAlert'    => (int) $quota,
                    'contract_id' => (int) $contractId
                 ]
             );
@@ -52,24 +52,24 @@ class PluginProjectbridgeContractGapAlert extends CommonDBTM
     }
 
     /**
-     * get contractGapAlert entry by contractId
+     * get contractQuotaAlert entry by contractId
      * @global type $DB
      * @param string $contractId
      * @return type
      */
-    public static function getContractGapAlertByContractID($contractId)
+    public static function getContractQuotaAlertByContractID($contractId)
     {
         global $DB;
-        $contractGapAlert = null;
+        $contractQuotaAlert = null;
         $req = $DB->request([
           'SELECT' => ['*'],
-          'FROM' => PluginProjectbridgeContractGapAlert::$table_name,
+          'FROM' => PluginProjectbridgeContractQuotaAlert::$table_name,
           'WHERE' => ['contract_id' => $contractId]
         ]);
         if ($row = $req->next()) {
-            $contractGapAlert = $row;
+            $contractQuotaAlert = $row;
         }
 
-        return $contractGapAlert;
+        return $contractQuotaAlert;
     }
 }
