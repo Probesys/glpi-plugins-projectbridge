@@ -773,7 +773,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4236,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => __('Percent done'),
+              'name' => __('Comsuption', 'projectbridge'),
               'massiveaction' => false,
             ];
 
