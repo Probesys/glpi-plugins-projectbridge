@@ -769,6 +769,13 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'name' => __('Associate tickets', 'projectbridge'),
               'massiveaction' => false,
             ];
+            $options[] = [
+              'id' => 4236,
+              'table' => PluginProjectbridgeTicket::$table_name,
+              'field' => 'project_id',
+              'name' => __('Percent done'),
+              'massiveaction' => false,
+            ];
 
             break;
 
@@ -1056,11 +1063,20 @@ function plugin_projectbridge_addSelect($itemtype, $key, $offset)
                 ";
             } elseif ($key == 4235) {
                 // project status
-
                 $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
 
                 $select = "
                     nb_tickets
+                    AS `ITEM_" . $offset . "`,
+                ";
+            } elseif ($key == 4236) {
+                // percentage done
+                $project_link = rtrim($CFG_GLPI['root_doc'], '/') . '/front/project.form.php?id=';
+                $select = "
+                    CONCAT(ROUND(
+                        ROUND(`ticket_actiontimes`.`actiontime_sum`, 2)*100/ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2),
+                        0
+                    ),' %')
                     AS `ITEM_" . $offset . "`,
                 ";
             }
