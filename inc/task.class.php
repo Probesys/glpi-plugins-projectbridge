@@ -2,7 +2,6 @@
 
 class PluginProjectbridgeTask extends CommonDBTM
 {
-
     /**
      * @var ProjectTask
      */
@@ -78,7 +77,6 @@ class PluginProjectbridgeTask extends CommonDBTM
                 $return = [
                     'description' => __('Project task treatment', 'projectbridge'),
                 ];
-
                 break;
 
             case 'UpdateProgressPercent':
@@ -89,6 +87,11 @@ class PluginProjectbridgeTask extends CommonDBTM
             case 'AlertContractsToRenew':
                 $return = [
                     'description' => __('Contract Alert to renew', 'projectbridge'),
+                ];
+                break;
+            case 'AlertContractsOverQuota':
+                $return = [
+                    'description' => __('Send email alert containing contract with consummation over quota', 'projectbridge'),
                 ];
                 break;
         }
@@ -134,6 +137,7 @@ class PluginProjectbridgeTask extends CommonDBTM
         }
 
         $task = new ProjectTask();
+
 
         global $DB;
         $bridgeContract = new PluginProjectbridgeContract();
@@ -314,8 +318,10 @@ class PluginProjectbridgeTask extends CommonDBTM
                                     $ticket_user = new Ticket_User();
                                     $ticket_users = $ticket_user->find(['tickets_id' => $old_ticket_id]);
                                     foreach ($ticket_users as $ticket_user_data) {
-                                        if ((in_array('requester', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::REQUESTER) || (in_array('assign_technician', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::ASSIGN) || (in_array('watcher_user', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::OBSERVER)
-                                        ) {
+                                        if ((in_array('requester', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::REQUESTER)
+                                            || (in_array('assign_technician', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::ASSIGN)
+                                            || (in_array('watcher_user', $elementsAssociateToExcessTicket) && $ticket_user_data['type'] == CommonITILActor::OBSERVER)
+                                          ) {
 
                                             // test if not exist aready in database
                                             $ticket_user_exist = $ticket_user->find(
@@ -507,8 +513,21 @@ class PluginProjectbridgeTask extends CommonDBTM
         $recipients = PluginProjectbridgeConfig::getRecipients();
         echo __('find', 'projectbridge') . count($recipients) . ' ' . __('person(s) to alert', 'projectbridge') . "<br />\n";
 
-        if (count($recipients)) {
-            global $CFG_GLPI;
+            if (count($recipients)) {
+                global $CFG_GLPI;
+
+                $contract = null;
+                $projectId = $this->_task->fields['projects_id'];
+                $project = new Project();
+                $project->getFromDB($projectId);
+                // search contract throw projectbridge_contracts
+                $bridgeContract = new PluginProjectbridgeContract();
+                $contractId = $bridgeContract->getFromDBByCrit(['project_id' => $projectId]);
+                if ($contractId) {
+                    $contract = (new Contract())->find($contractId);
+                }
+
+                $subject = __('project Task') . ' "' . $project->fields['name'] . '" ' . __('closed');
 
             $contract = null;
             $projectId = $this->_task->fields['projects_id'];
@@ -588,6 +607,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                 'content' => addslashes(__('Adjustment task', 'projectbridge')),
                 'state' => 2 // fait
             ];
+
 
             $ticket_task->add($ticket_task_data);
 
@@ -911,6 +931,77 @@ class PluginProjectbridgeTask extends CommonDBTM
                     $task->addVolume(count($contracts));
                 }
             }
+        }
+
+        echo __('Finish') . "<br />\n";
+
+        return ($nb_successes > 0) ? 1 : 0;
+    }
+
+    public static function cronAlertContractsOverQuota($task = null)
+    {
+        if (class_exists('PluginProjectbridgeConfig')) {
+            $plugin = new Plugin();
+
+            if (!$plugin->isActivated(PluginProjectbridgeConfig::NAMESPACE)) {
+                echo __('Disabled plugin') . "<br />\n";
+                return 0;
+            }
+        } else {
+            echo __('Plugin is not installed', 'projectbridge') . "<br />\n";
+            return 0;
+        }
+
+        $nb_successes = 0;
+        $recipients = PluginProjectbridgeConfig::getRecipients();
+        echo count($recipients) . ' ' . __('person(s) to alert', 'projectbridge') . "<br />\n";
+
+        if (count($recipients)) {
+            // récupération des contrat en cours
+            $contracts = PluginProjectbridgeContract::getContractsOverQuota();
+            $subject = count($contracts) . ' ' . __('contract(s) over limit quota alert', 'projectbridge');
+
+            $html_parts = [];
+            $html_parts[] = '<p>' . "\n";
+            $html_parts[] = count($contracts) . ' ' . __('contract(s) over limit quota alert', 'projectbridge') . ' :';
+            $html_parts[] = '</p>' . "\n";
+
+            $html_parts[] = '<ol>' . "\n";
+
+            global $CFG_GLPI;
+
+            foreach ($contracts as $contract_id => $contract_data) {
+                $html_parts[] = '<li>' . "\n";
+
+                $html_parts[] = '<strong>' . __('Name') . '</strong> : ';
+                $html_parts[] = '<a href="' . rtrim($CFG_GLPI['url_base'], '/') . '/front/contract.form.php?id=' . $contract_id . '">';
+                $html_parts[] = $contract_data['contract']->fields['name'];
+                $html_parts[] = '</a>';
+                $html_parts[] = '<br />' . "\n";
+
+                $html_parts[] = '<strong>' . __('Quota', 'projectbridge') . '</strong> : ';
+                $html_parts[] = $contract_data['ratio'] .'% ('.round($contract_data['consumption']).'/'.$contract_data['nb_hours'].')' ;
+                $html_parts[] = '<br />' . "\n";
+
+                $entity = new Entity();
+                $entity->getFromDB($contract_data['contract']->fields['entities_id']);
+                $html_parts[] = '<strong>' . __('Entity') . '</strong> : ';
+                $html_parts[] = $entity->fields['name'];
+                $html_parts[] = '<br />' . "\n";
+                $html_parts[] = '</li>' . "\n";
+            }
+            $html_parts[] = '</ol>' . "\n";
+
+            if (count($contracts)) {
+                foreach ($recipients as $recipient) {
+                    $success = PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
+
+                    if ($success) {
+                        $nb_successes++;
+                    }
+                }
+            }
+            $task->addVolume(count($contracts));
         }
 
         echo __('Finish') . "<br />\n";

@@ -1,7 +1,7 @@
 <?php
 
 
-define('PLUGIN_PROJECTBRIDGE_VERSION', '2.4');
+define('PLUGIN_PROJECTBRIDGE_VERSION', '2.5RC1');
 
 define('PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION', '9.4');
 define('PLUGIN_PROJECTBRIDGE_MAX_GLPI_VERSION', '9.6');
@@ -15,6 +15,9 @@ if (!defined("PLUGIN_PROJECTBRIDGE_WEB_DIR")) {
 
 if (!class_exists('PluginProjectbridgeConfig')) {
     require_once(__DIR__.'/inc/config.class.php');
+}
+if (!class_exists('PluginProjectbridgeContractQuotaAlert')) {
+    require_once(__DIR__.'/inc/contractQuotaAlert.class.php');
 }
 
 /**
@@ -76,6 +79,13 @@ function plugin_init_projectbridge()
         'tools' => 'PluginProjectbridgeTask',
     ];
     $PLUGIN_HOOKS['add_javascript'][PluginProjectbridgeConfig::NAMESPACE] = 'js/projectbridge.js.php';
+
+    Plugin::registerClass(
+        'PluginProjectbridgeContract',
+        [
+            'addtabon' => ['Contract']
+        ]
+    );
 }
 
 /**
