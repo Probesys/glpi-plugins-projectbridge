@@ -513,21 +513,21 @@ class PluginProjectbridgeTask extends CommonDBTM
         $recipients = PluginProjectbridgeConfig::getRecipients();
         echo __('find', 'projectbridge') . count($recipients) . ' ' . __('person(s) to alert', 'projectbridge') . "<br />\n";
 
-            if (count($recipients)) {
-                global $CFG_GLPI;
+        if (count($recipients)) {
+            global $CFG_GLPI;
 
-                $contract = null;
-                $projectId = $this->_task->fields['projects_id'];
-                $project = new Project();
-                $project->getFromDB($projectId);
-                // search contract throw projectbridge_contracts
-                $bridgeContract = new PluginProjectbridgeContract();
-                $contractId = $bridgeContract->getFromDBByCrit(['project_id' => $projectId]);
-                if ($contractId) {
-                    $contract = (new Contract())->find($contractId);
-                }
+            $contract = null;
+            $projectId = $this->_task->fields['projects_id'];
+            $project = new Project();
+            $project->getFromDB($projectId);
+            // search contract throw projectbridge_contracts
+            $bridgeContract = new PluginProjectbridgeContract();
+            $contractId = $bridgeContract->getFromDBByCrit(['project_id' => $projectId]);
+            if ($contractId) {
+                $contract = (new Contract())->find($contractId);
+            }
 
-                $subject = __('project Task') . ' "' . $project->fields['name'] . '" ' . __('closed');
+            $subject = __('project Task') . ' "' . $project->fields['name'] . '" ' . __('closed');
 
             $contract = null;
             $projectId = $this->_task->fields['projects_id'];
@@ -571,8 +571,8 @@ class PluginProjectbridgeTask extends CommonDBTM
         //}
         // exec update percent crontask
         self::cronUpdateProgressPercent();
-        
-        
+
+
         return $newTicketIds;
     }
 
@@ -959,11 +959,11 @@ class PluginProjectbridgeTask extends CommonDBTM
         if (count($recipients)) {
             // récupération des contrat en cours
             $contracts = PluginProjectbridgeContract::getContractsOverQuota();
-            $subject = count($contracts) . ' ' . __('contract(s) over limit quota alert', 'projectbridge');
+            $subject = count($contracts) . ' ' . __('Contract(s) over limit quota alert', 'projectbridge');
 
             $html_parts = [];
             $html_parts[] = '<p>' . "\n";
-            $html_parts[] = count($contracts) . ' ' . __('contract(s) over limit quota alert', 'projectbridge') . ' :';
+            $html_parts[] = count($contracts) . ' ' . __('Contract(s) over limit quota alert', 'projectbridge') . ' :';
             $html_parts[] = '</p>' . "\n";
 
             $html_parts[] = '<ol>' . "\n";
