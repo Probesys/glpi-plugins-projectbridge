@@ -62,6 +62,11 @@
          <compatibility>~9.5.6</compatibility>
          <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.4/glpi-plugin-projectbridge-v2.4.tar.bz2</download_url>
       </version>
+      <version>
+         <num>2.5</num>
+         <compatibility>~9.5.6</compatibility>
+         <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.5/glpi-plugin-projectbridge-v2.4.tar.bz2</download_url>
+      </version>
    </versions>
    <langs>
       <lang>fr_FR</lang>
