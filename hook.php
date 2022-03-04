@@ -486,8 +486,10 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
  * @return void
  */
 function plugin_projectbridge_ticket_update(Ticket $ticket)
-{
-    if (!empty($ticket->input['update']) && $ticket->input['update'] == 'Faire la liaison' && !empty($ticket->input['projectbridge_project_id'])) {
+{    
+    $update_val = $contract->input['update'] ?? $contract->input['_update'] ?? null;
+
+    if ($update_val == __('Make the connection', 'projectbridge') && !empty($ticket->input['projectbridge_project_id'])) {
         $is_project_link_update = true;
         $contract_id = null;
     } else {
