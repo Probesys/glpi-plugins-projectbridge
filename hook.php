@@ -287,7 +287,7 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
     $update_val = $contract->input['update'] ?? $contract->input['_update'] ?? null;
 
     if ($contract->canUpdate() && $update_val !== null && isset($contract->input['projectbridge_project_id'])) {
-        if ($update_val != __('Lier les tickets au renouvellement', 'projectbridge')) {
+        if ($update_val != __('Link tickets to renewal', 'projectbridge')) {
             // update contract
             $nb_hours = 0;
 
