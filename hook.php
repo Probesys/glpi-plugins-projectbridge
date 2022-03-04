@@ -283,9 +283,11 @@ function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false)
 function plugin_projectbridge_pre_contract_update(Contract $contract)
 {
     global $DB;
+    
+    $update_val = $contract->input['update'] ?? $contract->input['_update'] ?? null;
 
-    if ($contract->canUpdate() && isset($contract->input['update']) && isset($contract->input['projectbridge_project_id'])) {
-        if ($contract->input['update'] != 'Lier les tickets au renouvellement') {
+    if ($contract->canUpdate() && $update_val !== null && isset($contract->input['projectbridge_project_id'])) {
+        if ($update_val != __('Lier les tickets au renouvellement', 'projectbridge')) {
             // update contract
             $nb_hours = 0;
 
