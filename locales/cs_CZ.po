@@ -211,12 +211,12 @@ msgstr "Výstrahu neobdrží nikdo"
 #: front/config.form.php:336
 msgctxt "projectbridge"
 msgid "General config"
-msgstr ""
+msgstr "Obecné nastavení"
 
 #: front/config.form.php:356
 msgctxt "projectbridge"
 msgid "Count only public tasks in project"
-msgstr ""
+msgstr "Spočítat pouze veřejné úkoly v projektu"
 
 #: front/config.form.php:370
 msgctxt "projectbridge"
@@ -251,7 +251,7 @@ msgstr "Přístup k propojeným projektům"
 #: inc/contract.class.php:207
 msgctxt "projectbridge"
 msgid "Warning ! No associate projectTask with \"In progress\" status exist"
-msgstr ""
+msgstr "Varování! Neexistují žádné související úkoly projektu ve stavu „Zpracovávání“"
 
 #: inc/contract.class.php:228
 msgctxt "projectbridge"
