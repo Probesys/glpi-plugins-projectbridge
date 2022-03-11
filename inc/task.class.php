@@ -959,11 +959,11 @@ class PluginProjectbridgeTask extends CommonDBTM
         if (count($recipients)) {
             // récupération des contrat en cours
             $contracts = PluginProjectbridgeContract::getContractsOverQuota();
-            $subject = count($contracts) . ' ' . __('Contract(s) over limit quota alert', 'projectbridge');
+            $subject =  __('Contract(s) over limit quota alert', 'projectbridge').' ('.count($contracts).')';
 
             $html_parts = [];
             $html_parts[] = '<p>' . "\n";
-            $html_parts[] = count($contracts) . ' ' . __('Contract(s) over limit quota alert', 'projectbridge') . ' :';
+            $html_parts[] = __('Contract(s) over limit quota alert', 'projectbridge') .' ('.count($contracts).') :';
             $html_parts[] = '</p>' . "\n";
 
             $html_parts[] = '<ol>' . "\n";
