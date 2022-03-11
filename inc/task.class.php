@@ -923,6 +923,9 @@ class PluginProjectbridgeTask extends CommonDBTM
 
             $html_parts[] = '</ol>' . "\n";
 
+            $html_parts[] = '<br /><br /><hr/>' . "\n";
+            $html_parts[] = '<p><small>'.__('This Email si send automacitly by the plugin projectBridge', 'projectbridge') .' ('.PLUGIN_PROJECTBRIDGE_VERSION.')</small></p>.';
+
             foreach ($recipients as $recipient) {
                 $success = PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
 
@@ -991,6 +994,9 @@ class PluginProjectbridgeTask extends CommonDBTM
                 $html_parts[] = '</li>' . "\n";
             }
             $html_parts[] = '</ol>' . "\n";
+
+            $html_parts[] = '<br /><br /><hr/>' . "\n";
+            $html_parts[] = '<p><small>'.__('This Email si send automacitly by the plugin projectBridge', 'projectbridge') .' ('.PLUGIN_PROJECTBRIDGE_VERSION.')</small></p>.';
 
             if (count($contracts)) {
                 foreach ($recipients as $recipient) {
