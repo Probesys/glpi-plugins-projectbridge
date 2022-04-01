@@ -8,15 +8,16 @@ msgstr ""
 "Project-Id-Version: ProjectBridge 2.4RC3\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
 "POT-Creation-Date: 2022-03-11 11:35+0100\n"
-"PO-Revision-Date: 2022-03-11 11:37+0100\n"
-"Last-Translator: probeSys <contact@probesys.com>\n"
-"Language-Team: PROBESYS\n"
+"PO-Revision-Date: 2022-04-02 08:31+0000\n"
+"Last-Translator: Weblate Admin <noc@probesys.com>\n"
+"Language-Team: French <http://weblate.probesys.com/projects/plugins-glpi/"
+"projectbridge/fr/>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.11.2\n"
 
 #: hook.php:290 ajax/get_renewal_tickets.php:132
 msgctxt "projectbridge"
@@ -205,9 +206,7 @@ msgstr "Configuration générale"
 #: front/config.form.php:363
 msgctxt "projectbridge"
 msgid "Count only public tasks in project"
-msgstr ""
-"Décompter du projet uniquement la durée des tâches de ticket\n"
-" publiques"
+msgstr "Décompter du projet uniquement la durée des tâches de ticket publiques"
 
 #: front/config.form.php:377
 msgctxt "projectbridge"
@@ -218,7 +217,7 @@ msgstr ""
 #: front/config.form.php:391
 msgctxt "projectbridge"
 msgid "Global percentage quota to send alert notification"
-msgstr "Pourcentage de consommation  auquel envoyer une alerte"
+msgstr "Pourcentage de consommation auquel envoyer une alerte"
 
 #: front/config.form.php:400
 msgid "Task"
