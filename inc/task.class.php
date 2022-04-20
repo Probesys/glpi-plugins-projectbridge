@@ -524,7 +524,7 @@ class PluginProjectbridgeTask extends CommonDBTM
             $bridgeContract = new PluginProjectbridgeContract();
             $contractId = $bridgeContract->getFromDBByCrit(['project_id' => $projectId]);
             if ($contractId) {
-                $contract = (new Contract())->find($contractId);
+                $contract = (new Contract())->find(['id'=> $contractId]);
             }
 
             $subject = __('project Task') . ' "' . $project->fields['name'] . '" ' . __('closed');
@@ -694,7 +694,10 @@ class PluginProjectbridgeTask extends CommonDBTM
                     $total_actiontime = ProjectTask_Ticket::getTicketsTotalActionTime($task->getId());
 
                     $target = $total_actiontime + $timediff;
-                    $planned_duration = $task->fields['planned_duration'];
+                    $planned_duration = 1;
+                    if (array_key_exists('planned_duration', $task->fields)) {
+                        $planned_duration = $task->fields['planned_duration'];
+                    }
 
                     if (empty($planned_duration)) {
                         $planned_duration = 1;

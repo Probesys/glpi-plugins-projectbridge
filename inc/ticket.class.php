@@ -28,7 +28,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
             $result = $this->getFromDBByCrit(['ticket_id' => $this->_ticket->getId()]);
 
             if ($result) {
-                $this->_project_id = (int) $this->fields['project_id'];
+                $this->_project_id = (int) $this->fields['projecttasks_id'];
             }
         }
 
@@ -72,7 +72,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
                 if ($project_id) {
                     // save link between ticket and project in DB
                     $bridge_ticket->add([
-                        'project_id' => $project_id,
+                        'projecttasks_id' => $project_id,
                         'ticket_id' => $ticket->getID()
                     ]);
                 }
@@ -90,7 +90,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
           'values' => $project_list,
           'display' => false,
         ];
-        
+
         $html_parts = [];
         $html_parts[] = '<table>' . "\n";
         $html_parts[] = '<tr id="projectbridge_config">' . "\n";
@@ -350,7 +350,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
     {
         $return = false;
         global $DB;
-        
+
         switch ($ma->getAction()) {
             case 'deleteProjectLink':
                 echo '&nbsp;';
@@ -402,15 +402,15 @@ class PluginProjectbridgeTicket extends CommonDBTM
                   'value' => null,
                   'values' => $project_task_list,
                 ];
-                
+
                 // pre selection auto contrat par defaut entité en cours
                 $criteria = ['entity_id' =>$_SESSION['glpiactive_entity']];
                 $req = $DB->request(PluginProjectbridgeEntity::$table_name, $criteria);
                 if ($row = $req->next()) {
                     $contract_id = $row['contract_id'];
-                    
+
                     $pluginProjectbridgeContract = new PluginProjectbridgeContract();
-                   
+
                     $req2 = $DB->request(PluginProjectbridgeContract::$table_name, ['contract_id' => $contract_id]);
                     if ($row = $req2->next()) {
                         $projectId= $row['project_id'];
@@ -421,7 +421,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
                         }
                     }
                 }
-                
+
                 Dropdown::showFromArray('projectbridge_projecttask_id', $project_task_list, $project_task_config);
                 echo '<br />';
                 echo '<br />';
@@ -435,7 +435,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
         if (!$return) {
             return parent::showMassiveActionsSubForm($ma);
         }
-        
+
         return $return;
     }
 
