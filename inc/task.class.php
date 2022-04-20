@@ -524,7 +524,7 @@ class PluginProjectbridgeTask extends CommonDBTM
             $bridgeContract = new PluginProjectbridgeContract();
             $contractId = $bridgeContract->getFromDBByCrit(['project_id' => $projectId]);
             if ($contractId) {
-                $contract = (new Contract())->find($contractId);
+                $contract = (new Contract())->find(['id'=> $contractId]);
             }
 
             $subject = __('project Task') . ' "' . $project->fields['name'] . '" ' . __('closed');
@@ -694,7 +694,10 @@ class PluginProjectbridgeTask extends CommonDBTM
                     $total_actiontime = ProjectTask_Ticket::getTicketsTotalActionTime($task->getId());
 
                     $target = $total_actiontime + $timediff;
-                    $planned_duration = $task->fields['planned_duration'];
+                    $planned_duration = 1;
+                    if (array_key_exists('planned_duration', $task->fields)) {
+                        $planned_duration = $task->fields['planned_duration'];
+                    }
 
                     if (empty($planned_duration)) {
                         $planned_duration = 1;
@@ -923,6 +926,9 @@ class PluginProjectbridgeTask extends CommonDBTM
 
             $html_parts[] = '</ol>' . "\n";
 
+            $html_parts[] = '<br /><br /><hr/>' . "\n";
+            $html_parts[] = '<p><small>'.__('This Email si send automacitly by the plugin projectBridge', 'projectbridge') .' ('.PLUGIN_PROJECTBRIDGE_VERSION.')</small></p>.';
+
             foreach ($recipients as $recipient) {
                 $success = PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
 
@@ -959,11 +965,11 @@ class PluginProjectbridgeTask extends CommonDBTM
         if (count($recipients)) {
             // récupération des contrat en cours
             $contracts = PluginProjectbridgeContract::getContractsOverQuota();
-            $subject = count($contracts) . ' ' . __('Contract(s) over limit quota alert', 'projectbridge');
+            $subject =  __('Contract(s) over limit quota alert', 'projectbridge').' ('.count($contracts).')';
 
             $html_parts = [];
             $html_parts[] = '<p>' . "\n";
-            $html_parts[] = count($contracts) . ' ' . __('Contract(s) over limit quota alert', 'projectbridge') . ' :';
+            $html_parts[] = __('Contract(s) over limit quota alert', 'projectbridge') .' ('.count($contracts).') :';
             $html_parts[] = '</p>' . "\n";
 
             $html_parts[] = '<ol>' . "\n";
@@ -991,6 +997,9 @@ class PluginProjectbridgeTask extends CommonDBTM
                 $html_parts[] = '</li>' . "\n";
             }
             $html_parts[] = '</ol>' . "\n";
+
+            $html_parts[] = '<br /><br /><hr/>' . "\n";
+            $html_parts[] = '<p><small>'.__('This Email si send automacitly by the plugin projectBridge', 'projectbridge') .' ('.PLUGIN_PROJECTBRIDGE_VERSION.')</small></p>.';
 
             if (count($contracts)) {
                 foreach ($recipients as $recipient) {

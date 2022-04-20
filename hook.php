@@ -48,7 +48,7 @@ function plugin_projectbridge_install()
             (
                 `id` INT(11) NOT NULL AUTO_INCREMENT,
                 `ticket_id` INT(11) NOT NULL,
-                `project_id` INT(11) NOT NULL,
+                `projecttasks_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX (`ticket_id`)
             )
@@ -56,6 +56,13 @@ function plugin_projectbridge_install()
             ENGINE=InnoDB
         ";
         $DB->query($create_table_query) or die($DB->error());
+    } else {
+        // test if old version of plugin
+        $fields = $DB->listFields(PluginProjectbridgeTicket::$table_name);
+        if (array_key_exists('project_id', $fields)) {
+            $update_structure_query = "ALTER TABLE `" . PluginProjectbridgeTicket::$table_name . "` CHANGE `project_id` `projecttasks_id` INT(11) NOT NULL;";
+            $DB->query($update_structure_query) or die($DB->error());
+        }
     }
 
     // configs datatable
@@ -81,7 +88,7 @@ function plugin_projectbridge_install()
         $DB->query($insert_table_query) or die($DB->error());
     } else {
         // test if old version of glpi_plugin_projectbridge_configs
-        $fields = $DB->list_fields(PluginProjectbridgeConfig::$table_name);
+        $fields = $DB->listFields(PluginProjectbridgeConfig::$table_name);
         if (array_key_exists('user_id', $fields)) {
             // save old values of user_id
 
@@ -283,7 +290,7 @@ function plugin_projectbridge_pre_entity_update(Entity $entity, $force = false)
 function plugin_projectbridge_pre_contract_update(Contract $contract)
 {
     global $DB;
-    
+
     $update_val = $contract->input['update'] ?? $contract->input['_update'] ?? null;
 
     if ($contract->canUpdate() && $update_val !== null && isset($contract->input['projectbridge_project_id'])) {
@@ -486,7 +493,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
  * @return void
  */
 function plugin_projectbridge_ticket_update(Ticket $ticket)
-{    
+{
     $update_val = $contract->input['update'] ?? $contract->input['_update'] ?? null;
 
     if ($update_val == __('Make the connection', 'projectbridge') && !empty($ticket->input['projectbridge_project_id'])) {

@@ -15,14 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
     createRenewalTicket($contract_id);
 
     $unlinked_tickets = [];
+    $linkedTicketsids = [];
     $task = new ProjectTask();
     # n'afficher que les tickets qui n'ont pas de tâche de projet lié et qui sont associé à l'entité
     if ($task_id) {
         global $DB;
         $task->getFromDB($task_id);
         $entity_id = $task->fields['entities_id'];
-
-
         $ticket = new Ticket();
         $task_ticket = new ProjectTask_Ticket();
 
@@ -47,17 +46,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
         }
 
         // récupération des tickets associés à l'entité, non supprimés et non associés à une tâche de projet
-        $unlinked_tickets = $ticket->find([
-            'NOT' => ['id' => $linkedTicketsids],
-            'entities_id' => $entity_id,
-            'is_deleted' => 0,
-                ], 'date DESC');
+        if (count($linkedTicketsids)) {
+            $unlinked_tickets = $ticket->find([
+                'NOT' => ['id' => $linkedTicketsids],
+                'entities_id' => $entity_id,
+                'is_deleted' => 0,
+                    ], 'date DESC');
+        }
     }
 
     global $CFG_GLPI;
 
     $html = '';
-
     $html .= '<form method="post" id="renewal_tickets_form" action="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php">' . "\n";
     $html .= '<input type="hidden" name="entities_id" value="' . $task->fields['entities_id'] . '" />' . "\n";
     $html .= '<input type="hidden" name="id" value="' . $contract_id . '" />' . "\n";
@@ -147,7 +147,7 @@ function createRenewalTicket($contract_id)
     $bridge_contract = new PluginProjectbridgeContract($contract);
     $project_id = $bridge_contract->getProjectId();
     $allActiveTasks = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($project_id);
-    
+
     // call crontask function ( projectTask ) to create a new tikcet with exeed time if necessary
     foreach ($allActiveTasks as $task_data) {
         $expired = false;

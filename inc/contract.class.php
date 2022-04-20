@@ -229,7 +229,8 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours);
                     $html_parts[] = '&nbsp;';
                     $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
-                } else {
+                } elseif ($consumption) {
+                    $html_parts[] = '<br/>'.__('Comsuption', 'projectbridge') . ' : '.round($consumption, 2) . ' ' . _n('Hour', 'Hours', $consumption);
                     //$html_parts[] = '0/'. $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours).'&nbsp; (0%)';
                 }
                 $html_parts[] = '</span>';
@@ -920,7 +921,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         }
 
         $duration = $this->_contract->getField('duration');
-        
+
         if (!empty($this->_contract->input['projectbridge_duration'])) {
             $projectbridge_duration = $this->_contract->input['projectbridge_duration'];
         } else {
