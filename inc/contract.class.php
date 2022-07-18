@@ -356,8 +356,24 @@ class PluginProjectbridgeContract extends CommonDBTM
                     
                     function add_months(dt, n) 
                     {
-                      return new Date(dt.setMonth(dt.getMonth() + parseInt(n)));      
+                        console.log(dt);
+                        console.log(n);
+                        
+                        var new_date =  new Date(dt.setMonth(dt.getMonth() + parseInt(n)));   
+                        console.log(new_date);
+                        // check timezone difference problem
+                        var dt_timezoneOffset = dt.getTimezoneOffset();
+                        var emptyDate = new Date();
+                        var newDate_timezoneOffset = emptyDate.getTimezoneOffset();
+                        var diff_timezoneOffset = difference(dt_timezoneOffset, newDate_timezoneOffset);
+                        var new_date = new Date(new_date.getTime() + diff_timezoneOffset*60000);
+                        
+                        return new_date;
                     }
+                    
+                    function difference(a, b) {
+                        return Math.abs(a - b);
+                      }
 
                     $(document).on("click", ".projectbridge-renewal-trigger", function(e) {
                         e.preventDefault();
@@ -403,6 +419,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                         var strDate = $("input[name=projecttask_begin_date]").val().split("-");
                         var begin_Date = new Date(parseInt(strDate[0]), parseInt(strDate[1])-1, parseInt(strDate[2]));
                         var end_date = add_months(begin_Date, $("input[name=projectbridge_duration]").val()).toISOString().slice(0,10);
+                        console.log(end_date);
                         
                         var data_to_add_to_modal = {
                             projectbridge_project_id: $("[id^=dropdown_projectbridge_project_id]").val(),
