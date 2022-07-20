@@ -356,19 +356,38 @@ class PluginProjectbridgeContract extends CommonDBTM
                     
                     function add_months(dt, n) 
                     {
-                        console.log(dt);
-                        console.log(n);
-                        
+                    console.log("old date : " + dt);
                         var new_date =  new Date(dt.setMonth(dt.getMonth() + parseInt(n)));   
-                        console.log(new_date);
+                        var new_date_hour = dt.getHours();
                         // check timezone difference problem
                         var dt_timezoneOffset = dt.getTimezoneOffset();
                         var emptyDate = new Date();
                         var newDate_timezoneOffset = emptyDate.getTimezoneOffset();
                         var diff_timezoneOffset = difference(dt_timezoneOffset, newDate_timezoneOffset);
-                        var new_date = new Date(new_date.getTime() + diff_timezoneOffset*60000);
+                        var final_date = new Date(new_date.getTime() + diff_timezoneOffset*60000);
+                        var final_date_hour = final_date.getHours();
                         
-                        return new_date;
+                        // debug logs
+                        console.log("***** logs function add_months ******");
+                        console.log("nb months to add : " + n);
+                        console.log("new_date : " + final_date);
+                        console.log("dt_hour : " + new_date_hour);
+                        console.log("final_date_hour : " + new_date_hour);
+
+                        return formatDate(final_date);
+                    }
+                    
+                    function padTo2Digits(num) {
+                      return num.toString().padStart(2, "0");
+                    }
+
+                    function formatDate(date) {
+                      return [
+                        date.getFullYear(),
+                        padTo2Digits(date.getMonth() + 1),
+                        padTo2Digits(date.getDate()),
+                        
+                      ].join("-");
                     }
                     
                     function difference(a, b) {
@@ -418,7 +437,8 @@ class PluginProjectbridgeContract extends CommonDBTM
                         renewal_tickets_modal.dialog("open");
                         var strDate = $("input[name=projecttask_begin_date]").val().split("-");
                         var begin_Date = new Date(parseInt(strDate[0]), parseInt(strDate[1])-1, parseInt(strDate[2]));
-                        var end_date = add_months(begin_Date, $("input[name=projectbridge_duration]").val()).toISOString().slice(0,10);
+                        //var end_date = add_months(begin_Date, $("input[name=projectbridge_duration]").val()).toISOString().slice(0,10);
+                        var end_date = add_months(begin_Date, $("input[name=projectbridge_duration]").val());
                         console.log(end_date);
                         
                         var data_to_add_to_modal = {

@@ -66,17 +66,17 @@ echo '<hr />' . "\n";
 
 if ($can_update) {
     $post_fields = [
-      'projectbridge_state_in_progress',
-      'projectbridge_state_closed',
-      'projectbridge_state_renewal',
-      'projectbridge_save_states',
-      'projectbridge_delete_recipient',
-      'projectbridge_add_recipient',
-      'projectbridge_add_recipient_submit',
-      'projectbridge_config_countOnlyPublicTasks',
-      'projectbridge_config_addContractSelectorOnCreatingTicketForm',
-      'projectbridge_config_elementsAssociateToExcessTicket',
-      'projectbridge_config_globalContractQuotaAlert'
+        'projectbridge_state_in_progress',
+        'projectbridge_state_closed',
+        'projectbridge_state_renewal',
+        'projectbridge_save_states',
+        'projectbridge_delete_recipient',
+        'projectbridge_add_recipient',
+        'projectbridge_add_recipient_submit',
+        'projectbridge_config_countOnlyPublicTasks',
+        'projectbridge_config_addContractSelectorOnCreatingTicketForm',
+        'projectbridge_config_elementsAssociateToExcessTicket',
+        'projectbridge_config_globalContractQuotaAlert'
     ];
 
     $post_data = getPostDataFromFields($post_fields);
@@ -119,7 +119,6 @@ if ($can_update) {
 
     echo '</thead>' . "\n";
 
-
     echo '<tbody>' . "\n";
 
     if (!empty($post_data['projectbridge_save_states'])) {
@@ -128,8 +127,8 @@ if ($can_update) {
         if ($post_data['projectbridge_state_in_progress'] !== $state_in_progress_value) {
             $state = new PluginProjectbridgeState();
             $state_data = [
-              'status' => 'in_progress',
-              'projectstates_id' => (int) $post_data['projectbridge_state_in_progress'],
+                'status' => 'in_progress',
+                'projectstates_id' => (int) $post_data['projectbridge_state_in_progress'],
             ];
 
             if ($state_in_progress_value === null) {
@@ -147,8 +146,8 @@ if ($can_update) {
         if ($post_data['projectbridge_state_closed'] !== $state_closed_value) {
             $state = new PluginProjectbridgeState();
             $state_data = [
-              'status' => 'closed',
-              'projectstates_id' => (int) $post_data['projectbridge_state_closed'],
+                'status' => 'closed',
+                'projectstates_id' => (int) $post_data['projectbridge_state_closed'],
             ];
 
             if ($state_closed_value === null) {
@@ -166,8 +165,8 @@ if ($can_update) {
         if ($post_data['projectbridge_state_renewal'] !== $state_renewal_value) {
             $state = new PluginProjectbridgeState();
             $state_data = [
-              'status' => 'renewal',
-              'projectstates_id' => (int) $post_data['projectbridge_state_renewal'],
+                'status' => 'renewal',
+                'projectstates_id' => (int) $post_data['projectbridge_state_renewal'],
             ];
 
             if ($state_renewal_value === null) {
@@ -182,8 +181,8 @@ if ($can_update) {
     }
 
     $state_dropdown_conf = [
-      'addicon' => false,
-      'comments' => false,
+        'addicon' => false,
+        'comments' => false,
     ];
 
     $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
@@ -246,27 +245,25 @@ if ($can_update) {
         $recipientIds = [];
     }
 
-    if (!empty($post_data['projectbridge_delete_recipient']) && is_array($post_data['projectbridge_delete_recipient'])
-    ) {
+    if (!empty($post_data['projectbridge_delete_recipient']) && is_array($post_data['projectbridge_delete_recipient'])) {
         $row_id = key($post_data['projectbridge_delete_recipient']);
 
         if (in_array($row_id, $recipientIds)) {
             $recipientIds = array_diff($recipientIds, [$row_id]);
             PluginProjectbridgeConfig::updateConfValue('RecipientIds', $recipientIds);
         }
-    } elseif (!empty($post_data['projectbridge_add_recipient']) && !empty($post_data['projectbridge_add_recipient_submit']) && !isset($post_data[(int) $post_data['projectbridge_add_recipient']])
-    ) {
+    } elseif (!empty($post_data['projectbridge_add_recipient']) && !empty($post_data['projectbridge_add_recipient_submit']) && !isset($post_data[(int) $post_data['projectbridge_add_recipient']])) {
         $recipient_user_id = (int) $post_data['projectbridge_add_recipient'];
 
         if (!in_array($recipient_user_id, $recipientIds)) {
             // check if selected user have email address
             $user = (new User())->getById($recipient_user_id);
-            
+
             if (strlen($user->getDefaultEmail()) > 0) {
                 $recipientIds[] = $recipient_user_id;
                 PluginProjectbridgeConfig::updateConfValue('RecipientIds', $recipientIds);
             } else {
-                echo '<div class="warning">'.__('The selected user have no default email adress configured', 'projectbridge').'</div>';
+                echo '<div class="warning">' . __('The selected user have no default email adress configured', 'projectbridge') . '</div>';
             }
         }
     }
@@ -322,11 +319,11 @@ if ($can_update) {
     echo '<tr">' . "\n";
     echo '<td>' . "\n";
     echo User::dropdown([
-      'name' => 'projectbridge_add_recipient',
-      'used' => $recipient_user_ids,
-      'right' => 'all',
-      'comments' => false,
-      'display' => false,
+        'name' => 'projectbridge_add_recipient',
+        'used' => $recipient_user_ids,
+        'right' => 'all',
+        'comments' => false,
+        'display' => false,
     ]);
     echo '</td>' . "\n";
     echo '<td>';
@@ -339,8 +336,7 @@ if ($can_update) {
     echo '</table>' . "\n";
     Html::closeForm();
 
-
-    echo '<h2>'.__('General config', 'projectbridge').'</h2>';
+    echo '<h2>' . __('General config', 'projectbridge') . '</h2>';
     echo '<form method="post" action="">' . "\n";
     echo '<table>' . "\n";
     echo '<thead>' . "\n";
@@ -360,7 +356,7 @@ if ($can_update) {
         PluginProjectbridgeConfig::updateConfValue('CountOnlyPublicTasks', $countOnlyPublicTasks);
     }
     echo '<tr">' . "\n";
-    echo '<td>'.__('Count only public tasks in project', 'projectbridge').'' . "\n";
+    echo '<td>' . __('Count only public tasks in project', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
     Dropdown::showYesNo('projectbridge_config_countOnlyPublicTasks', $countOnlyPublicTasks, []);
@@ -374,7 +370,7 @@ if ($can_update) {
         PluginProjectbridgeConfig::updateConfValue('AddContractSelectorOnCreatingTicketForm', $addContractSelectorOnCreatingTicketForm);
     }
     echo '<tr">' . "\n";
-    echo '<td>'.__('Add contract selector on creating ticket form', 'projectbridge').'' . "\n";
+    echo '<td>' . __('Add contract selector on creating ticket form', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
     Dropdown::showYesNo('projectbridge_config_addContractSelectorOnCreatingTicketForm', $addContractSelectorOnCreatingTicketForm, []);
@@ -388,27 +384,27 @@ if ($can_update) {
         PluginProjectbridgeConfig::updateConfValue('globalContractQuotaAlert', $globalContractQuotaAlert);
     }
     echo '<tr">' . "\n";
-    echo '<td>'.__('Global percentage quota to send alert notification', 'projectbridge').'' . "\n";
+    echo '<td>' . __('Global percentage quota to send alert notification', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
-    Dropdown::showFromArray('projectbridge_config_globalContractQuotaAlert', range(0, 100), ['value'=>$globalContractQuotaAlert]);
+    Dropdown::showFromArray('projectbridge_config_globalContractQuotaAlert', range(0, 100), ['value' => $globalContractQuotaAlert]);
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
 
     // select elements wich is copy during creating excess ticket
     $possibleElements = [
-        'tasks'     => _n('Task', 'Tasks', 2),
+        'tasks' => _n('Task', 'Tasks', 2),
         'followups' => _n('Followup', 'Followup', 2),
         'documents' => _n('Document', 'Documents', 2),
         'solutions' => _n('Solution', 'Solutions', 2),
-        'tickets'   => _n('Ticket', 'Tickets', 2),
-        'requester_groups'    => _n('Requester group', 'Requester groups', 2),
-        'requester'     => __('Requester user'),
+        'tickets' => _n('Ticket', 'Tickets', 2),
+        'requester_groups' => _n('Requester group', 'Requester groups', 2),
+        'requester' => __('Requester user'),
         'assign_groups' => __('Group in charge of the ticket'),
         'assign_technician' => __('Assigned to technicians'),
         'watcher_user' => __('Watcher user'),
         'watcher_group' => _n('Watcher group', 'Watcher groups', 2),
-     ];
+    ];
     $elementsAssociateToExcessTicket = PluginProjectbridgeConfig::getConfValueByName('ElementsAssociateToExcessTicket');
 
     if (!$elementsAssociateToExcessTicket) {
@@ -421,15 +417,15 @@ if ($can_update) {
         PluginProjectbridgeConfig::updateConfValue('ElementsAssociateToExcessTicket', $elementsAssociateToExcessTicket);
     }
     echo '<tr">' . "\n";
-    echo '<td>'.__('Elements from previous ticket to be associated with renewed ticket', 'projectbridge').'' . "\n";
+    echo '<td>' . __('Elements from previous ticket to be associated with renewed ticket', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
-    echo '<select name="projectbridge_config_elementsAssociateToExcessTicket[]" id="projectbridge_config_elementsAssociateToExcessTicket" class="select2" multiple>'. "\n";
+    echo '<select name="projectbridge_config_elementsAssociateToExcessTicket[]" id="projectbridge_config_elementsAssociateToExcessTicket" class="select2" multiple>' . "\n";
     foreach ($possibleElements as $key => $value) {
         $select = in_array($key, $elementsAssociateToExcessTicket) ? 'selected' : '';
-        echo '<option value="'.$key.'" '.$select.'>'.$value.'</option>';
+        echo '<option value="' . $key . '" ' . $select . '>' . $value . '</option>';
     }
-    echo '</select>'. "\n";
+    echo '</select>' . "\n";
     echo "<script type='text/javascript'>
     //<![CDATA[
     $(function() {
