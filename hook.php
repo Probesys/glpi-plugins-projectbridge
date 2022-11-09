@@ -494,7 +494,8 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
  */
 function plugin_projectbridge_ticket_update(Ticket $ticket)
 {
-    $update_val = $contract->input['update'] ?? $contract->input['_update'] ?? null;
+    $update_val = $ticket->input['update'] ?? $ticket->input['_update'] ?? null;
+    $isCreate = (array_key_exists('_add',$ticket->input) && $ticket->input['id'] == 0)?? false;
 
     if ($update_val == __('Make the connection', 'projectbridge') && !empty($ticket->input['projectbridge_project_id'])) {
         $is_project_link_update = true;
@@ -520,7 +521,7 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
     // get ticket status
     $ticketStatus = $ticket->getField('status');
 
-    if ($ticketStatus!=Ticket::CLOSED && ($is_project_link_update || ($contract_id && !$haveAlreadyContractAssociate))) {
+    if (($ticketStatus!=Ticket::CLOSED || $isCreate) && ($is_project_link_update || ($contract_id && !$haveAlreadyContractAssociate))) {
         // default contract for the entity found or update
 
         if (!$is_project_link_update) {
