@@ -69,7 +69,7 @@ function plugin_init_projectbridge()
     $PLUGIN_HOOKS['item_add'][PluginProjectbridgeConfig::NAMESPACE] = [
         'Contract' => 'plugin_projectbridge_contract_add',
         'TicketTask' => 'plugin_projectbridge_ticketask_add',
-        'Ticket'=> 'plugin_projectbridge_ticket_add',
+        'Ticket'=> 'plugin_projectbridge_ticket_update',
     ];
 
     $PLUGIN_HOOKS['use_massive_action'][PluginProjectbridgeConfig::NAMESPACE] = 1;
