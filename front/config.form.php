@@ -244,12 +244,14 @@ if ($can_update) {
     if (!$recipientIds) {
         $recipientIds = [];
     }
-
+    
     if (!empty($post_data['projectbridge_delete_recipient']) && is_array($post_data['projectbridge_delete_recipient'])) {
         $row_id = key($post_data['projectbridge_delete_recipient']);
-
         if (in_array($row_id, $recipientIds)) {
-            $recipientIds = array_diff($recipientIds, [$row_id]);
+            // search key to delete after
+            $key = array_search($row_id, $recipientIds);
+            // delete key and value et reorganize array
+            array_splice($recipientIds,$key,1);
             PluginProjectbridgeConfig::updateConfValue('RecipientIds', $recipientIds);
         }
     } elseif (!empty($post_data['projectbridge_add_recipient']) && !empty($post_data['projectbridge_add_recipient_submit']) && !isset($post_data[(int) $post_data['projectbridge_add_recipient']])) {
