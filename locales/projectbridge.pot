@@ -245,6 +245,18 @@ msgid_plural    "Requester groups"
 msgstr[0]       ""
 msgstr[1]       ""
 
+#: front/config.form.php:406
+msgid   "Requester user"
+msgid_plural    "Requester users"
+msgstr[0]       ""
+msgstr[1]       ""
+
+#: front/config.form.php:409
+msgid   "Watcher user"
+msgid_plural    "Watcher users"
+msgstr[0]       ""
+msgstr[1]       ""
+
 #: front/config.form.php:410
 msgid   "Watcher group"
 msgid_plural    "Watcher groups"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: ProjectBridge 2.4RC3\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
 "POT-Creation-Date: 2022-03-11 11:35+0100\n"
-"PO-Revision-Date: 2022-04-02 08:31+0000\n"
+"PO-Revision-Date: 2022-12-05 10:31-0300\n"
 "Last-Translator: Weblate Admin <noc@probesys.com>\n"
 "Language-Team: French <http://weblate.probesys.com/projects/plugins-glpi/"
 "projectbridge/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.11.2\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: hook.php:290 ajax/get_renewal_tickets.php:132
 msgctxt "projectbridge"
@@ -254,6 +254,24 @@ msgid "Requester group"
 msgid_plural "Requester groups"
 msgstr[0] "Groupe de demandeur"
 msgstr[1] "Groupes de demandeur"
+
+#: front/config.form.php:406
+#, fuzzy
+#| msgid "Requester group"
+#| msgid_plural "Requester groups"
+msgid "Requester user"
+msgid_plural "Requester users"
+msgstr[0] "Groupe de demandeur"
+msgstr[1] "Groupes de demandeur"
+
+#: front/config.form.php:409
+#, fuzzy
+#| msgid "Watcher group"
+#| msgid_plural "Watcher groups"
+msgid "Watcher user"
+msgid_plural "Watcher users"
+msgstr[0] "Groupe d'observateur"
+msgstr[1] "Groupes d'observateurs"
 
 #: front/config.form.php:410
 msgid "Watcher group"

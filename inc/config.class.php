@@ -59,7 +59,7 @@ class PluginProjectbridgeConfig extends CommonDBTM
           'FROM' => PluginProjectbridgeConfig::$table_name,
           'WHERE' => ['name' => $name]
         ]);
-        if ($row = $req->next()) {
+        if ($row = $req->current()) {
             $conf = $row;
         }
         

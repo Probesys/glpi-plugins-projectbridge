@@ -401,10 +401,10 @@ if ($can_update) {
         'solutions' => _n('Solution', 'Solutions', 2),
         'tickets' => _n('Ticket', 'Tickets', 2),
         'requester_groups' => _n('Requester group', 'Requester groups', 2),
-        'requester' => __('Requester user'),
+        'requester' => _n('Requester user', 'Requester users', 2),
         'assign_groups' => __('Group in charge of the ticket'),
         'assign_technician' => __('Assigned to technicians'),
-        'watcher_user' => __('Watcher user'),
+        'watcher_user' => _n('Watcher user','Watcher users', 2),
         'watcher_group' => _n('Watcher group', 'Watcher groups', 2),
     ];
     $elementsAssociateToExcessTicket = PluginProjectbridgeConfig::getConfValueByName('ElementsAssociateToExcessTicket');
