@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: ProjectBridge 2.4RC3\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
 "POT-Creation-Date: 2022-03-11 11:35+0100\n"
-"PO-Revision-Date: 2022-04-02 08:31+0000\n"
-"Last-Translator: Weblate Admin <noc@probesys.com>\n"
+"PO-Revision-Date: 2023-01-17 16:08+0100\n"
+"Last-Translator: probeSys <contact@probesys.com>\n"
 "Language-Team: French <http://weblate.probesys.com/projects/plugins-glpi/"
 "projectbridge/fr/>\n"
 "Language: fr_FR\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.11.2\n"
+"X-Generator: Poedit 2.4.2\n"
 
 #: hook.php:290 ajax/get_renewal_tickets.php:132
 msgctxt "projectbridge"
@@ -140,7 +140,7 @@ msgstr ""
 #: front/config.form.php:58 front/config.form.php:62
 msgctxt "projectbridge"
 msgid "ProjectBridge Configuration"
-msgstr "Configuration des statuts"
+msgstr "Configuration du plugin ProjectBridge"
 
 #: front/config.form.php:90 front/projecttask.php:7
 msgctxt "projectbridge"

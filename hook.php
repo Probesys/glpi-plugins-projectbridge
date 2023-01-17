@@ -19,7 +19,7 @@ function plugin_projectbridge_install()
                 PRIMARY KEY (`id`),
                 INDEX (`entity_id`)
             )
-            COLLATE='utf8_unicode_ci'
+            COLLATE='utf8mb4_unicode_ci'
             ENGINE=InnoDB
         ";
         $DB->query($create_table_query) or die($DB->error());
@@ -36,7 +36,7 @@ function plugin_projectbridge_install()
                 PRIMARY KEY (`id`),
                 INDEX (`contract_id`)
             )
-            COLLATE='utf8_unicode_ci'
+            COLLATE='utf8mb4_unicode_ci'
             ENGINE=InnoDB
         ";
         $DB->query($create_table_query) or die($DB->error());
@@ -52,7 +52,7 @@ function plugin_projectbridge_install()
                 PRIMARY KEY (`id`),
                 INDEX (`ticket_id`)
             )
-            COLLATE='utf8_unicode_ci'
+            COLLATE='utf8mb4_unicode_ci'
             ENGINE=InnoDB
         ";
         $DB->query($create_table_query) or die($DB->error());
@@ -74,7 +74,7 @@ function plugin_projectbridge_install()
                 `value` VARCHAR(250) NOT NULL,
                 PRIMARY KEY (`id`)
             )
-            COLLATE='utf8_unicode_ci'
+            COLLATE='utf8mb4_unicode_ci'
             ENGINE=InnoDB
         ";
     if (!$DB->tableExists(PluginProjectbridgeConfig::$table_name)) {
@@ -145,7 +145,7 @@ function plugin_projectbridge_install()
                 PRIMARY KEY (`id`),
                 INDEX (`status`)
             )
-            COLLATE='utf8_unicode_ci'
+            COLLATE='utf8mb4_unicode_ci'
             ENGINE=InnoDB
         ";
         $DB->query($create_table_query) or die($DB->error());
@@ -160,7 +160,7 @@ function plugin_projectbridge_install()
                 `quotaAlert` INT(11) NOT NULL,
                 PRIMARY KEY (`id`)
             )
-            COLLATE='utf8_unicode_ci'
+            COLLATE='utf8mb4_unicode_ci'
             ENGINE=InnoDB
         ";
         $DB->query($create_table_query) or die($DB->error());
@@ -172,7 +172,7 @@ function plugin_projectbridge_install()
         $DB->query($delete_crontask_table) or die($DB->error());
     }
     if (version_compare(PLUGIN_PROJECTBRIDGE_VERSION, '2.3', '>')) {
-        $update_structure_query = "ALTER TABLE `" . PluginProjectbridgeConfig::$table_name . "` CHANGE `value` `value` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;";
+        $update_structure_query = "ALTER TABLE `" . PluginProjectbridgeConfig::$table_name . "` CHANGE `value` `value` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci NOT NULL;";
         $DB->query($update_structure_query) or die($DB->error());
     }
 

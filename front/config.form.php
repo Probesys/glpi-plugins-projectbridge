@@ -57,12 +57,11 @@ global $CFG_GLPI;
 
 Html::header(__('ProjectBridge Configuration', 'projectbridge'), $_SERVER['PHP_SELF'], 'config', 'plugins');
 echo '<div align="center">' . "\n";
-
+echo '<div class="card">' . "\n";
 echo '<h1>';
 echo __('ProjectBridge Configuration', 'projectbridge');
 echo '</h1>' . "\n";
 
-echo '<hr />' . "\n";
 
 if ($can_update) {
     $post_fields = [
@@ -91,10 +90,12 @@ if ($can_update) {
     echo '</a>';
 
     // status config
-
+    echo '<div class="card-header">' . "\n";
     echo '<h2>';
     echo __('Status Configuration', 'projectbridge');
     echo '</h2>' . "\n";
+    echo '</div>' . "\n";
+    echo '<div class="card-body">' . "\n";
 
     echo '<p>';
     echo __('Please match the status names and their values in GLPI', 'projectbridge') . '.';
@@ -237,8 +238,6 @@ if ($can_update) {
     echo '</table>' . "\n";
     Html::closeForm();
 
-    echo '<hr />' . "\n";
-
     // recipients config
     $recipientIds = PluginProjectbridgeConfig::getConfValueByName('RecipientIds');
     if (!$recipientIds) {
@@ -270,10 +269,13 @@ if ($can_update) {
         }
     }
     $recipients = PluginProjectbridgeConfig::getRecipients();
-
+    echo '</div>' . "\n";
+    echo '<div class="card-header">' . "\n";
     echo '<h2>';
     echo __('People receiving alerts', 'projectbridge');
     echo '</h2>' . "\n";
+    echo '</div>' . "\n";
+    echo '<div class="card-body">' . "\n";
 
     echo '<form method="post" action="">' . "\n";
     echo '<table>' . "\n";
@@ -337,8 +339,12 @@ if ($can_update) {
 
     echo '</table>' . "\n";
     Html::closeForm();
-
+    
+    echo '</div>' . "\n";
+    echo '<div class="card-header">' . "\n";
     echo '<h2>' . __('General config', 'projectbridge') . '</h2>';
+    echo '</div>' . "\n";
+    echo '<div class="card-body">' . "\n";
     echo '<form method="post" action="">' . "\n";
     echo '<table>' . "\n";
     echo '<thead>' . "\n";
@@ -465,5 +471,7 @@ if ($can_update) {
     echo '</b>';
 }
 
+echo '</div>' . "\n";
+echo '</div>' . "\n";
 echo '</div>' . "\n";
 Html::footer();
