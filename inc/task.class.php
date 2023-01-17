@@ -851,7 +851,7 @@ class PluginProjectbridgeTask extends CommonDBTM
             echo __('Plugin is not installed', 'projectbridge') . "<br />\n";
             return 0;
         }
-
+        global $CFG_GLPI;
         $nb_successes = 0;
         $recipients = PluginProjectbridgeConfig::getRecipients();
         echo count($recipients) . ' ' . __('person(s) to alert', 'projectbridge') . "<br />\n";
@@ -869,7 +869,7 @@ class PluginProjectbridgeTask extends CommonDBTM
 
             $html_parts[] = '<ol>' . "\n";
 
-            global $CFG_GLPI;
+            
 
             foreach ($contracts as $contract_id => $contract_data) {
                 $html_parts[] = '<li>' . "\n";
@@ -957,7 +957,7 @@ class PluginProjectbridgeTask extends CommonDBTM
             echo __('Plugin is not installed', 'projectbridge') . "<br />\n";
             return 0;
         }
-
+        global $CFG_GLPI;
         $nb_successes = 0;
         $recipients = PluginProjectbridgeConfig::getRecipients();
         echo count($recipients) . ' ' . __('person(s) to alert', 'projectbridge') . "<br />\n";
@@ -973,8 +973,6 @@ class PluginProjectbridgeTask extends CommonDBTM
             $html_parts[] = '</p>' . "\n";
 
             $html_parts[] = '<ol>' . "\n";
-
-            global $CFG_GLPI;
 
             foreach ($contracts as $contract_id => $contract_data) {
                 $html_parts[] = '<li>' . "\n";
