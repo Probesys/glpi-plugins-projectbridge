@@ -1021,7 +1021,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         $contracts = [];
 
         if ($result) {
-            while ($row = $DB->fetch_assoc($result)) {
+            while ($row = $DB->fetchAssoc($result)) {
                 $contract = new Contract();
                 $contract->getFromDB($row['id']);
 
@@ -1075,7 +1075,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         $result = $DB->query($get_contracts_query);
         $contracts = [];
         if ($result) {
-            while ($row = $DB->fetch_assoc($result)) {
+            while ($row = $DB->fetchAssoc($result)) {
                 $contract = new Contract();
                 $contract->getFromDB($row['id']);
 

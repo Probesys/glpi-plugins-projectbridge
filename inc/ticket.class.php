@@ -312,7 +312,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
         $result = $DB->query($get_nb_links_query);
 
         if ($result && $DB->numrows($result)) {
-            $results = $DB->fetch_assoc($result);
+            $results = $DB->fetchAssoc($result);
             $nb_links = (int) $results['nb_links'];
         } else {
             $nb_links = 0;
