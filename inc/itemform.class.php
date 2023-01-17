@@ -188,8 +188,10 @@ class PluginProjectbridgeItemForm
             'value' => $defaultContractID,
             'display' => false,
             'values' => $contract_list,
-            'class' => 'required',
-            'noselect2' => false
+            'class' => count($contract_datas)?'required':'',
+            'required'=> count($contract_datas)?'required':'',
+            'noselect2' => false,
+            'display_emptychoice' => true
         ];
 
         $html_parts = Dropdown::showFromArray('projectbridge_contract_id', $contract_list, $config);
@@ -200,12 +202,11 @@ class PluginProjectbridgeItemForm
             $requiredSpan = '<span class="required">*</span>';
         }
         
-        $out = '<tr tab_bg_1>';
-        $out .= '<th>' . __('Associated contract') .$requiredSpan. '</th>';
+        $out = '<div class="form-field row col-12  mb-2">';
+        $out .= '<label class="col-form-label col-xxl-4 text-xxl-end">' . __('Associated contract') .$requiredSpan. '</label>';
         // récupération des contrats associés à l'entité
-        $out .= '<td>' . $html_parts . '</td>';
-        $out .= '<th></th><td></td>';
-        $out .= '</tr>';
+        $out .= '<div class="col-xxl-8  field-container">' . $html_parts . '</div>';
+        $out .= '</div>';
         
 
         return $out;
