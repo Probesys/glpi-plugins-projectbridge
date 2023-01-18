@@ -73,15 +73,18 @@ class PluginProjectbridgeContract extends CommonDBTM
     public static function postShow(Contract $contract)
     {
         $contract_id = $contract->getId();
-
+        
         $html_parts = [];
         $html_parts[] = '<div style="display: none;">' . "\n";
-        $html_parts[] = '<table class="tab_cadre_fixe">' . "\n";
-        $html_parts[] = '<tr id="projectbridge_config" class="tab_bg_1">' . "\n";
-        $html_parts[] = '<td>';
-        $html_parts[] = __('linking Project', 'projectbridge');
-        $html_parts[] = '</td>' . "\n";
-        $html_parts[] = '<td colspan="2">' . "\n";
+        $html_parts[] = '       <div id="projectbridge_config"class="col-12 col-xxl-12 flex-column" >' . "\n";
+        $html_parts[] = '           <div class="d-flex flex-row flex-wrap flex-xl-nowrap" >' . "\n";
+        $html_parts[] = '               <div class="row flex-row align-items-start flex-grow-1" >' . "\n";
+        $html_parts[] = '                   <div class="row flex-row" >' . "\n";
+        $html_parts[] = '                       <div class="form-field row col-12 col-sm-6  mb-2">' . "\n";
+        $html_parts[] = '                           <label class="col-form-label col-xxl-5 text-xxl-end" for="projectbridge_project_id">';
+        $html_parts[] =                             __('linking Project', 'projectbridge');
+        $html_parts[] = '                           </label>' . "\n";
+        $html_parts[] = '                           <div class="col-xxl-7 field-container">' . "\n";
         if (empty($contract_id)) {
             // create
             $html_parts[] = PluginProjectbridgeContract::_getPostShowCreateHtml($contract);
@@ -89,24 +92,24 @@ class PluginProjectbridgeContract extends CommonDBTM
             // update
             $html_parts[] = PluginProjectbridgeContract::_getPostShowUpdateHtml($contract);
         }
-        $html_parts[] = '</td>' . "\n";
-        $html_parts[] = '<td>';
-        $html_parts[] = '&nbsp;';
-        $html_parts[] = '</td>' . "\n";
-        $html_parts[] = '</tr>' . "\n";
-        $html_parts[] = '</table>' . "\n";
+        $html_parts[] = '                           </div>' . "\n";
+        $html_parts[] = '                       </div>' . "\n";
+        $html_parts[] = '                   </div>' . "\n";
+        $html_parts[] = '               </div>' . "\n";
+        $html_parts[] = '           </div>' . "\n";
+        $html_parts[] = '       </div>' . "\n";
         $html_parts[] = '</div>' . "\n";
 
         echo implode('', $html_parts);
         echo Html::scriptBlock('$(document).ready(function() {
             var projectbridge_config = $("#projectbridge_config");
-            var target = $("#mainformtable tr.footerRow").next();
+            var target = $("#mainformtable .card-body").first();
 
             if (!target.length) {
                 target = $("#mainformtable tr:last");
             }
 
-            target.before(projectbridge_config.clone());
+            target.append(projectbridge_config.clone());
             projectbridge_config.remove();
             projectbridge_config = $("#projectbridge_config");
 
@@ -128,6 +131,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     private static function _getPostShowCreateHtml(Contract $contract)
     {
         $html_parts = [];
+        $html_parts[] = '&nbsp;';
         $html_parts[] = __('Create project', 'projectbridge') . ' :';
         $html_parts[] = '&nbsp;';
         $html_parts[] = Dropdown::showYesNo('projectbridge_create_project', 1, -1, ['display' => false]);
@@ -179,7 +183,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         global $CFG_GLPI;
 
         if (!empty($project_id) && isset($project_list[$project_id])) {
-            $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left:5px;" target="_blank">';
+            $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/project.form.php?id=' . $project_id . '" style="margin-left:5px;" class="btn btn-outline-warning me-2" target="_blank">';
             $html_parts[] = __('Access to linked project', 'projectbridge');
             $html_parts[] = '</a>' . "\n";
 
@@ -198,14 +202,11 @@ class PluginProjectbridgeContract extends CommonDBTM
             $nb_hours = $bridge_contract->getNbHours();
 
             if ($nb_hours) {
-
                 // get all activ projectTask
                 $activeProjectTask = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($project_id);
-
                 if (!count($activeProjectTask)) {
                     $haveToBeRenewed = true;
-                    $html_parts[] = '<span class="red">' . __('Warning ! No associate projectTask with "In progress" status exist', 'projectbridge') . ' </span><br/>';
-                    $projectTaskID = null;
+                    $html_parts[] = '<div class="alert alert-warning"><i class="fas fa-exclamation-triangle"></i>&nbsp;' . __('Warning ! No associate projectTask with "In progress" status exist', 'projectbridge') . ' </div>';
                     $lastClosedProjectTask = PluginProjectbridgeContract::getLastClosedProjectTasksForProject($project_id);
                     $projectTaskID = $lastClosedProjectTask['id'];
                 } else {
@@ -218,22 +219,21 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $consumption_ratio = $consumption / $nb_hours;
                 }
 
-                $classRation = '';
+                $classRation = 'info';
                 if ($consumption >= $nb_hours) {
                     $haveToBeRenewed = true;
-                    $classRation = 'red';
+                    $classRation = 'danger';
                 }
-                $html_parts[] = '<span class="' . $classRation . '">';
+                $html_parts[] = '<div class="alert alert-' . $classRation . '"><i class="fa fa-info-circle"></i>&nbsp;';
                 if ($activeProjectTask || $lastClosedProjectTask) {
                     $html_parts[] = __('Comsuption', 'projectbridge') . ' : ';
                     $html_parts[] = round($consumption, 2) . '/' . $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours);
                     $html_parts[] = '&nbsp;';
                     $html_parts[] = '(' . round($consumption_ratio * 100) . '%)';
                 } elseif ($consumption) {
-                    $html_parts[] = '<br/>'.__('Comsuption', 'projectbridge') . ' : '.round($consumption, 2) . ' ' . _n('Hour', 'Hours', $consumption);
-                    //$html_parts[] = '0/'. $nb_hours . ' ' . _n('Hour', 'Hours', $nb_hours).'&nbsp; (0%)';
+                    $html_parts[] = __('Comsuption', 'projectbridge') . ' : '.round($consumption, 2) . ' ' . _n('Hour', 'Hours', $consumption);
                 }
-                $html_parts[] = '</span>';
+                $html_parts[] = '</div>';
             }
 
 
@@ -246,79 +246,72 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $date_delta = $datediff / (60 * 60 * 24);
                 $end_date_delta = floor($date_delta);
 
-                if ($nb_hours) {
-                    $html_parts[] = '&nbsp;';
-                    $html_parts[] = '-';
-                    $html_parts[] = '&nbsp;';
-                }
-
                 if ($end_date_delta == 0) {
                     $end_date_reached = true;
-                    $html_parts[] = '<span class="red">' . __('Expired in less than 24h', 'projectbridge') . ' ! </span>';
+                    $html_parts[] = '<div class="alert alert-danger d-flex align-items-center" role="alert"><i class="fas fa-exclamation-triangle"></i>&nbsp;' . __('Expired in less than 24h', 'projectbridge') . ' ! </div>';
                 } elseif ($end_date_delta > 0) {
-                    $html_parts[] = __('Expired in', 'projectbridge') . ' ' . $end_date_delta . ' ' . _n('Day', 'Days', abs($end_date_delta));
+                    $html_parts[] = '<div class="alert alert-info"><i class="fas fa-exclamation-triangle"></i>&nbsp;' .__('Expired in', 'projectbridge') . ' ' . $end_date_delta . ' ' . _n('Day', 'Days', abs($end_date_delta)).'</div>';
                 } else {
                     $end_date_reached = true;
 
                     if ($date_delta > -1) {
-                        $html_parts[] = '<span class="red">' . __('Expired today', 'projectbridge') . ' ! </span>';
+                        $html_parts[] = '<div class="alert alert-danger d-flex align-items-center" role="alert"><i class="fas fa-exclamation-triangle"></i>&nbsp;' . __('Expired today', 'projectbridge') . ' ! </div>';
                     } else {
-                        $html_parts[] = '<span class="red">' . __('Expired since', 'projectbridge') . ' ' . (abs($end_date_delta)) . ' ' . _n('Day', 'Days', abs($end_date_delta)) . ' ! </span>';
+                        $html_parts[] = '<div class="alert alert-danger d-flex align-items-center" role="alert">' . __('Expired since', 'projectbridge') . ' ' . (abs($end_date_delta)) . ' ' . _n('Day', 'Days', abs($end_date_delta)) . ' ! </div>';
                         $haveToBeRenewed = true;
                     }
                 }
             }
 
             if ($haveToBeRenewed) {
-                $html_parts[] = '&nbsp;-&nbsp;';
 
                 $html_parts[] = '<input type="submit" value="' . __('Renew the contract', 'projectbridge') . '" class="submit projectbridge-renewal-trigger" />' . "\n";
 
                 $renewal_data = $bridge_contract->getRenewalData();
-                $html_parts[] = '<table class="projectbridge-renewal-data" style="display: none; margin-top: 15px; padding: 15px; background: #cacaca;">' . "\n";
+                $html_parts[] = '<div class="projectbridge-renewal-data " style="display: none;">' . "\n";
+                $html_parts[] = '<div class="card ">' . "\n";
+                $html_parts[] = '<div class="card card-body row flex-row">' . "\n";
 
-                $html_parts[] = '<tr>' . "\n";
-                $html_parts[] = '<td>';
+                $html_parts[] = '<div class="form-field row col-12  mb-2">' . "\n";
+                $html_parts[] = '<label class="col-form-label col-xxl-5 text-xxl-end">';
                 $html_parts[] = __('Start date');
-                $html_parts[] = '</td>' . "\n";
-                $html_parts[] = '<td>';
+                $html_parts[] = '</label>' . "\n";
+                $html_parts[] = '<div class="col-xxl-7  field-container">';
                 $html_parts[] = Html::showDateField('projecttask_begin_date', [
                             'value' => $renewal_data['begin_date'],
                             'maybeempty' => false,
                             'display' => false,
                 ]);
-                $html_parts[] = '</td>' . "\n";
-                $html_parts[] = '</tr>' . "\n";
+                $html_parts[] = '</div>' . "\n";
+                $html_parts[] = '</div>' . "\n";
 
-                $html_parts[] = '<tr>' . "\n";
-                $html_parts[] = '<td>';
+                $html_parts[] = '<div class="form-field row col-12 mb-2">' . "\n";
+                $html_parts[] = '<label class="col-form-label col-xxl-5 text-xxl-end">';
                 $html_parts[] = __('Duration') . ' (' . _n('month', 'months', 2) . ')';
-                $html_parts[] = '</td>' . "\n";
-                $html_parts[] = '<td>';
+                $html_parts[] = '</label>' . "\n";
+                $html_parts[] = '<div class="col-xxl-7  field-container">';
                 $html_parts[] = '<input type="number" min="0" max="12" name="projectbridge_duration" value="' . $renewal_data['duration'] . '" style="width: 50px" step="any" />';
+                $html_parts[] = '</div>' . "\n";
+                $html_parts[] = '</div>' . "\n";
 
-                $html_parts[] = '</td>' . "\n";
-                $html_parts[] = '</tr>' . "\n";
-
-                $html_parts[] = '<tr>' . "\n";
-                $html_parts[] = '<td>';
+                $html_parts[] = '<div class="form-field row col-12 mb-2">' . "\n";
+                $html_parts[] = '<label class="col-form-label col-xxl-5 text-xxl-end">';
                 $html_parts[] = __('Number of hours', 'projectbridge');
-                $html_parts[] = '</td>' . "\n";
-                $html_parts[] = '<td>';
+                $html_parts[] = '</label>' . "\n";
+                $html_parts[] = '<div class="col-xxl-7  field-container">';
                 $html_parts[] = '<input type="number" min="0" max="99999" name="projectbridge_nb_hours_to_use" value="' . $renewal_data['nb_hours_to_use'] . '" style="width: 50px" step="any" />';
-                $html_parts[] = '</td>' . "\n";
-                $html_parts[] = '</tr>' . "\n";
+                $html_parts[] = '</div>' . "\n";
+                $html_parts[] = '</div>' . "\n";
+                
 
-                $html_parts[] = '<tr>' . "\n";
-                $html_parts[] = '<td>';
+                $html_parts[] = '<div class="col-12  mb-2">' . "\n";
                 $html_parts[] = '<input type="submit" name="update" value="' . __('Confirm renewal', 'projectbridge') . '" class="submit projectbridge-renewal-tickets" />';
-                $html_parts[] = '</td>' . "\n";
-                $html_parts[] = '<td>';
                 $html_parts[] = '<input type="submit" name="update" value="' . __('Cancel') . '" class="submit projectbridge-renewal-cancel" />';
-                $html_parts[] = '</td>' . "\n";
-                $html_parts[] = '</tr>' . "\n";
+                $html_parts[] = '</div>' . "\n";
 
-                $html_parts[] = '</table>' . "\n";
+                $html_parts[] = '</div>' . "\n";
+                $html_parts[] = '</div>' . "\n";
+                $html_parts[] = '</div>' . "\n";
 
                 $modal_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/ajax/get_renewal_tickets.php';
                 $html_parts[] = Ajax::createModalWindow('renewal_tickets_modal', $modal_url, [
@@ -567,11 +560,16 @@ class PluginProjectbridgeContract extends CommonDBTM
         $html_parts = [];
 
         if ($withInput) {
-            $html_parts[] = '<br />';
-            $html_parts[] = '<br />';
-            $html_parts[] = __('Number of hours', 'projectbridge') . ' :';
-            $html_parts[] = '&nbsp;';
-            $html_parts[] = '<input type="number" min="0" max="99999" step="1" name="projectbridge_project_hours" value="' . $nb_hours . '" style="width: 50px" />';
+            $html_parts[] = '</div>';
+            $html_parts[] = '</div>';
+            $html_parts[] = '<div class="form-field row col-12 col-sm-6  mb-2">';
+            $html_parts[] = '   <label class="col-form-label col-xxl-5 text-xxl-end" for="projectbridge_project_hours">';
+            $html_parts[] =     __('Number of hours', 'projectbridge') . ' :';
+            $html_parts[] = '   </label>';
+            $html_parts[] = '   <div class="col-xxl-7  field-container">';
+            $html_parts[] = '       <input type="number" min="0" max="99999" step="1" name="projectbridge_project_hours" value="' . $nb_hours . '" style="width: 50px" />';
+            $html_parts[] = '   </div>';
+            $html_parts[] = '</div>';
         } else {
             $html_parts[] = '<input type="hidden" name="projectbridge_project_hours" value="' . $nb_hours . '" />';
         }
