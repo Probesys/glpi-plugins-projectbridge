@@ -1163,15 +1163,15 @@ class PluginProjectbridgeContract extends CommonDBTM
                     $contract = new Contract();
 
                     if ($contract->getFromDB($contract_bridge_data['contract_id'])) {
-                        $html_parts[] = '<a href="' . $contract_url . $contract->getId() . '" target="_blank">';
+                        $html_parts[] = '<div class="center firstbloc"><a href="' . $contract_url . $contract->getId() . '" class="btn btn-outline-warning me-2" target="_blank">';
                         $html_parts[] = __('Access to linked contract', 'projectbridge') . ' "' . $contract->fields['name'] . '"';
-                        $html_parts[] = '</a><br/>';
+                        $html_parts[] = '</a></div><br/>';
                     } else {
-                        $html_parts[] = __('Link to contract nonexistent', 'projectbridge') . ' : ' . __('Access to linked contract', 'projectbridge') . ' n°' . $contract->getId();
+                        $html_parts[] = '<div class="alert alert-warning">'.__('Link to contract nonexistent', 'projectbridge') . ' : ' . __('Access to linked contract', 'projectbridge') . ' n°' . $contract->getId().'</div>';
                     }
                 }
             } else {
-                $html_parts[] = __('No linked contract', 'projectbridge');
+                $html_parts[] = '<div class="alert alert-info">'.__('No linked contract', 'projectbridge').'</div>';
             }
 
             $html_parts[] = '</div>' . "\n";
