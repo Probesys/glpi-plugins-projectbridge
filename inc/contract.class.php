@@ -273,7 +273,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '<div class="card card-body row flex-row">' . "\n";
 
                 $html_parts[] = '<div class="form-field row col-12  mb-2">' . "\n";
-                $html_parts[] = '<label class="col-form-label col-xxl-5 text-xxl-end">';
+                $html_parts[] = '<label class="col-form-label col-xxl-5 text-xxl-end" for="projecttask_begin_date">';
                 $html_parts[] = __('Start date');
                 $html_parts[] = '</label>' . "\n";
                 $html_parts[] = '<div class="col-xxl-7  field-container">';
@@ -286,20 +286,20 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $html_parts[] = '</div>' . "\n";
 
                 $html_parts[] = '<div class="form-field row col-12 mb-2">' . "\n";
-                $html_parts[] = '<label class="col-form-label col-xxl-5 text-xxl-end">';
+                $html_parts[] = '<label class="col-form-label col-xxl-5 text-xxl-end" for="projectbridge_duration">';
                 $html_parts[] = __('Duration') . ' (' . _n('month', 'months', 2) . ')';
                 $html_parts[] = '</label>' . "\n";
                 $html_parts[] = '<div class="col-xxl-7  field-container">';
-                $html_parts[] = '<input type="number" min="0" max="12" name="projectbridge_duration" value="' . $renewal_data['duration'] . '" style="width: 50px" step="any" />';
+                $html_parts[] = '<input type="number" min="0" max="12" name="projectbridge_duration" value="' . $renewal_data['duration'] . '" style="width: 150px"  step="any" />';
                 $html_parts[] = '</div>' . "\n";
                 $html_parts[] = '</div>' . "\n";
 
                 $html_parts[] = '<div class="form-field row col-12 mb-2">' . "\n";
-                $html_parts[] = '<label class="col-form-label col-xxl-5 text-xxl-end">';
+                $html_parts[] = '<label class="col-form-label col-xxl-5 text-xxl-end" for="projectbridge_nb_hours_to_use">';
                 $html_parts[] = __('Number of hours', 'projectbridge');
                 $html_parts[] = '</label>' . "\n";
                 $html_parts[] = '<div class="col-xxl-7  field-container">';
-                $html_parts[] = '<input type="number" min="0" max="99999" name="projectbridge_nb_hours_to_use" value="' . $renewal_data['nb_hours_to_use'] . '" style="width: 50px" step="any" />';
+                $html_parts[] = '<input type="number" min="0" max="99999" name="projectbridge_nb_hours_to_use" value="' . $renewal_data['nb_hours_to_use'] . '" style="width: 150px" step="any" />';
                 $html_parts[] = '</div>' . "\n";
                 $html_parts[] = '</div>' . "\n";
                 
@@ -316,6 +316,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $modal_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/ajax/get_renewal_tickets.php';
                 $html_parts[] = Ajax::createModalWindow('renewal_tickets_modal', $modal_url, [
                             'display' => false,
+                            'title'       => __('Renew the contract', 'projectbridge'),
                             'extraparams' => [
                                 //'task_id' => PluginProjectbridgeContract::getProjectTaskDataByProjectId($project_id, 'task_id', $search_closed),
                                 'task_id' => self::getProjectTaskFieldValue($project_id, $search_closed, 'id'),
@@ -324,12 +325,13 @@ class PluginProjectbridgeContract extends CommonDBTM
                             ],
                 ]);
 
+
                 $date_format = Toolbox::getDateFormat('js');
 
                 $js_block = '
                     window.projectbridge_datepicker_init = true;
                     window._renewal_modal_js = undefined;
-
+                    
                     /**
                      * Trigger a timeout until a modal is open
                      *
@@ -338,7 +340,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                      */
                     function timeoutUntilModalOpen(modal, callback)
                     {
-                        if ($("form", modal).length) {
+                        if ($("#moreDataContainer").length) {
                             callback();
                         } else {
                             window.setTimeout(function() {
@@ -346,10 +348,10 @@ class PluginProjectbridgeContract extends CommonDBTM
                             }, 300);
                         }
                     }
-                    
+                                        
                     function add_months(dt, n) 
                     {
-                    console.log("old date : " + dt);
+                        console.log("old date : " + dt);
                         var new_date =  new Date(dt.setMonth(dt.getMonth() + parseInt(n)));   
                         var new_date_hour = dt.getHours();
                         // check timezone difference problem
@@ -427,12 +429,12 @@ class PluginProjectbridgeContract extends CommonDBTM
                             renewal_tickets_modal = window._renewal_modal_js();
                         }
 
-                        renewal_tickets_modal.dialog("open");
+                        
                         var strDate = $("input[name=projecttask_begin_date]").val().split("-");
                         var begin_Date = new Date(parseInt(strDate[0]), parseInt(strDate[1])-1, parseInt(strDate[2]));
                         //var end_date = add_months(begin_Date, $("input[name=projectbridge_duration]").val()).toISOString().slice(0,10);
                         var end_date = add_months(begin_Date, $("input[name=projectbridge_duration]").val());
-                        console.log(end_date);
+                        //console.log(end_date);
                         
                         var data_to_add_to_modal = {
                             projectbridge_project_id: $("[id^=dropdown_projectbridge_project_id]").val(),
@@ -448,9 +450,17 @@ class PluginProjectbridgeContract extends CommonDBTM
                         for (var data_name in data_to_add_to_modal) {
                             html_to_add_to_modal += "<input type=\"hidden\" name=\"" + data_name + "\" value=\"" + data_to_add_to_modal[data_name] + "\" />";
                         }
+                        
+                        // open modal
+                        renewal_tickets_modal.show();
 
+                        // add more input into the modal form
                         timeoutUntilModalOpen(renewal_tickets_modal, function() {
-                            $("form", renewal_tickets_modal).prepend(html_to_add_to_modal);
+                            //console.log("dans la fonction timeoutUntilModalOpen");
+                            $("#moreDataContainer").html(html_to_add_to_modal);
+                            //console.log($("#moreDataContainer").html());
+                            // reactivate the submit button of the modal form
+                            $("#renewal_tickets_form_submit").prop( "disabled", false );
                             renewal_tickets_modal = undefined;
                         });
 
