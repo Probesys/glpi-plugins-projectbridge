@@ -51,9 +51,7 @@ function plugin_projectbridge_install()
                 `projecttasks_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX (`ticket_id`)
-            )
-            COLLATE='utf8mb4_unicode_ci'
-            ENGINE=InnoDB
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC
         ";
         $DB->query($create_table_query) or die($DB->error());
     } else {
@@ -73,9 +71,7 @@ function plugin_projectbridge_install()
                 `name` VARCHAR(50) NOT NULL ,
                 `value` VARCHAR(250) NOT NULL,
                 PRIMARY KEY (`id`)
-            )
-            COLLATE='utf8mb4_unicode_ci'
-            ENGINE=InnoDB
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC
         ";
     if (!$DB->tableExists(PluginProjectbridgeConfig::$table_name)) {
         $DB->query($create_tableConfig_query) or die($DB->error());
@@ -139,14 +135,12 @@ function plugin_projectbridge_install()
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeState::$table_name . "`
             (
-                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
                 `status` VARCHAR(250) NOT NULL,
                 `projectstates_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX (`status`)
-            )
-            COLLATE='utf8mb4_unicode_ci'
-            ENGINE=InnoDB
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC
         ";
         $DB->query($create_table_query) or die($DB->error());
     }
@@ -155,13 +149,11 @@ function plugin_projectbridge_install()
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeContractQuotaAlert::$table_name . "`
             (
-                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
                 `contract_id` INT(11) NOT NULL,
                 `quotaAlert` INT(11) NOT NULL,
                 PRIMARY KEY (`id`)
-            )
-            COLLATE='utf8mb4_unicode_ci'
-            ENGINE=InnoDB
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC
         ";
         $DB->query($create_table_query) or die($DB->error());
     }
