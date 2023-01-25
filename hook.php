@@ -164,7 +164,7 @@ function plugin_projectbridge_install()
         $DB->query($delete_crontask_table) or die($DB->error());
     }
     if (version_compare(PLUGIN_PROJECTBRIDGE_VERSION, '2.3', '>')) {
-        $update_structure_query = "ALTER TABLE `" . PluginProjectbridgeConfig::$table_name . "` CHANGE `value` `value` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8mb4_unicode_ci NOT NULL;";
+        $update_structure_query = "ALTER TABLE `" . PluginProjectbridgeConfig::$table_name . "` CHANGE `value` `value` VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;";
         $DB->query($update_structure_query) or die($DB->error());
     }
 
