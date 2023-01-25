@@ -1208,28 +1208,24 @@ class PluginProjectbridgeContract extends CommonDBTM
             $selectedValue = $contractQuotaAlert['quotaAlert'];
         }
 
-        echo "<div class='spaced'>";
-
+        echo "<div class='card'>";
+        echo "<div class='card-body'>";
+        echo "<h5 class='card-title'>".__('ProjectBridge Configurations', 'projectbridge')."</h5>";
         echo "<form method='post' name='form' action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
-
-        echo "<table class='tab_cadre_fixe'>";
-        echo "<tr><th colspan='2'>".__('ProjectBridge Configurations', 'projectbridge')."</th></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>".__('Percentage quota to send alert notification', 'projectbridge')."</td>";
-        echo "<td>";
+        
+        echo "<div class='form-group'>";
+        echo "<label for='percentage_quota'>".__('Percentage quota to send alert notification', 'projectbridge')."</label>";
         Dropdown::showFromArray('percentage_quota', range(0, 100), ['value'=>$selectedValue]);
-        echo '</td></tr>';
-
-        echo "<tr>";
-        echo "<td class='tab_bg_2 center' colspan='4'>";
+        echo "</div>";
+        
+        echo "<div class='center firstbloc'>";
         echo "<input type='hidden' name='id' value='".$contractId."'>";
         echo "<input type='submit' name='update' value=\""._sx('button', 'Save')."\" class='submit'>";
-        echo "</td></tr>";
-        echo "</table>";
+        echo "</div>";
+        
         Html::closeForm();
 
-
+        echo "</div>";
         echo "</div>";
     }
 

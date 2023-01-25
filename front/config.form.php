@@ -74,6 +74,7 @@ if ($can_update) {
         'projectbridge_add_recipient_submit',
         'projectbridge_config_countOnlyPublicTasks',
         'projectbridge_config_addContractSelectorOnCreatingTicketForm',
+        'projectbridge_config_isRequiredContractSelectorOnCreatingTicketForm',
         'projectbridge_config_elementsAssociateToExcessTicket',
         'projectbridge_config_globalContractQuotaAlert'
     ];
@@ -363,7 +364,7 @@ if ($can_update) {
         $countOnlyPublicTasks = $post_data['projectbridge_config_countOnlyPublicTasks'];
         PluginProjectbridgeConfig::updateConfValue('CountOnlyPublicTasks', $countOnlyPublicTasks);
     }
-    echo '<tr">' . "\n";
+    echo '<tr>' . "\n";
     echo '<td>' . __('Count only public tasks in project', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
@@ -377,13 +378,31 @@ if ($can_update) {
         $addContractSelectorOnCreatingTicketForm = $post_data['projectbridge_config_addContractSelectorOnCreatingTicketForm'];
         PluginProjectbridgeConfig::updateConfValue('AddContractSelectorOnCreatingTicketForm', $addContractSelectorOnCreatingTicketForm);
     }
-    echo '<tr">' . "\n";
+    echo '<tr>' . "\n";
     echo '<td>' . __('Add contract selector on creating ticket form', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
     Dropdown::showYesNo('projectbridge_config_addContractSelectorOnCreatingTicketForm', $addContractSelectorOnCreatingTicketForm, []);
+    echo '</span>';
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
+    
+    // isRequiredContractSelectorOnCreatingTicketForm
+    $isRequiredContractSelectorOnCreatingTicketForm = PluginProjectbridgeConfig::getConfValueByName('isRequiredContractSelectorOnCreatingTicketForm');
+    if (isset($post_data['projectbridge_config_isRequiredContractSelectorOnCreatingTicketForm'])) {
+        $isRequiredContractSelectorOnCreatingTicketForm = $post_data['projectbridge_config_isRequiredContractSelectorOnCreatingTicketForm'];
+        PluginProjectbridgeConfig::updateConfValue('isRequiredContractSelectorOnCreatingTicketForm', $isRequiredContractSelectorOnCreatingTicketForm);
+    }
+    $display = $isRequiredContractSelectorOnCreatingTicketForm?'block':'none';
+    echo '<tr id="isRequiredContractSelectorOnCreatingTicketForm" style=\"display:'.$display.';\">' . "\n";
+    echo '<td>' . __('Contract selector on creating ticket form is required', 'projectbridge') . '' . "\n";
+    echo '</td>' . "\n";
+    echo '<td>' . "\n";
+    Dropdown::showYesNo('projectbridge_config_isRequiredContractSelectorOnCreatingTicketForm', $isRequiredContractSelectorOnCreatingTicketForm, []);
+    echo '</span>';
+    echo '</td>' . "\n";
+    echo '</tr>' . "\n";
+    
 
     // projectbridge_config_globalContractQuotaAlert
     $globalContractQuotaAlert = PluginProjectbridgeConfig::getConfValueByName('globalContractQuotaAlert');
@@ -391,7 +410,7 @@ if ($can_update) {
         $globalContractQuotaAlert = $post_data['projectbridge_config_globalContractQuotaAlert'];
         PluginProjectbridgeConfig::updateConfValue('globalContractQuotaAlert', $globalContractQuotaAlert);
     }
-    echo '<tr">' . "\n";
+    echo '<tr>' . "\n";
     echo '<td>' . __('Global percentage quota to send alert notification', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
@@ -424,7 +443,7 @@ if ($can_update) {
         $elementsAssociateToExcessTicket = $post_data['projectbridge_config_elementsAssociateToExcessTicket'];
         PluginProjectbridgeConfig::updateConfValue('ElementsAssociateToExcessTicket', $elementsAssociateToExcessTicket);
     }
-    echo '<tr">' . "\n";
+    echo '<tr>' . "\n";
     echo '<td>' . __('Elements from previous ticket to be associated with renewed ticket', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
@@ -437,6 +456,10 @@ if ($can_update) {
     echo "<script type='text/javascript'>
     //<![CDATA[
     $(function() {
+            $('select[name=\"projectbridge_config_addContractSelectorOnCreatingTicketForm\"]').change(function() {
+                $('#isRequiredContractSelectorOnCreatingTicketForm').toggle();
+            });
+
              $('#projectbridge_config_elementsAssociateToExcessTicket').select2({
 
                 width: '100%',

@@ -91,7 +91,7 @@ class PluginProjectbridgeItemForm
         
         // get contratcs associate to current entity with active projectTask
         $sub1 = new \QuerySubQuery([
-            'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
+            'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $contract->getTable().'.name AS contractName', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
             'FROM' => $bridge_contract->getTable(),
             'INNER JOIN' => [
                 $contract->getTable() => [
@@ -132,7 +132,7 @@ class PluginProjectbridgeItemForm
         
         // get contracts associate to ancestor entities with active projectTask
         $sub2 = new \QuerySubQuery([
-            'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
+            'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $contract->getTable().'.name AS contractName', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
             'FROM' => $bridge_contract->getTable(),
             'INNER JOIN' => [
                 $contract->getTable() => [
@@ -182,23 +182,28 @@ class PluginProjectbridgeItemForm
             null => Dropdown::EMPTY_VALUE,
         ];
         foreach ($contract_datas as $contract_data) {
-            $contract_list[$contract_data['contract_id']] = $contract_data['name'] ;
+            $contract_list[$contract_data['contract_id']] = $contract_data['contractName'] ;
         }
+        //get if select is required form config
+        $isRequiredContractSelectorOnCreatingTicketForm = PluginProjectbridgeConfig::getConfValueByName('isRequiredContractSelectorOnCreatingTicketForm');
+        $required = (count($contract_datas) && $isRequiredContractSelectorOnCreatingTicketForm)?'required':'';
         $config = [
             'value' => $defaultContractID,
             'display' => false,
             'values' => $contract_list,
-            'class' => count($contract_datas)?'required':'',
-            'required'=> count($contract_datas)?'required':'',
+            'class' => $required,
             'noselect2' => false,
             'display_emptychoice' => true
         ];
-
+        if($required){
+          $config['required'] = $required;
+        }
+        
         $html_parts = Dropdown::showFromArray('projectbridge_contract_id', $contract_list, $config);
         $requiredSpan = '';
-        if (count($contract_datas)) {
+        if ($required) {
             // if at least one contract was found, add required attribute
-            $html_parts = str_replace('<select', '<select required', $html_parts);
+            $html_parts = str_replace('<select', '<select '.$required, $html_parts);
             $requiredSpan = '<span class="required">*</span>';
         }
         
