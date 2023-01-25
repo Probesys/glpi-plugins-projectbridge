@@ -406,13 +406,13 @@ class PluginProjectbridgeTicket extends CommonDBTM
                 // pre selection auto contrat par defaut entité en cours
                 $criteria = ['entity_id' =>$_SESSION['glpiactive_entity']];
                 $req = $DB->request(PluginProjectbridgeEntity::$table_name, $criteria);
-                if ($row = $req->next()) {
+                foreach ($req as $row) {
                     $contract_id = $row['contract_id'];
 
                     $pluginProjectbridgeContract = new PluginProjectbridgeContract();
 
                     $req2 = $DB->request(PluginProjectbridgeContract::$table_name, ['contract_id' => $contract_id]);
-                    if ($row = $req2->next()) {
+                    foreach ($req2 as $row) {
                         $projectId= $row['project_id'];
                         $tasks = $pluginProjectbridgeContract::getAllActiveProjectTasksForProject($projectId);
                         if (count($tasks)) {

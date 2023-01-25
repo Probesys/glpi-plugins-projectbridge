@@ -363,11 +363,11 @@ class PluginProjectbridgeContract extends CommonDBTM
                         var final_date_hour = final_date.getHours();
                         
                         // debug logs
-                        console.log("***** logs function add_months ******");
-                        console.log("nb months to add : " + n);
-                        console.log("new_date : " + final_date);
-                        console.log("dt_hour : " + new_date_hour);
-                        console.log("final_date_hour : " + new_date_hour);
+//                        console.log("***** logs function add_months ******");
+//                        console.log("nb months to add : " + n);
+//                        console.log("new_date : " + final_date);
+//                        console.log("dt_hour : " + new_date_hour);
+//                        console.log("final_date_hour : " + new_date_hour);
 
                         return formatDate(final_date);
                     }
@@ -396,10 +396,8 @@ class PluginProjectbridgeContract extends CommonDBTM
                         
                         const fp = fieldwithFlatPicketParent.flatpickr({
                             defaultDate: fieldwithFlatPicket.val(),
-                            altInput: true,
                             altFormat: \'' . $date_format . '\',
                             dateFormat: \'Y-m-d\',
-                            wrap: true,
                             weekNumbers: true,
                             locale: "' . $CFG_GLPI['languages'][$_SESSION['glpilanguage']][3] . '",
                         });
@@ -501,7 +499,7 @@ class PluginProjectbridgeContract extends CommonDBTM
             $whereConditionsArray['is_private'] = 0;
         }
 
-        $iterator = $DB->request([
+        $req = $DB->request([
             'SELECT' => new QueryExpression('SUM(' . TicketTask::getTable() . '.actiontime) AS duration'),
             'FROM' => ProjectTask_Ticket::getTable(),
             'INNER JOIN' => [
@@ -520,10 +518,10 @@ class PluginProjectbridgeContract extends CommonDBTM
             ],
             'WHERE' => $whereConditionsArray
         ]);
-
-        if ($row = $iterator->next()) {
+        foreach ($req as $row) {
             return $row['duration'] ? $row['duration'] : 0;
         }
+        
         return 0;
     }
 
@@ -539,7 +537,7 @@ class PluginProjectbridgeContract extends CommonDBTM
 
         $whereConditionsArray = ['projecttasks_id' => $projecttasks_id];
 
-        $iterator = $DB->request([
+        $req = $DB->request([
             'SELECT' => new QueryExpression('COUNT(' . ProjectTask_Ticket::getTable() . '.tickets_id) AS nb'),
             'FROM' => ProjectTask_Ticket::getTable(),
             'INNER JOIN' => [
@@ -552,10 +550,11 @@ class PluginProjectbridgeContract extends CommonDBTM
             ],
             'WHERE' => $whereConditionsArray
         ]);
-
-        if ($row = $iterator->next()) {
+        
+        foreach ($req as $row) {
             return $row['nb'];
         }
+
         return 0;
     }
 
@@ -1185,7 +1184,6 @@ class PluginProjectbridgeContract extends CommonDBTM
         switch ($item::getType()) {
             case Contract::getType():
                 return __('ProjectBridge', 'projectbridge');
-                break;
         }
         return '';
     }

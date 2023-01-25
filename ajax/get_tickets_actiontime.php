@@ -22,12 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['ticket_ids']) && is_a
             $whereConditionsArray['is_private'] = 0;
         }
 
-        $iterator = $DB->request([
+        $req = $DB->request([
             'SELECT' => new QueryExpression('SUM(' . TicketTask::getTable() . '.actiontime) AS duration'),
             'FROM' => TicketTask::getTable(),
             'WHERE' => $whereConditionsArray
         ]);
-        if ($row = $iterator->next()) {
+        foreach ($req as $row) {
             $totalActiontime = (int) $row['duration'];
         }
         if (!empty($totalActiontime)) {
@@ -40,12 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['ticket_ids']) && is_a
         $privateActiontime = 0;
         if (Session::haveRight("task", CommonITILTask::SEEPRIVATE) && !$onlypublicTasks) {
             $whereConditionsArray['is_private'] = 1;
-            $iterator = $DB->request([
+            $req = $DB->request([
                 'SELECT' => new QueryExpression('SUM(' . TicketTask::getTable() . '.actiontime) AS duration'),
                 'FROM' => TicketTask::getTable(),
                 'WHERE' => $whereConditionsArray
             ]);
-            if ($row = $iterator->next()) {
+            foreach ($req as $row) {
                 $privateActiontime = (int) $row['duration'];
             }
             if (!empty($privateActiontime)) {
