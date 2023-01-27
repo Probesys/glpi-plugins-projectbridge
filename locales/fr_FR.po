@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: ProjectBridge 2.4RC3\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
 "POT-Creation-Date: 2023-01-27 10:27+0100\n"
-"PO-Revision-Date: 2023-01-17 16:08+0100\n"
-"Last-Translator: probeSys <contact@probesys.com>\n"
-"Language-Team: French <http://weblate.probesys.com/projects/plugins-glpi/"
+"PO-Revision-Date: 2023-01-27 10:50+0000\n"
+"Last-Translator: fernando.lagrange <fernando.lagrange@probesys.com>\n"
+"Language-Team: French <http://i18n.probesys.com/projects/plugins-glpi/"
 "projectbridge/fr/>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Weblate 4.15.1\n"
 
 #: hook.php:289 ajax/get_renewal_tickets.php:133
 msgctxt "projectbridge"
@@ -30,20 +30,18 @@ msgid "Please complete all renewal fields"
 msgstr "Veuillez remplir tous les champs de renouvellement"
 
 #: hook.php:376
-#, fuzzy
 msgctxt "projectbridge"
 msgid "The contract has no start date. The project could not be created."
-msgstr "Le contrat n'a pas de date de début. Le projet n'a pas pu être crée"
+msgstr "Le contrat n'a pas de date de début. Le projet n'a pas pu être crée."
 
 #: hook.php:424
-#, fuzzy
 msgctxt "projectbridge"
 msgid ""
 "The correspondence for the status \"In progress\" has not been defined. The "
 "project could not be created."
 msgstr ""
-"La correspondance pour le statut \"En cours\" n'a pas été définie. Le "
-"contrat n'a pas pu être renouvelé"
+"La correspondance pour le statut \"En cours\" n'a pas été définie. Le projet "
+"n'a pas pu être créé."
 
 #: hook.php:492 inc/ticket.class.php:112
 msgctxt "projectbridge"
@@ -71,7 +69,6 @@ msgid "ProjectTask status"
 msgstr "Statut de la Tâches de projet"
 
 #: hook.php:695
-#, fuzzy
 msgctxt "projectbridge"
 msgid "Is linked to a project task"
 msgstr "Est lié à une tâche de projet"
@@ -187,7 +184,6 @@ msgid "Renewal"
 msgstr "Renouveler"
 
 #: front/config.form.php:268
-#, fuzzy
 msgctxt "projectbridge"
 msgid "The selected user has no default email adress configured"
 msgstr "L'utilisateur sélectionné n'a pas d'adresse de messagerie configurée"
@@ -219,11 +215,10 @@ msgstr ""
 "Ajouter un selecteur de contrat dans le formulaire de création de ticket"
 
 #: front/config.form.php:398
-#, fuzzy
 msgctxt "projectbridge"
 msgid "Contract selector on creating ticket form is required"
 msgstr ""
-"Ajouter un selecteur de contrat dans le formulaire de création de ticket"
+"Ajouter un sélecteur de contrat dans le formulaire de création de ticket"
 
 #: front/config.form.php:414
 msgctxt "projectbridge"
@@ -306,7 +301,7 @@ msgstr "Souvenez vous de bien actualiser cette page après avoir crée le projet
 #: inc/contract.class.php:647
 msgctxt "projectbridge"
 msgid "Please define the correspondence of the \""
-msgstr "Merci de définir une correspondance pour le statut \"Fermé\"."
+msgstr "Merci de définir une correspondance pour le statut \""
 
 #: inc/contract.class.php:809
 msgctxt "projectbridge"
@@ -379,11 +374,9 @@ msgid "Contract Alert to renew"
 msgstr "Alerte de contrat à renouveler"
 
 #: inc/task.class.php:94
-#, fuzzy
 msgctxt "projectbridge"
 msgid "Send email alert containing contract with consumption over quota"
-msgstr ""
-"Envoyer l'alerte contentant les contrats avec une consommation dépassée"
+msgstr "Envoyer l'alerte contentant les contrats avec une consommation dépassée"
 
 #: inc/task.class.php:119 inc/task.class.php:851 inc/task.class.php:957
 msgctxt "projectbridge"
@@ -488,7 +481,6 @@ msgid "Expected end date"
 msgstr "Date de fin requise"
 
 #: inc/task.class.php:930 inc/task.class.php:1000
-#, fuzzy
 msgctxt "projectbridge"
 msgid "This Email is send automatically by the plugin projectBridge"
 msgstr "Ce courriel a été envoyé automatiquement par le plugin projectBridge"
