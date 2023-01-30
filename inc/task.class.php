@@ -91,7 +91,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                 break;
             case 'AlertContractsOverQuota':
                 $return = [
-                    'description' => __('Send email alert containing contract with consummation over quota', 'projectbridge'),
+                    'description' => __('Send email alert containing contract with consumption over quota', 'projectbridge'),
                 ];
                 break;
         }
@@ -927,7 +927,7 @@ class PluginProjectbridgeTask extends CommonDBTM
             $html_parts[] = '</ol>' . "\n";
 
             $html_parts[] = '<br /><br /><hr/>' . "\n";
-            $html_parts[] = '<p><small>'.__('This Email si send automacitly by the plugin projectBridge', 'projectbridge') .' ('.PLUGIN_PROJECTBRIDGE_VERSION.')</small></p>.';
+            $html_parts[] = '<p><small>'.__('This Email is send automatically by the plugin projectBridge', 'projectbridge') .' ('.PLUGIN_PROJECTBRIDGE_VERSION.')</small></p>.';
 
             foreach ($recipients as $recipient) {
                 $success = PluginProjectbridgeConfig::notify(implode('', $html_parts), $recipient['email'], $recipient['name'], $subject);
