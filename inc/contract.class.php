@@ -73,8 +73,8 @@ class PluginProjectbridgeContract extends CommonDBTM
     public static function postShow(Contract $contract)
     {
         $contract_id = $contract->getId();
-        
         $html_parts = [];
+        $html_parts[]= '$contract_id ='.$contract->getId();
         $html_parts[] = '<div style="display: none;">' . "\n";
         $html_parts[] = '       <div id="projectbridge_config"class="col-12 col-xxl-12 flex-column" >' . "\n";
         $html_parts[] = '           <div class="d-flex flex-row flex-wrap flex-xl-nowrap" >' . "\n";
@@ -85,12 +85,12 @@ class PluginProjectbridgeContract extends CommonDBTM
         $html_parts[] =                             __('linking Project', 'projectbridge');
         $html_parts[] = '                           </label>' . "\n";
         $html_parts[] = '                           <div class="col-xxl-7 field-container">' . "\n";
-        if (empty($contract_id)) {
-            // create
-            $html_parts[] = PluginProjectbridgeContract::_getPostShowCreateHtml($contract);
-        } else {
+        if ($contract_id && $contract_id > 0) {
             // update
             $html_parts[] = PluginProjectbridgeContract::_getPostShowUpdateHtml($contract);
+        } else {
+            // create
+            $html_parts[] = PluginProjectbridgeContract::_getPostShowCreateHtml($contract);
         }
         $html_parts[] = '                           </div>' . "\n";
         $html_parts[] = '                       </div>' . "\n";
