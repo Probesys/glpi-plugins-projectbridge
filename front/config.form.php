@@ -265,7 +265,7 @@ if ($can_update) {
                 $recipientIds[] = $recipient_user_id;
                 PluginProjectbridgeConfig::updateConfValue('RecipientIds', $recipientIds);
             } else {
-                echo '<div class="warning">' . __('The selected user have no default email adress configured', 'projectbridge') . '</div>';
+                echo '<div class="warning">' . __('The selected user has no default email adress configured', 'projectbridge') . '</div>';
             }
         }
     }

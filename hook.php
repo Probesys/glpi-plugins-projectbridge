@@ -375,7 +375,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
         }
 
         if (empty($begin_date)) {
-            Session::addMessageAfterRedirect(__('The contract has no start date. The project could not be created', 'projectbridge'), false, ERROR);
+            Session::addMessageAfterRedirect(__('The contract has no start date. The project could not be created.', 'projectbridge'), false, ERROR);
             return false;
         }
 
@@ -423,7 +423,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
 
         if (empty($state_in_progress_value)) {
-            Session::addMessageAfterRedirect(__('The correspondence for the status "In progress" has not been defined. The project could not be created', 'projectbridge'), false, ERROR);
+            Session::addMessageAfterRedirect(__('The correspondence for the status "In progress" has not been defined. The project could not be created.', 'projectbridge'), false, ERROR);
             return false;
         }
 
@@ -694,7 +694,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4214,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => __('Is link to a project task', 'projectbridge').' ?',
+              'name' => __('Is linked to a project task', 'projectbridge').' ?',
               'massiveaction' => false,
               'datatype' => 'bool'
             ];
