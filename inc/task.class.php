@@ -986,7 +986,7 @@ class PluginProjectbridgeTask extends CommonDBTM
                 $html_parts[] = '<br />' . "\n";
 
                 $html_parts[] = '<strong>' . __('Quota', 'projectbridge') . '</strong> : ';
-                $html_parts[] = $contract_data['ratio'] .'% ('.round($contract_data['consumption']).'/'.$contract_data['nb_hours'].')' ;
+                $html_parts[] = $contract_data['ratio'] .'% ('.round($contract_data['consumption'],1).'/'.$contract_data['nb_hours'].')' ;
                 $html_parts[] = '<br />' . "\n";
 
                 $entity = new Entity();
