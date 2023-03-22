@@ -3,7 +3,7 @@
    <name>ProjectBridge</name>
    <key>projectbridge</key>
    <state>stable</state>
-   <logo>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/pics/logo.png</logo>
+   <logo>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/main/pics/logo.png</logo>
    <description>
       <short>
          <fr><![CDATA[ProjectBridge : ajout de liens entre les tickets et les contrats pour en décompter le temps]]></fr>
@@ -36,7 +36,7 @@
    <homepage>https://github.com/Probesys/glpi-plugins-projectbridge/</homepage>
    <download>https://github.com/Probesys/glpi-plugins-projectbridge/releases</download>
    <issues>https://github.com/Probesys/glpi-plugins-projectbridge/issues</issues>
-   <readme>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/README.md</readme>
+   <readme>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/main/README.md</readme>
    <authors>
       <author>Probesys</author>
       <author>Pierre de Vésian</author>
@@ -94,8 +94,8 @@
       </fr>
    </tags>
    <screenshots>
-      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/configuration-panel.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/usage1.png</screenshot>
-      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/github/screenshots/usage2.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/main/screenshots/configuration-panel.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/main/screenshots/usage1.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/Probesys/glpi-plugins-projectbridge/main/screenshots/usage2.png</screenshot>
    </screenshots>
 </root>
