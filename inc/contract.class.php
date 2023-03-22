@@ -1061,7 +1061,7 @@ class PluginProjectbridgeContract extends CommonDBTM
     public function getContractsOverQuota()
     {
         global $DB;
-        $quota = intval(PluginProjectbridgeConfig::getConfValueByName('globalContractQuotaAlert'));
+        $defaultQuota = intval(PluginProjectbridgeConfig::getConfValueByName('globalContractQuotaAlert'));
 
         $bridgeContract = new PluginProjectbridgeContract();
         $contract = new Contract();
@@ -1069,13 +1069,14 @@ class PluginProjectbridgeContract extends CommonDBTM
             SELECT c.id
             FROM ' . $bridgeContract::getTable() . ' AS bc
             INNER JOIN  ' . $contract::getTable() . ' AS c ON bc.contract_id = c.id   
-            WHERE c.is_deleted = 0 AND c.is_template = 0 AND c.alert!=0   
+            WHERE c.is_deleted = 0 AND c.is_template = 0 AND c.alert!=0
             ';
 
         $result = $DB->query($get_contracts_query);
         $contracts = [];
         if ($result) {
             while ($row = $DB->fetch_assoc($result)) {
+                $quota = $defaultQuota;
                 $contract = new Contract();
                 $contract->getFromDB($row['id']);
 
