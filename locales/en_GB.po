@@ -525,3 +525,7 @@ msgstr "Link(s) with project task(s) deleted"
 
 #~ msgid "Link to a project"
 #~ msgstr "Link to a project"
+
+#~ msgctxt "projectbridge"
+#~ msgid "re-calculuation for ticket task"
+#~ msgstr "re-calculuation for ticket task"
