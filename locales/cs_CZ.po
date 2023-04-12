@@ -533,3 +533,7 @@ msgstr "Propojení s úkolem/y projektu smazáno/y"
 
 #~ msgid "Link to a project"
 #~ msgstr "Propojit s projektem"
+
+#~ msgctxt "projectbridge"
+#~ msgid "re-calculuation for ticket task"
+#~ msgstr "přepočítání pro úkol požadavku"
