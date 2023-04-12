@@ -638,6 +638,46 @@ class PluginProjectbridgeTask extends CommonDBTM
         }
 
         $nb_successes = 0;
+        $taskIds = [];
+        global $DB;
+
+        // search projectTaskId associate to project that are present on projectbridge_contract data table
+        $projectTask = new ProjectTask();
+        $projectbridgeContract = new PluginProjectbridgeContract();
+        foreach ($DB->request([
+            'SELECT'=> 'pt.id',
+            'DISTINCT' => true,
+            'FROM' => $projectTask->getTable(). ' AS pt',
+            'INNER JOIN' => [
+                $projectbridgeContract->getTable(). ' AS pbc' => [
+                'FKEY' => [
+                        'pt' => 'projects_id',
+                        'pbc' => 'project_id'
+                    ]
+                ]
+            ],
+            'WHERE' => ['pt.projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('in_progress')]
+
+            ]) as $data) {
+            $taskIds[] = $data['id'];
+        }
+        
+        foreach ($taskIds as $taskId) {
+            if ($cron_task) {
+                echo __('re-calculuation for projectTask', 'projectbridge') . ' ' . $taskId . "<br />\n";
+            }
+
+            $projectTask::recalculatePercentDone($taskId);
+            $nb_successes++;
+        }
+        if ($cron_task) {
+            $cron_task->addVolume($nb_successes);
+
+            echo __('Finish') . "<br />\n";
+        }
+
+        return ($nb_successes > 0) ? 1 : 0;
+        
 
         $ticket_task = new TicketTask();
         $ticket_tasks = $ticket_task->find(['actiontime' => ['>' => 0]]);
@@ -680,6 +720,7 @@ class PluginProjectbridgeTask extends CommonDBTM
 
         $task_link = new ProjectTask_Ticket();
         $task_links = $task_link->find(['tickets_id' => $ticket_id]);
+        //$task_links = $task_link->find(['tickets_id' => $ticket_id, 'projecttasks_id' => 217]); // for test
 
         if (!empty($task_links)) {
             foreach ($task_links as $task_link) {
