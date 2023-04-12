@@ -638,14 +638,14 @@ class PluginProjectbridgeTask extends CommonDBTM
         }
 
         $nb_successes = 0;
-        $taskIds = [];
+        $taskInfos = [];
         global $DB;
 
         // search projectTaskId associate to project that are present on projectbridge_contract data table
         $projectTask = new ProjectTask();
         $projectbridgeContract = new PluginProjectbridgeContract();
         foreach ($DB->request([
-            'SELECT'=> 'pt.id',
+            'SELECT'=> ['pt.id', 'pbc.contract_id'],
             'DISTINCT' => true,
             'FROM' => $projectTask->getTable(). ' AS pt',
             'INNER JOIN' => [
@@ -659,15 +659,26 @@ class PluginProjectbridgeTask extends CommonDBTM
             'WHERE' => ['pt.projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('in_progress')]
 
             ]) as $data) {
-            $taskIds[] = $data['id'];
+            $taskInfos[] = $data;
         }
         
-        foreach ($taskIds as $taskId) {
+        $pluginProjectbridgeContract = new PluginProjectbridgeContract();
+        foreach ($taskInfos as $row) {
             if ($cron_task) {
-                echo __('re-calculuation for projectTask', 'projectbridge') . ' ' . $taskId . "<br />\n";
+                echo __('re-calculuation for projectTask', 'projectbridge') . ' ' . $row['id'] . "<br />\n";
             }
+            $contract = new Contract();
+            $contract->getFromDB($row['contract_id']);
 
-            $projectTask::recalculatePercentDone($taskId);
+            $bridge_contract = new PluginProjectbridgeContract($contract);
+            $nb_hours = $bridge_contract->getNbHours();
+            $consumption = $pluginProjectbridgeContract::getTicketsTotalActionTime($row['id']) / 3600;
+            $ratio = round(($consumption*100)/$nb_hours);
+            $task = $projectTask->getFromDB($row['id']); 
+            $task->update([
+                        'id' => $task->getId(),
+                        'percent_done' => $ratio,
+                    ]);
             $nb_successes++;
         }
         if ($cron_task) {
