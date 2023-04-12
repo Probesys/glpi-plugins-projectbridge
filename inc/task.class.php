@@ -674,9 +674,8 @@ class PluginProjectbridgeTask extends CommonDBTM
             $nb_hours = $bridge_contract->getNbHours();
             $consumption = $pluginProjectbridgeContract::getTicketsTotalActionTime($row['id']) / 3600;
             $ratio = round(($consumption*100)/$nb_hours);
-            $task = $projectTask->getFromDB($row['id']); 
-            $task->update([
-                        'id' => $task->getId(),
+            $projectTask->update([
+                        'id' => $row['id'],
                         'percent_done' => $ratio,
                     ]);
             $nb_successes++;
@@ -690,93 +689,9 @@ class PluginProjectbridgeTask extends CommonDBTM
         return ($nb_successes > 0) ? 1 : 0;
         
 
-        $ticket_task = new TicketTask();
-        $ticket_tasks = $ticket_task->find(['actiontime' => ['>' => 0]]);
-        if ($cron_task) {
-            echo __('find') . ' ' . count($ticket_tasks) . ' ' . __('tasks with time', 'projectbridge') . "<br />\n";
-        }
-
-        foreach ($ticket_tasks as $ticket_task_data) {
-            if ($cron_task) {
-                echo __('re-calculuation for ticket task', 'projectbridge') . ' ' . $ticket_task_data['tickets_id'] . "<br />\n";
-            }
-
-            // use the existing time to force an update of the percent_done in the tasks linked to the tickets
-            $nb_successes += PluginProjectbridgeTask::updateProgressPercent($ticket_task_data['tickets_id']);
-        }
-        if ($cron_task) {
-            $cron_task->addVolume($nb_successes);
-
-            echo __('Finish') . "<br />\n";
-        }
-
-        return ($nb_successes > 0) ? 1 : 0;
     }
 
-    /**
-     * Update the progress percentage of tasks linked to a ticket
-     *
-     * @param  integer $ticket_id
-     * @param  integer $timediff
-     * @return integer
-     */
-    public static function updateProgressPercent($ticket_id, $timediff = 0)
-    {
-        static $task_list;
-        $nb_successes = 0;
-
-        if ($task_list === null) {
-            $task_list = [];
-        }
-
-        $task_link = new ProjectTask_Ticket();
-        $task_links = $task_link->find(['tickets_id' => $ticket_id]);
-        //$task_links = $task_link->find(['tickets_id' => $ticket_id, 'projecttasks_id' => 217]); // for test
-
-        if (!empty($task_links)) {
-            foreach ($task_links as $task_link) {
-                if (!isset($task_list[$task_link['projecttasks_id']])) {
-                    $task_list[$task_link['projecttasks_id']] = new ProjectTask();
-                    $task_list[$task_link['projecttasks_id']]->getFromDB($task_link['projecttasks_id']);
-                }
-
-                $task = $task_list[$task_link['projecttasks_id']];
-
-                if ($task->getId()) {
-                    $total_actiontime = ProjectTask_Ticket::getTicketsTotalActionTime($task->getId());
-
-                    $target = $total_actiontime + $timediff;
-                    $planned_duration = 1;
-                    if (array_key_exists('planned_duration', $task->fields)) {
-                        $planned_duration = $task->fields['planned_duration'];
-                    }
-
-                    if (empty($planned_duration)) {
-                        $planned_duration = 1;
-                    }
-
-                    $target_percent = round(($target / $planned_duration) * 100);
-
-                    if ($target_percent > 100) {
-                        $target_percent = 100;
-                    } elseif ($target_percent < 0) {
-                        $target_percent = 0;
-                    }
-
-                    $success = $task->update([
-                        'id' => $task->getId(),
-                        'percent_done' => $target_percent,
-                    ]);
-
-                    if ($success) {
-                        $nb_successes++;
-                    }
-                }
-            }
-        }
-
-        return $nb_successes;
-    }
+   
 
     /**
      * Customize the duration columns in a list of project tasks
