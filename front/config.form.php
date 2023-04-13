@@ -57,12 +57,11 @@ global $CFG_GLPI;
 
 Html::header(__('ProjectBridge Configuration', 'projectbridge'), $_SERVER['PHP_SELF'], 'config', 'plugins');
 echo '<div align="center">' . "\n";
-
+echo '<div class="card">' . "\n";
 echo '<h1>';
 echo __('ProjectBridge Configuration', 'projectbridge');
 echo '</h1>' . "\n";
 
-echo '<hr />' . "\n";
 
 if ($can_update) {
     $post_fields = [
@@ -75,6 +74,7 @@ if ($can_update) {
         'projectbridge_add_recipient_submit',
         'projectbridge_config_countOnlyPublicTasks',
         'projectbridge_config_addContractSelectorOnCreatingTicketForm',
+        'projectbridge_config_isRequiredContractSelectorOnCreatingTicketForm',
         'projectbridge_config_elementsAssociateToExcessTicket',
         'projectbridge_config_globalContractQuotaAlert'
     ];
@@ -91,10 +91,12 @@ if ($can_update) {
     echo '</a>';
 
     // status config
-
+    echo '<div class="card-header">' . "\n";
     echo '<h2>';
     echo __('Status Configuration', 'projectbridge');
     echo '</h2>' . "\n";
+    echo '</div>' . "\n";
+    echo '<div class="card-body">' . "\n";
 
     echo '<p>';
     echo __('Please match the status names and their values in GLPI', 'projectbridge') . '.';
@@ -237,8 +239,6 @@ if ($can_update) {
     echo '</table>' . "\n";
     Html::closeForm();
 
-    echo '<hr />' . "\n";
-
     // recipients config
     $recipientIds = PluginProjectbridgeConfig::getConfValueByName('RecipientIds');
     if (!$recipientIds) {
@@ -265,15 +265,18 @@ if ($can_update) {
                 $recipientIds[] = $recipient_user_id;
                 PluginProjectbridgeConfig::updateConfValue('RecipientIds', $recipientIds);
             } else {
-                echo '<div class="warning">' . __('The selected user have no default email adress configured', 'projectbridge') . '</div>';
+                echo '<div class="warning">' . __('The selected user has no default email adress configured', 'projectbridge') . '</div>';
             }
         }
     }
     $recipients = PluginProjectbridgeConfig::getRecipients();
-
+    echo '</div>' . "\n";
+    echo '<div class="card-header">' . "\n";
     echo '<h2>';
     echo __('People receiving alerts', 'projectbridge');
     echo '</h2>' . "\n";
+    echo '</div>' . "\n";
+    echo '<div class="card-body">' . "\n";
 
     echo '<form method="post" action="">' . "\n";
     echo '<table>' . "\n";
@@ -337,8 +340,12 @@ if ($can_update) {
 
     echo '</table>' . "\n";
     Html::closeForm();
-
+    
+    echo '</div>' . "\n";
+    echo '<div class="card-header">' . "\n";
     echo '<h2>' . __('General config', 'projectbridge') . '</h2>';
+    echo '</div>' . "\n";
+    echo '<div class="card-body">' . "\n";
     echo '<form method="post" action="">' . "\n";
     echo '<table>' . "\n";
     echo '<thead>' . "\n";
@@ -357,7 +364,7 @@ if ($can_update) {
         $countOnlyPublicTasks = $post_data['projectbridge_config_countOnlyPublicTasks'];
         PluginProjectbridgeConfig::updateConfValue('CountOnlyPublicTasks', $countOnlyPublicTasks);
     }
-    echo '<tr">' . "\n";
+    echo '<tr>' . "\n";
     echo '<td>' . __('Count only public tasks in project', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
@@ -371,13 +378,31 @@ if ($can_update) {
         $addContractSelectorOnCreatingTicketForm = $post_data['projectbridge_config_addContractSelectorOnCreatingTicketForm'];
         PluginProjectbridgeConfig::updateConfValue('AddContractSelectorOnCreatingTicketForm', $addContractSelectorOnCreatingTicketForm);
     }
-    echo '<tr">' . "\n";
+    echo '<tr>' . "\n";
     echo '<td>' . __('Add contract selector on creating ticket form', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
     Dropdown::showYesNo('projectbridge_config_addContractSelectorOnCreatingTicketForm', $addContractSelectorOnCreatingTicketForm, []);
+    echo '</span>';
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
+    
+    // isRequiredContractSelectorOnCreatingTicketForm
+    $isRequiredContractSelectorOnCreatingTicketForm = PluginProjectbridgeConfig::getConfValueByName('isRequiredContractSelectorOnCreatingTicketForm');
+    if (isset($post_data['projectbridge_config_isRequiredContractSelectorOnCreatingTicketForm'])) {
+        $isRequiredContractSelectorOnCreatingTicketForm = $post_data['projectbridge_config_isRequiredContractSelectorOnCreatingTicketForm'];
+        PluginProjectbridgeConfig::updateConfValue('isRequiredContractSelectorOnCreatingTicketForm', $isRequiredContractSelectorOnCreatingTicketForm);
+    }
+    $display = $isRequiredContractSelectorOnCreatingTicketForm?'block':'none';
+    echo '<tr id="isRequiredContractSelectorOnCreatingTicketForm" style=\"display:'.$display.';\">' . "\n";
+    echo '<td>' . __('Contract selector on creating ticket form is required', 'projectbridge') . '' . "\n";
+    echo '</td>' . "\n";
+    echo '<td>' . "\n";
+    Dropdown::showYesNo('projectbridge_config_isRequiredContractSelectorOnCreatingTicketForm', $isRequiredContractSelectorOnCreatingTicketForm, []);
+    echo '</span>';
+    echo '</td>' . "\n";
+    echo '</tr>' . "\n";
+    
 
     // projectbridge_config_globalContractQuotaAlert
     $globalContractQuotaAlert = PluginProjectbridgeConfig::getConfValueByName('globalContractQuotaAlert');
@@ -385,7 +410,7 @@ if ($can_update) {
         $globalContractQuotaAlert = $post_data['projectbridge_config_globalContractQuotaAlert'];
         PluginProjectbridgeConfig::updateConfValue('globalContractQuotaAlert', $globalContractQuotaAlert);
     }
-    echo '<tr">' . "\n";
+    echo '<tr>' . "\n";
     echo '<td>' . __('Global percentage quota to send alert notification', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
@@ -418,7 +443,7 @@ if ($can_update) {
         $elementsAssociateToExcessTicket = $post_data['projectbridge_config_elementsAssociateToExcessTicket'];
         PluginProjectbridgeConfig::updateConfValue('ElementsAssociateToExcessTicket', $elementsAssociateToExcessTicket);
     }
-    echo '<tr">' . "\n";
+    echo '<tr>' . "\n";
     echo '<td>' . __('Elements from previous ticket to be associated with renewed ticket', 'projectbridge') . '' . "\n";
     echo '</td>' . "\n";
     echo '<td>' . "\n";
@@ -431,6 +456,10 @@ if ($can_update) {
     echo "<script type='text/javascript'>
     //<![CDATA[
     $(function() {
+            $('select[name=\"projectbridge_config_addContractSelectorOnCreatingTicketForm\"]').change(function() {
+                $('#isRequiredContractSelectorOnCreatingTicketForm').toggle();
+            });
+
              $('#projectbridge_config_elementsAssociateToExcessTicket').select2({
 
                 width: '100%',
@@ -465,5 +494,7 @@ if ($can_update) {
     echo '</b>';
 }
 
+echo '</div>' . "\n";
+echo '</div>' . "\n";
 echo '</div>' . "\n";
 Html::footer();

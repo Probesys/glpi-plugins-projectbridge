@@ -312,7 +312,7 @@ class PluginProjectbridgeTicket extends CommonDBTM
         $result = $DB->query($get_nb_links_query);
 
         if ($result && $DB->numrows($result)) {
-            $results = $DB->fetch_assoc($result);
+            $results = $DB->fetchAssoc($result);
             $nb_links = (int) $results['nb_links'];
         } else {
             $nb_links = 0;
@@ -406,13 +406,13 @@ class PluginProjectbridgeTicket extends CommonDBTM
                 // pre selection auto contrat par defaut entité en cours
                 $criteria = ['entity_id' =>$_SESSION['glpiactive_entity']];
                 $req = $DB->request(PluginProjectbridgeEntity::$table_name, $criteria);
-                if ($row = $req->next()) {
+                foreach ($req as $row) {
                     $contract_id = $row['contract_id'];
 
                     $pluginProjectbridgeContract = new PluginProjectbridgeContract();
 
                     $req2 = $DB->request(PluginProjectbridgeContract::$table_name, ['contract_id' => $contract_id]);
-                    if ($row = $req2->next()) {
+                    foreach ($req2 as $row) {
                         $projectId= $row['project_id'];
                         $tasks = $pluginProjectbridgeContract::getAllActiveProjectTasksForProject($projectId);
                         if (count($tasks)) {

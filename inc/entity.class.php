@@ -47,6 +47,7 @@ class PluginProjectbridgeEntity extends CommonDBTM
      */
     public static function postShow(Entity $entity)
     {
+        global $CFG_GLPI;
         $bridge_entity = new PluginProjectbridgeEntity($entity);
         $contract_id = $bridge_entity->getContractId();
 
@@ -62,17 +63,12 @@ class PluginProjectbridgeEntity extends CommonDBTM
 
         $html_parts = [];
         $html_parts[] = '<div style="display: none;">' . "\n";
-        $html_parts[] = '<table class="tab_cadre_fixe">' . "\n";
-        $html_parts[] = '<tr id="projectbridge_config" class="tab_bg_1">' . "\n";
-
-        $html_parts[] = '<td>';
+        $html_parts[] = '<div class="form-field row col-12 col-sm-6  mb-2" id="projectbridge_config">' . "\n";
+        $html_parts[] = '<label class="col-form-label col-xxl-5 text-xxl-end">';
         $html_parts[] = __('Default contract', 'projectbridge');
-        $html_parts[] = '</td>' . "\n";
-
-        $html_parts[] = '<td colspan="2">' . "\n";
+        $html_parts[] = '</label>' . "\n";
+        $html_parts[] = '<div class="col-xxl-7  field-container">' . "\n";
         $html_parts[] = Contract::dropdown($contract_config);
-
-        global $CFG_GLPI;
 
         if (!empty($contract_id)) {
             $html_parts[] = '<a href="' . $CFG_GLPI['root_doc'] . '/front/contract.form.php?id=' . $contract_id . '" style="margin-left: 5px;" target="_blank">';
@@ -88,20 +84,15 @@ class PluginProjectbridgeEntity extends CommonDBTM
             $html_parts[] = '</small>' . "\n";
         }
 
-        $html_parts[] = '</td>' . "\n";
+        $html_parts[] = '</div>' . "\n";
 
-        $html_parts[] = '<td>';
-        $html_parts[] = '&nbsp;';
-        $html_parts[] = '</td>' . "\n";
-
-        $html_parts[] = '</tr>' . "\n";
-        $html_parts[] = '</table>' . "\n";
+        $html_parts[] = '</div>' . "\n";
         $html_parts[] = '</div>' . "\n";
 
         echo implode('', $html_parts);
         echo Html::scriptBlock('$(document).ready(function() {
             var projectbridge_config = $("#projectbridge_config");
-            $("#mainformtable .footerRow").before(projectbridge_config.clone());
+            $("#mainformtable .card-body").first().append(projectbridge_config.clone());
             projectbridge_config.remove();
 
             $("#projectbridge_config .select2-container").remove();

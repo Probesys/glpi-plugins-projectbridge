@@ -61,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
     $html .= '<form method="post" id="renewal_tickets_form" action="' . rtrim($CFG_GLPI['root_doc'], '/') . '/front/contract.form.php">' . "\n";
     $html .= '<input type="hidden" name="entities_id" value="' . $task->fields['entities_id'] . '" />' . "\n";
     $html .= '<input type="hidden" name="id" value="' . $contract_id . '" />' . "\n";
+    $html .= '<div id="moreDataContainer"></div>';
     $html .= '<h2 style="text-align: center">';
     $html .= 'Tickets';
     $html .= '</h2>' . "\n";
@@ -88,10 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
     $html .= __('Time');
     $html .= '</th>' . "\n";
     $html .= '<th>';
-    $html .= __('Open Date');
+    $html .= __('Opening date');
     $html .= '</th>' . "\n";
     $html .= '<th>';
-    $html .= __('Close Date');
+    $html .= __('Closing date');
     $html .= '</th>' . "\n";
     $html .= '</tr>' . "\n";
 
@@ -129,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['task_id']) && !empty(
 
     $html .= '<tr class="tab_bg_1">' . "\n";
     $html .= '<td colspan="5" style="text-align: center">';
-    $html .= '<input type="submit" name="update" value="' . __('Link tickets to renewal', 'projectbridge') . '" class="submit" />';
+    $html .= '<input type="submit" name="update" id="renewal_tickets_form_submit" disabled value="' . __('Link tickets to renewal', 'projectbridge') . '" class="submit" />';
     $html .= '</td>' . "\n";
     $html .= '</tr>' . "\n";
     $html .= '</table>' . "\n";

@@ -13,13 +13,13 @@ function plugin_projectbridge_install()
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeEntity::$table_name . "`
             (
-                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
                 `entity_id` INT(11) NOT NULL,
                 `contract_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX (`entity_id`)
             )
-            COLLATE='utf8_unicode_ci'
+            COLLATE='utf8mb4_unicode_ci'
             ENGINE=InnoDB
         ";
         $DB->query($create_table_query) or die($DB->error());
@@ -29,14 +29,14 @@ function plugin_projectbridge_install()
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeContract::$table_name . "`
             (
-                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
                 `contract_id` INT(11) NOT NULL,
                 `project_id` INT(11) NOT NULL,
                 `nb_hours` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX (`contract_id`)
             )
-            COLLATE='utf8_unicode_ci'
+            COLLATE='utf8mb4_unicode_ci'
             ENGINE=InnoDB
         ";
         $DB->query($create_table_query) or die($DB->error());
@@ -46,14 +46,12 @@ function plugin_projectbridge_install()
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeTicket::$table_name . "`
             (
-                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
                 `ticket_id` INT(11) NOT NULL,
                 `projecttasks_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX (`ticket_id`)
-            )
-            COLLATE='utf8_unicode_ci'
-            ENGINE=InnoDB
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC
         ";
         $DB->query($create_table_query) or die($DB->error());
     } else {
@@ -69,13 +67,11 @@ function plugin_projectbridge_install()
     $create_tableConfig_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeConfig::$table_name . "`
             (
-                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
                 `name` VARCHAR(50) NOT NULL ,
                 `value` VARCHAR(250) NOT NULL,
                 PRIMARY KEY (`id`)
-            )
-            COLLATE='utf8_unicode_ci'
-            ENGINE=InnoDB
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC
         ";
     if (!$DB->tableExists(PluginProjectbridgeConfig::$table_name)) {
         $DB->query($create_tableConfig_query) or die($DB->error());
@@ -139,14 +135,12 @@ function plugin_projectbridge_install()
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeState::$table_name . "`
             (
-                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
                 `status` VARCHAR(250) NOT NULL,
                 `projectstates_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX (`status`)
-            )
-            COLLATE='utf8_unicode_ci'
-            ENGINE=InnoDB
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC
         ";
         $DB->query($create_table_query) or die($DB->error());
     }
@@ -155,13 +149,11 @@ function plugin_projectbridge_install()
         $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeContractQuotaAlert::$table_name . "`
             (
-                `id` INT(11) NOT NULL AUTO_INCREMENT,
+                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
                 `contract_id` INT(11) NOT NULL,
                 `quotaAlert` INT(11) NOT NULL,
                 PRIMARY KEY (`id`)
-            )
-            COLLATE='utf8_unicode_ci'
-            ENGINE=InnoDB
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC
         ";
         $DB->query($create_table_query) or die($DB->error());
     }
@@ -172,7 +164,7 @@ function plugin_projectbridge_install()
         $DB->query($delete_crontask_table) or die($DB->error());
     }
     if (version_compare(PLUGIN_PROJECTBRIDGE_VERSION, '2.3', '>')) {
-        $update_structure_query = "ALTER TABLE `" . PluginProjectbridgeConfig::$table_name . "` CHANGE `value` `value` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;";
+        $update_structure_query = "ALTER TABLE `" . PluginProjectbridgeConfig::$table_name . "` CHANGE `value` `value` VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;";
         $DB->query($update_structure_query) or die($DB->error());
     }
 
@@ -294,6 +286,7 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
     $update_val = $contract->input['update'] ?? $contract->input['_update'] ?? null;
 
     if ($contract->canUpdate() && $update_val !== null && isset($contract->input['projectbridge_project_id'])) {
+
         if ($update_val != __('Link tickets to renewal', 'projectbridge')) {
             // update contract
             $nb_hours = 0;
@@ -366,7 +359,8 @@ function plugin_projectbridge_pre_contract_update(Contract $contract)
  */
 function plugin_projectbridge_contract_add(Contract $contract, $force = false)
 {
-    if ($force === true || ($contract->canUpdate() && isset($contract->input['projectbridge_create_project']) && $contract->input['projectbridge_create_project'])) {
+    
+    if ($force === true || ($contract->canUpdate() && isset($contract->input['projectbridge_create_project']) )) {
         $nb_hours = 0;
 
         if (!empty($contract->input['projectbridge_project_hours']) && $contract->input['projectbridge_project_hours'] > 0) {
@@ -381,7 +375,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
         }
 
         if (empty($begin_date)) {
-            Session::addMessageAfterRedirect(__('The contract has no start date. The project could not be created', 'projectbridge'), false, ERROR);
+            Session::addMessageAfterRedirect(__('The contract has no start date. The project could not be created.', 'projectbridge'), false, ERROR);
             return false;
         }
 
@@ -429,7 +423,7 @@ function plugin_projectbridge_contract_add(Contract $contract, $force = false)
         $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
 
         if (empty($state_in_progress_value)) {
-            Session::addMessageAfterRedirect(__('The correspondence for the status "In progress" has not been defined. The project could not be created', 'projectbridge'), false, ERROR);
+            Session::addMessageAfterRedirect(__('The correspondence for the status "In progress" has not been defined. The project could not be created.', 'projectbridge'), false, ERROR);
             return false;
         }
 
@@ -700,7 +694,7 @@ function plugin_projectbridge_getAddSearchOptionsNew($itemtype)
               'id' => 4214,
               'table' => PluginProjectbridgeTicket::$table_name,
               'field' => 'project_id',
-              'name' => __('Is link to a project task', 'projectbridge').' ?',
+              'name' => __('Is linked to a project task', 'projectbridge').' ?',
               'massiveaction' => false,
               'datatype' => 'bool'
             ];
