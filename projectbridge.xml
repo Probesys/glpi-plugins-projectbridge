@@ -72,15 +72,20 @@
          <compatibility>~9.5.8</compatibility>
          <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.6.2/projectbridge-2.6.2.tbz</download_url>
       </version>
+      <version>   
+         <num>2.6.3</num>
+         <compatibility>~9.5.11</compatibility>
+         <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.6.2/projectbridge-2.6.2.tbz</download_url>
+      </version>
       <version>
          <num>2.6.4</num>
          <compatibility>~9.5.11</compatibility>
          <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.6.4/projectbridge.tar.gz</download_url>
       </version>
-      <version>   
-         <num>2.6.3</num>
+      <version>
+         <num>2.6.5</num>
          <compatibility>~9.5.11</compatibility>
-         <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.6.2/projectbridge-2.6.2.tbz</download_url>
+         <download_url>https://github.com/Probesys/glpi-plugins-projectbridge/releases/download/v2.6.5/projectbridge-2.6.5.tbz</download_url>
       </version>
       <version>
          <num>2.7.0</num>
