@@ -69,10 +69,10 @@ rsync \
 pushd $DEST > /dev/null
 
 #rename .tpl...
-for f in `ls *.tpl`
-do
-    mv $f ${f%.*}
-done
+#for f in `ls *.tpl`
+#do
+#    mv $f ${f%.*}
+#done
 
 # move xml file
 mv plugin.xml $LNAME.xml
@@ -84,6 +84,6 @@ sed \
     -e "s/{UNAME}/$UNAME/" \
     -e "s/{VERSION}/$VERSION/" \
     -e "s/{YEAR}/$YEAR/" \
-    -i setup.php hook.php $LNAME.xml tools/HEADER README.md
+    -i setup.php hook.php $LNAME.xml README.md
 
 popd > /dev/null
