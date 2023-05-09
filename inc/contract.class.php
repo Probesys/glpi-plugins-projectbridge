@@ -1113,7 +1113,8 @@ class PluginProjectbridgeContract extends CommonDBTM
                     if ($consumption) {
                         // récupération d'un quota spécique sur le contrat
                         $contractQuotaAlertObject = PluginProjectbridgeContractQuotaAlert::getContractQuotaAlertByContractID($row['id']);
-                        if ($contractQuotaAlertObject && intval($contractQuotaAlertObject['quotaAlert']) > 0) {
+                        //if ($contractQuotaAlertObject && intval($contractQuotaAlertObject['quotaAlert']) > 0) {
+                        if ($contractQuotaAlertObject) {    
                             $quota = intval($contractQuotaAlertObject['quotaAlert']);
                         }
                         // calul ration conso
@@ -1199,7 +1200,8 @@ class PluginProjectbridgeContract extends CommonDBTM
     public function showConfigFormForContract(Contract $entity, $selectedValue = 0)
     {
         $contractId = $entity->getField('id');
-
+        // instancite selectedValue with default quota alert
+        $selectedValue = PluginProjectbridgeConfig::getConfValueByName('globalContractQuotaAlert');
         // get contractQuotaAlert in database if exist
         $contractQuotaAlertObject = new PluginProjectbridgeContractQuotaAlert();
         $contractQuotaAlert = $contractQuotaAlertObject::getContractQuotaAlertByContractID($contractId);
@@ -1213,7 +1215,7 @@ class PluginProjectbridgeContract extends CommonDBTM
         echo "<form method='post' name='form' action='".Toolbox::getItemTypeFormURL(__CLASS__)."'>";
         
         echo "<div class='form-group'>";
-        echo "<label for='percentage_quota'>".__('Percentage quota to send alert notification', 'projectbridge')."</label>";
+        echo "<label for='percentage_quota'>".__('Percentage quota to send alert notification', 'projectbridge')."</label> ";
         Dropdown::showFromArray('percentage_quota', range(0, 100), ['value'=>$selectedValue]);
         echo "</div>";
         
