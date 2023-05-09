@@ -1106,7 +1106,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                         // récupération d'un quota spécique sur le contrat
                         $contractQuotaAlertObject = PluginProjectbridgeContractQuotaAlert::getContractQuotaAlertByContractID($row['id']);
                         //if ($contractQuotaAlertObject && intval($contractQuotaAlertObject['quotaAlert']) > 0) {
-                        if ($contractQuotaAlertObject && intval($contractQuotaAlertObject['quotaAlert']) > 0) {    
+                        if ($contractQuotaAlertObject) {    
                             $quota = intval($contractQuotaAlertObject['quotaAlert']);
                         }
                         // calul ration conso
