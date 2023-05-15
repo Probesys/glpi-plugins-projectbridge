@@ -546,18 +546,18 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
                 if ($bridge_ticket->getProjectId() > 0) {
                     $bridge_ticket->update([
                       'id' => $bridge_ticket->getId(),
-                      'project_id' => $project_id,
+                      'projecttasks_id' => $task_id,
                     ]);
                 } else {
                     $bridge_ticket->add([
                       'ticket_id' => $ticket->getId(),
-                      'project_id' => $project_id,
+                      'projecttasks_id' => $task_id,
                     ]);
                 }
             } else {
                 $bridge_ticket->add([
                       'ticket_id' => $ticket->getId(),
-                      'project_id' => $project_id,
+                      'projecttasks_id' => $task_id,
                 ]);
             }
         }
@@ -574,13 +574,9 @@ function plugin_projectbridge_ticket_update(Ticket $ticket)
 function plugin_projectbridge_ticketask_add(TicketTask $ticket_task)
 {
     if (isset($ticket_task->fields['actiontime'])) {
-        // no timediff needed because it's already in DB
-        PluginProjectbridgeTask::updateProgressPercent((int) $ticket_task->fields['tickets_id']);
+        updateProjectTaskProgressPercent($ticket_task);
     }
 }
-
-
-
 
 /**
  * Hook called before the update of a ticket task
@@ -592,9 +588,34 @@ function plugin_projectbridge_ticketask_add(TicketTask $ticket_task)
 function plugin_projectbridge_ticketask_update(TicketTask $ticket_task)
 {
     if (isset($ticket_task->fields['actiontime']) && isset($ticket_task->input['actiontime'])) {
-        $timediff = $ticket_task->input['actiontime'] - $ticket_task->fields['actiontime'];
-        PluginProjectbridgeTask::updateProgressPercent((int) $ticket_task->fields['tickets_id'], (int) $timediff);
+        //$timediff = $ticket_task->input['actiontime'] - $ticket_task->fields['actiontime'];
+        updateProjectTaskProgressPercent($ticket_task);
     }
+}
+
+/**
+ * this function update the progessPercent of processTask when a ticketTask is add or update with time associate.
+ * @param TicketTask $ticket_task
+ */
+function updateProjectTaskProgressPercent(TicketTask $ticket_task){
+        // search if entry exist for the associate ticket
+        $ticketId = $ticket_task->fields['tickets_id'];
+        $bridge_ticket = new PluginProjectbridgeTicket();
+        $results = $bridge_ticket->find(['ticket_id' => $ticketId]);
+        foreach($results as $result){
+            if (is_array($result) && $result['projecttasks_id'] > 0) {
+                $projectTask = new ProjectTask(); 
+                $projectTask->getFromDB($result['projecttasks_id']);
+                $project_id = $projectTask->fields['projects_id'];
+                $pluginProjectbridgeContract = new PluginProjectbridgeContract(); 
+                $pluginProjectbridgeContracts = $pluginProjectbridgeContract->find(['project_id' => $project_id]);
+                foreach($pluginProjectbridgeContracts as $pgc)
+                {
+                    $contract_id = $pgc['contract_id'];
+                    PluginProjectbridgeTask::updateProjectTaskProgressPercent($result['projecttasks_id'], $contract_id);
+                }
+            }
+        }
 }
 
 /**
