@@ -1337,14 +1337,14 @@ function plugin_projectbridge_addLeftJoin($itemtype, $ref_table, $new_table, $li
 function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $searchtype)
 {
     $where = "";
-
+    global $DB;
     switch ($itemtype) {
         case 'Entity':
             if ($searchtype == 'contains') {
                 if ($key == 4201) {
-                    $where = $link . "`glpi_contracts`.`name` " . Search::makeTextSearch($val);
+                    $where = $link . "`glpi_contracts`.`name` " . Search::makeTextSearch($DB->escape($val));
                 } else {
-                    $where = $link . "`unlinked_ticket_actiontimes`.`actiontime_sum` " . Search::makeTextSearch($val);
+                    $where = $link . "`unlinked_ticket_actiontimes`.`actiontime_sum` " . Search::makeTextSearch($DB->escape($val));
                 }
             }
 
@@ -1354,13 +1354,18 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
             if ($searchtype == 'contains') {
                 if ($key == 4211) {
                     // project name
-                    $where = $link . "`glpi_projects`.`name` " . Search::makeTextSearch($val);
+                    $where = $link . "`glpi_projects`.`name` " . Search::makeTextSearch($DB->escape($val));
                 } elseif ($key == 4212) {
                     // project task
-                    $where = $link . "(`glpi_projecttasks`.`name` " . Search::makeTextSearch($val)." OR `glpi_projecttasks`.`id`=".$val." )";
+                    $where = $link . "(`glpi_projecttasks`.`name` " . Search::makeTextSearch($DB->escape($val));
+                    if(is_integer($val)){
+                        $where .= " OR `glpi_projecttasks`.`id`='".$val."'";
+                    }
+                    
+                    $where .= ")";
                 } elseif ($key == 4213) {
                     // project task status
-                    $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($val);
+                    $where = $link . "`glpi_projectstates`.`name` " . Search::makeTextSearch($DB->escape($val));
                 }
             }
             if ($searchtype == 'equals') {
@@ -1394,7 +1399,7 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     // project task status
 
                     $where_parts = [
-                      "`last_tasks`.`project_state` " . Search::makeTextSearch($val),
+                      "`last_tasks`.`project_state` " . Search::makeTextSearch($DB->escape($val)),
                     ];
 
                     if (stripos(NOT_AVAILABLE, $val) !== false) {
@@ -1409,7 +1414,7 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     // project task status
 
                     $where_parts = [
-                      "`last_tasks`.`project_name` " . Search::makeTextSearch($val),
+                      "`last_tasks`.`project_name` " . Search::makeTextSearch($DB->escape($val)),
                     ];
 
                     if (stripos(NOT_AVAILABLE, $val) !== false) {
@@ -1428,9 +1433,9 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
         case 'projecttask':
             if ($searchtype == 'contains') {
                 if ($key == 4231) {
-                    $where = $link . "`ticket_actiontimes`.`actiontime_sum` " . Search::makeTextSearch($val);
+                    $where = $link . "`ticket_actiontimes`.`actiontime_sum` " . Search::makeTextSearch($DB->escape($val));
                 } elseif ($key == 4232) {
-                    $where = $link . " ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2) " . Search::makeTextSearch($val);
+                    $where = $link . " ROUND(`glpi_projecttasks`.`planned_duration` / 3600, 2) " . Search::makeTextSearch($DB->escape($val));
                 } elseif ($key == 4233) {
                     $searching_yes = (stripos(__('Yes'), $val) !== false);
                     $searching_no = (stripos(__('No'), $val) !== false);
@@ -1462,7 +1467,7 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     $where_parts = [
                       "(
                             `glpi_projecttasks`.`projects_id` IS NOT NULL
-                            AND `states`.`name` " . Search::makeTextSearch($val) . "
+                            AND `states`.`name` " . Search::makeTextSearch($DB->escape($val)) . "
                         )",
                     ];
 
@@ -1487,7 +1492,7 @@ function plugin_projectbridge_addWhere($link, $nott, $itemtype, $key, $val, $sea
                     if ($val == 0) {
                         $where = $link . "`task_counter`.`nb_tasks` IS NULL";
                     } else {
-                        $where = $link . "`task_counter`.`nb_tasks` " . Search::makeTextSearch($val);
+                        $where = $link . "`task_counter`.`nb_tasks` " . Search::makeTextSearch($DB->escape($val));
                     }
                 }
             }
