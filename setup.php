@@ -86,6 +86,7 @@ function plugin_init_projectbridge()
             'addtabon' => ['Contract']
         ]
     );
+    Plugin::registerClass('projecttask');
 }
 
 /**
