@@ -1,10 +1,10 @@
 Search.appendIndex(
     [
                 {
-            "fqsen": "\\createRenewalTicket\u0028\u0029",
-            "name": "createRenewalTicket",
-            "summary": "",
-            "url": "namespaces/default.html#function_createRenewalTicket"
+                     "fqsen": "\\createRenewalTicket\u0028\u0029",
+                     "name": "createRenewalTicket",
+                     "summary": "",
+                     "url": "namespaces/default.html#function_createRenewalTicket"
         },                {
             "fqsen": "\\getPostDataFromField\u0028\u0029",
             "name": "getPostDataFromField",

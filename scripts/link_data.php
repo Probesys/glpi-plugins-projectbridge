@@ -1,4 +1,32 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ *  projectBridge is a plugin allows to count down time from contracts
+ *  by linking tickets with project tasks and project tasks with contracts.
+ *  ---------------------------------------------------------------------
+ *  LICENSE
+ *
+ *  This file is part of projectBridge.
+ *
+ *  rgpdTools is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  rgpdTools is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ *  ---------------------------------------------------------------------
+ *  @copyright Copyright © 2022-2023 probeSys'
+ *  @license   http://www.gnu.org/licenses/agpl.txt AGPLv3+
+ *  @link      https://github.com/Probesys/glpi-plugins-projectbridge
+ *  @link      https://plugins.glpi-project.org/#/plugin/projectbridge
+ *  ---------------------------------------------------------------------
+ */
 
 chdir(__DIR__);
 require_once('../../../inc/includes.php');
@@ -74,33 +102,33 @@ foreach (array_keys($all_contracts) as $contract_id) {
     $end_date_datetime = new DateTime($end_date);
     $today_datetime = new DateTime("now");
 
-    if ($end_date_datetime >= $today_datetime
+   if ($end_date_datetime >= $today_datetime
     && isset($nb_hours_per_contract_type[$contract->fields['contracttypes_id']])
     && !in_array($contract->fields['name'], $project_names)
    ) {
-        // contracts that where in progress less than 3 months ago AND
-        // contracts with matching support hours AND
-        // no existing project by that name
+       // contracts that where in progress less than 3 months ago AND
+       // contracts with matching support hours AND
+       // no existing project by that name
 
-        $contract->input = [
+       $contract->input = [
       'projectbridge_project_hours' => $nb_hours_per_contract_type[$contract->fields['contracttypes_id']],
       'name' => $contract->fields['name'],
        ];
 
-        if (plugin_projectbridge_contract_add($contract, true) === true) {
-            echo 'Linked contract #' . $contract_id . ' "' . $contract->fields['name'] . '"' . "\n";
-            $success_contract_ids[] = $contract_id;
+       if (plugin_projectbridge_contract_add($contract, true) === true) {
+           echo 'Linked contract #' . $contract_id . ' "' . $contract->fields['name'] . '"' . "\n";
+           $success_contract_ids[] = $contract_id;
 
-            if (!in_array($contract->fields['entities_id'], $entities_ids)) {
-                $entities_ids[] = (int) $contract->fields['entities_id'];
-            }
-        } else {
-            echo 'FAILED linking contract #' . $contract_id . ' "' . $contract->fields['name'] . '"' . "\n";
-            $nb_fails++;
-        }
-    } else {
-        $nb_ignored++;
-    }
+          if (!in_array($contract->fields['entities_id'], $entities_ids)) {
+              $entities_ids[] = (int) $contract->fields['entities_id'];
+          }
+       } else {
+           echo 'FAILED linking contract #' . $contract_id . ' "' . $contract->fields['name'] . '"' . "\n";
+           $nb_fails++;
+       }
+   } else {
+       $nb_ignored++;
+   }
 }
 
 $nb_entities_too_many_contracts = 0;
@@ -109,37 +137,37 @@ $nb_entities_fails = 0;
 
 // entities
 if (!empty($entities_ids)) {
-    foreach ($entities_ids as $entity_id) {
-        $contract = new Contract();
-        $contracts = $contract->find("
+   foreach ($entities_ids as $entity_id) {
+       $contract = new Contract();
+       $contracts = $contract->find("
       TRUE
       AND entities_id = " . $entity_id . "
       AND is_deleted = 0
     ");
 
-        $nb_contracts = count($contracts);
+       $nb_contracts = count($contracts);
 
-        if ($nb_contracts == 1) {
-            $entity = new Entity();
-            $entity->getFromDB($entity_id);
-            $contract_id = key($contracts);
+      if ($nb_contracts == 1) {
+         $entity = new Entity();
+         $entity->getFromDB($entity_id);
+         $contract_id = key($contracts);
 
-            $entity->input = [
+         $entity->input = [
          'projectbridge_contract_id' => $contract_id,
-         ];
+          ];
 
-            if (plugin_projectbridge_pre_entity_update($entity, true)) {
-                echo 'Linked entity #' . $entity_id . ' with default contract' . "\n";
-                $nb_entities_success++;
-            } else {
-                echo 'FAILED linking entity #' . $entity_id . ' to contract #' . $contract_id . "\n";
-                $nb_entities_fails++;
-            }
-        } elseif ($nb_contracts > 1) {
-            echo 'FAILED linking entity #' . $entity_id . ': too many contracts' . "\n";
-            $nb_entities_too_many_contracts++;
-        }
-    }
+         if (plugin_projectbridge_pre_entity_update($entity, true)) {
+             echo 'Linked entity #' . $entity_id . ' with default contract' . "\n";
+             $nb_entities_success++;
+         } else {
+             echo 'FAILED linking entity #' . $entity_id . ' to contract #' . $contract_id . "\n";
+             $nb_entities_fails++;
+         }
+      } else if ($nb_contracts > 1) {
+          echo 'FAILED linking entity #' . $entity_id . ': too many contracts' . "\n";
+          $nb_entities_too_many_contracts++;
+      }
+   }
 }
 
 echo '--------' . "\n";

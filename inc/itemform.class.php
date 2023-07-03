@@ -42,180 +42,177 @@ class PluginProjectbridgeItemForm
      *
      * @return void
      */
-    public static function preItemForm($params)
-    {
-        $item = $params['item'];
-        $options = $params['options'];
-        $out = "";
-        if (!substr_count($_SERVER['SCRIPT_NAME'], 'helpdesk.public.php') && PluginProjectbridgeConfig::getConfValueByName('AddContractSelectorOnCreatingTicketForm')) {
-            // only for create new ticket form
-            if ($item::getType() == Ticket::getType() && $options['id'] == 0) {
-                // récupération entité courante
-                $entityID = $options['entities_id'];
-                $out .= self::getEntityContractsSelector($entityID);
-            }
-        }
+   public static function preItemForm($params) {
+       $item = $params['item'];
+       $options = $params['options'];
+       $out = "";
+      if (!substr_count($_SERVER['SCRIPT_NAME'], 'helpdesk.public.php') && PluginProjectbridgeConfig::getConfValueByName('AddContractSelectorOnCreatingTicketForm')) {
+          // only for create new ticket form
+         if ($item::getType() == Ticket::getType() && $options['id'] == 0) {
+            // récupération entité courante
+            $entityID = $options['entities_id'];
+            $out .= self::getEntityContractsSelector($entityID);
+         }
+      }
 
-        echo $out;
-    }
-    
+       echo $out;
+   }
+
     /**
      * List contract associate to one entity
      * @global type $DB
      * @param type $entityID
      * @return string
      */
-    private static function getEntityContractsSelector($entityID)
-    {
-        global $DB;
-        // récupération du contrat par défaut
-        $entity = new Entity();
-        $entityObject = $entity->getById($entityID);
-        $bridge_entity = new PluginProjectbridgeEntity($entityObject);
-        $defaultContractID = $bridge_entity->getContractId();
-        $bridge_contract = new PluginProjectbridgeContract();
-        $project = new Project();
-        $contract = new Contract();
-        $projectTask = new ProjectTask();
-        $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
-        $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
-        $state_renewal_value = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
-        $now = new DateTime();
+   private static function getEntityContractsSelector($entityID) {
+       global $DB;
+       // récupération du contrat par défaut
+       $entity = new Entity();
+       $entityObject = $entity->getById($entityID);
+       $bridge_entity = new PluginProjectbridgeEntity($entityObject);
+       $defaultContractID = $bridge_entity->getContractId();
+       $bridge_contract = new PluginProjectbridgeContract();
+       $project = new Project();
+       $contract = new Contract();
+       $projectTask = new ProjectTask();
+       $state_in_progress_value = PluginProjectbridgeState::getProjectStateIdByStatus('in_progress');
+       $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
+       $state_renewal_value = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
+       $now = new DateTime();
 
-        $contract_datas = [];
-        
-        // get ids of ancestor entities
-        $entitiesIDS = getAncestorsOf($entity->getTable(), $entityID);
-        // prevent empty array
-        array_push($entitiesIDS, $entityID);
-        
-        // get contratcs associate to current entity with active projectTask
-        $sub1 = new \QuerySubQuery([
-            'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $contract->getTable().'.name AS contractName', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
-            'FROM' => $bridge_contract->getTable(),
-            'INNER JOIN' => [
-                $contract->getTable() => [
-                    'FKEY' => [
-                        $bridge_contract->getTable() => 'contract_id',
-                        $contract->getTable() => 'id'
-                    ]
-                ],
-                $project->getTable() => [
-                    'FKEY' => [
-                        $bridge_contract->getTable() => 'project_id',
-                        $project->getTable() => 'id'
-                    ]
-                ],
-                $projectTask->getTable() => [
-                    'FKEY' => [
-                        $project->getTable() => 'id',
-                        $projectTask->getTable() => 'projects_id'
-                    ]
-                ],
-                $entity->getTable() => [
-                    'FKEY' => [
-                        $entity->getTable() => 'id',
-                        $contract->getTable() => 'entities_id'
-                    ]
-                ],
+       $contract_datas = [];
 
-            ],
-            'WHERE' => [
-                $entity->getTable().'.id' =>  $entityID,
-                $contract->getTable().'.is_deleted' => 0,
-                $contract->getTable().'.is_template' => 0,
-                $projectTask->getTable().'.projectstates_id' => [$state_in_progress_value, $state_renewal_value],
-                $projectTask->getTable().'.plan_end_date' => ['>=', 'NOW()'],
+       // get ids of ancestor entities
+       $entitiesIDS = getAncestorsOf($entity->getTable(), $entityID);
+       // prevent empty array
+       array_push($entitiesIDS, $entityID);
 
-            ]
-        ]);
-        
-        // get contracts associate to ancestor entities with active projectTask
-        $sub2 = new \QuerySubQuery([
-            'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $contract->getTable().'.name AS contractName', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
-            'FROM' => $bridge_contract->getTable(),
-            'INNER JOIN' => [
-                $contract->getTable() => [
-                    'FKEY' => [
-                        $bridge_contract->getTable() => 'contract_id',
-                        $contract->getTable() => 'id'
-                    ]
-                ],
-                $project->getTable() => [
-                    'FKEY' => [
-                        $bridge_contract->getTable() => 'project_id',
-                        $project->getTable() => 'id'
-                    ]
-                ],
-                $projectTask->getTable() => [
-                    'FKEY' => [
-                        $project->getTable() => 'id',
-                        $projectTask->getTable() => 'projects_id'
-                    ]
-                ],
-                $entity->getTable() => [
-                    'FKEY' => [
-                        $entity->getTable() => 'id',
-                        $contract->getTable() => 'entities_id'
-                    ]
-                ],
+       // get contratcs associate to current entity with active projectTask
+       $sub1 = new \QuerySubQuery([
+           'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $contract->getTable().'.name AS contractName', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
+           'FROM' => $bridge_contract->getTable(),
+           'INNER JOIN' => [
+               $contract->getTable() => [
+                   'FKEY' => [
+                       $bridge_contract->getTable() => 'contract_id',
+                       $contract->getTable() => 'id'
+                   ]
+               ],
+               $project->getTable() => [
+                   'FKEY' => [
+                       $bridge_contract->getTable() => 'project_id',
+                       $project->getTable() => 'id'
+                   ]
+               ],
+               $projectTask->getTable() => [
+                   'FKEY' => [
+                       $project->getTable() => 'id',
+                       $projectTask->getTable() => 'projects_id'
+                   ]
+               ],
+               $entity->getTable() => [
+                   'FKEY' => [
+                       $entity->getTable() => 'id',
+                       $contract->getTable() => 'entities_id'
+                   ]
+               ],
 
-            ],
-            'WHERE' => [
-                $entity->getTable().'.id' =>  $entitiesIDS,
-                $contract->getTable().'.is_deleted' => 0,
-                $contract->getTable().'.is_template' => 0,
-                $contract->getTable().'.is_recursive' => 1,
-                $projectTask->getTable().'.projectstates_id' => [$state_in_progress_value, $state_renewal_value],
-                $projectTask->getTable().'.plan_end_date' => ['>=', 'NOW()'],
+           ],
+           'WHERE' => [
+               $entity->getTable().'.id' =>  $entityID,
+               $contract->getTable().'.is_deleted' => 0,
+               $contract->getTable().'.is_template' => 0,
+               $projectTask->getTable().'.projectstates_id' => [$state_in_progress_value, $state_renewal_value],
+               $projectTask->getTable().'.plan_end_date' => ['>=', 'NOW()'],
 
-            ]
-        ]);
-        // create union query
-        $union = new \QueryUnion([$sub1, $sub2], true);
-        
-        foreach ($DB->request(['FROM' => $union]) as $data) {
-            $contract_datas[] = $data;
-        }
+           ]
+       ]);
 
-        $contract_list = [
-            null => Dropdown::EMPTY_VALUE,
-        ];
-        foreach ($contract_datas as $contract_data) {
-            $contract_list[$contract_data['contract_id']] = $contract_data['contractName'] ;
-        }
-        //get if select is required form config
-        $isRequiredContractSelectorOnCreatingTicketForm = PluginProjectbridgeConfig::getConfValueByName('isRequiredContractSelectorOnCreatingTicketForm');
-        $required = (count($contract_datas) && $isRequiredContractSelectorOnCreatingTicketForm)?'required':'';
-        $config = [
-            'value' => $defaultContractID,
-            'display' => false,
-            'values' => $contract_list,
-            'class' => $required,
-            'noselect2' => false,
-            'display_emptychoice' => true
-        ];
-        if($required){
+       // get contracts associate to ancestor entities with active projectTask
+       $sub2 = new \QuerySubQuery([
+           'SELECT' => [$bridge_contract->getTable().'.contract_id', $project->getTable().'.name AS name', $contract->getTable().'.name AS contractName', $bridge_contract->getTable().'.project_id', $projectTask->getTable().'.plan_end_date AS plan_end_date',],
+           'FROM' => $bridge_contract->getTable(),
+           'INNER JOIN' => [
+               $contract->getTable() => [
+                   'FKEY' => [
+                       $bridge_contract->getTable() => 'contract_id',
+                       $contract->getTable() => 'id'
+                   ]
+               ],
+               $project->getTable() => [
+                   'FKEY' => [
+                       $bridge_contract->getTable() => 'project_id',
+                       $project->getTable() => 'id'
+                   ]
+               ],
+               $projectTask->getTable() => [
+                   'FKEY' => [
+                       $project->getTable() => 'id',
+                       $projectTask->getTable() => 'projects_id'
+                   ]
+               ],
+               $entity->getTable() => [
+                   'FKEY' => [
+                       $entity->getTable() => 'id',
+                       $contract->getTable() => 'entities_id'
+                   ]
+               ],
+
+           ],
+           'WHERE' => [
+               $entity->getTable().'.id' =>  $entitiesIDS,
+               $contract->getTable().'.is_deleted' => 0,
+               $contract->getTable().'.is_template' => 0,
+               $contract->getTable().'.is_recursive' => 1,
+               $projectTask->getTable().'.projectstates_id' => [$state_in_progress_value, $state_renewal_value],
+               $projectTask->getTable().'.plan_end_date' => ['>=', 'NOW()'],
+
+           ]
+       ]);
+       // create union query
+       $union = new \QueryUnion([$sub1, $sub2], true);
+
+      foreach ($DB->request(['FROM' => $union]) as $data) {
+          $contract_datas[] = $data;
+      }
+
+       $contract_list = [
+           null => Dropdown::EMPTY_VALUE,
+       ];
+       foreach ($contract_datas as $contract_data) {
+           $contract_list[$contract_data['contract_id']] = $contract_data['contractName'];
+       }
+       //get if select is required form config
+       $isRequiredContractSelectorOnCreatingTicketForm = PluginProjectbridgeConfig::getConfValueByName('isRequiredContractSelectorOnCreatingTicketForm');
+       $required = (count($contract_datas) && $isRequiredContractSelectorOnCreatingTicketForm)?'required':'';
+       $config = [
+           'value' => $defaultContractID,
+           'display' => false,
+           'values' => $contract_list,
+           'class' => $required,
+           'noselect2' => false,
+           'display_emptychoice' => true
+       ];
+       if ($required) {
           $config['required'] = $required;
-        }
-        
-        $html_parts = Dropdown::showFromArray('projectbridge_contract_id', $contract_list, $config);
-        $requiredSpan = '';
-        if ($required) {
-            // if at least one contract was found, add required attribute
-            $html_parts = str_replace('<select', '<select '.$required, $html_parts);
-            $requiredSpan = '<span class="required">*</span>';
-        }
-        
-        $out = '<div class="form-field row col-12  mb-2">';
-        $out .= '<label class="col-form-label col-xxl-4 text-xxl-end">' . __('Associated contract') .$requiredSpan. '</label>';
-        // récupération des contrats associés à l'entité
-        $out .= '<div class="col-xxl-8  field-container">' . $html_parts . '</div>';
-        $out .= '</div>';
-        
+       }
 
-        return $out;
-    }
+       $html_parts = Dropdown::showFromArray('projectbridge_contract_id', $contract_list, $config);
+       $requiredSpan = '';
+       if ($required) {
+           // if at least one contract was found, add required attribute
+           $html_parts = str_replace('<select', '<select '.$required, $html_parts);
+           $requiredSpan = '<span class="required">*</span>';
+       }
+
+       $out = '<div class="form-field row col-12  mb-2">';
+       $out .= '<label class="col-form-label col-xxl-4 text-xxl-end">' . __('Associated contract') .$requiredSpan. '</label>';
+       // récupération des contrats associés à l'entité
+       $out .= '<div class="col-xxl-8  field-container">' . $html_parts . '</div>';
+       $out .= '</div>';
+
+       return $out;
+   }
 
     /**
      * Display contents at the begining of item forms.
@@ -224,13 +221,12 @@ class PluginProjectbridgeItemForm
      *
      * @return void
      */
-    public static function postItemForm($params)
-    {
-        $item = $params['item'];
-        $options = $params['options'];
+   public static function postItemForm($params) {
+       $item = $params['item'];
+       $options = $params['options'];
 
-        $out = '';
+       $out = '';
 
-        echo $out;
-    }
+       echo $out;
+   }
 }

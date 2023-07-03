@@ -1,7 +1,35 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+ *  projectBridge is a plugin allows to count down time from contracts
+ *  by linking tickets with project tasks and project tasks with contracts.
+ *  ---------------------------------------------------------------------
+ *  LICENSE
+ *
+ *  This file is part of projectBridge.
+ *
+ *  rgpdTools is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  rgpdTools is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Formcreator. If not, see <http://www.gnu.org/licenses/>.
+ *  ---------------------------------------------------------------------
+ *  @copyright Copyright © 2022-2023 probeSys'
+ *  @license   http://www.gnu.org/licenses/agpl.txt AGPLv3+
+ *  @link      https://github.com/Probesys/glpi-plugins-projectbridge
+ *  @link      https://plugins.glpi-project.org/#/plugin/projectbridge
+ *  ---------------------------------------------------------------------
+ */
 
 
-define('PLUGIN_PROJECTBRIDGE_VERSION', '2.7.4');
+define('PLUGIN_PROJECTBRIDGE_VERSION', '2.7.5');
 
 define('PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION', '10.0');
 define('PLUGIN_PROJECTBRIDGE_MAX_GLPI_VERSION', '11.0');
@@ -25,8 +53,7 @@ if (!class_exists('PluginProjectbridgeContractQuotaAlert')) {
  *
  * @return boolean
  */
-function plugin_version_projectbridge()
-{
+function plugin_version_projectbridge() {
     return [
         'name' => 'Projectbridge',
         'version' => PLUGIN_PROJECTBRIDGE_VERSION,
@@ -50,8 +77,7 @@ function plugin_version_projectbridge()
  *
  * @return boolean
  */
-function plugin_init_projectbridge()
-{
+function plugin_init_projectbridge() {
     global $PLUGIN_HOOKS;
 
     $PLUGIN_HOOKS['csrf_compliant'][PluginProjectbridgeConfig::NAMESPACE] = true;
@@ -94,19 +120,18 @@ function plugin_init_projectbridge()
  *
  * @return boolean
  */
-function plugin_projectbridge_check_prerequisites()
-{
+function plugin_projectbridge_check_prerequisites() {
     $prerequisites_check_ok = false;
 
-    try {
-        if (version_compare(GLPI_VERSION, PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION, '<')) {
-            throw new Exception('This plugin requires GLPI >= ' . PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION);
-        }
+   try {
+      if (version_compare(GLPI_VERSION, PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION, '<')) {
+          throw new \Exception('This plugin requires GLPI >= ' . PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION);
+      }
 
-        $prerequisites_check_ok = true;
-    } catch (Exception $e) {
-        echo $e->getMessage();
-    }
+       $prerequisites_check_ok = true;
+   } catch (\Exception $e) {
+       echo $e->getMessage();
+   }
 
     return $prerequisites_check_ok;
 }
@@ -116,8 +141,7 @@ function plugin_projectbridge_check_prerequisites()
  *
  * @return boolean
  */
-function plugin_projectbridge_check_config()
-{
+function plugin_projectbridge_check_config() {
     // nothing to do
     return true;
 }
