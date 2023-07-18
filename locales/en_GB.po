@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: ProjectBridge 2.4RC3\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
 "POT-Creation-Date: 2023-04-12 14:38+0200\n"
-"PO-Revision-Date: 2022-07-25 08:31+0000\n"
+"PO-Revision-Date: 2023-07-19 07:31+0000\n"
 "Last-Translator: fernando.lagrange <fernando.lagrange@probesys.com>\n"
 "Language-Team: English (United Kingdom) <http://i18n.probesys.com/projects/"
 "plugins-glpi/projectbridge/en_GB/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.11.2\n"
+"X-Generator: Weblate 4.15.1\n"
 
 #: hook.php:290 ajax/get_renewal_tickets.php:133
 msgctxt "projectbridge"
@@ -29,20 +29,18 @@ msgid "Please complete all renewal fields"
 msgstr "Please complete all renewal fields"
 
 #: hook.php:378
-#, fuzzy
 msgctxt "projectbridge"
 msgid "The contract has no start date. The project could not be created."
-msgstr "The contract has no start date. The project could not be created"
+msgstr "The contract has no start date. The project could not be created."
 
 #: hook.php:426
-#, fuzzy
 msgctxt "projectbridge"
 msgid ""
 "The correspondence for the status \"In progress\" has not been defined. The "
 "project could not be created."
 msgstr ""
-"The match for the status \"In progress\" has not been defined. The contract "
-"could not be renewed."
+"The match for the status \"In progress\" has not been defined. The project "
+"could not be created."
 
 #: hook.php:494 inc/ticket.class.php:112
 msgctxt "projectbridge"
@@ -70,10 +68,9 @@ msgid "ProjectTask status"
 msgstr "ProjectTask status"
 
 #: hook.php:697
-#, fuzzy
 msgctxt "projectbridge"
 msgid "Is linked to a project task"
-msgstr "Force link to a project task"
+msgstr "Is linked to a project task"
 
 #: hook.php:705 hook.php:745
 msgctxt "projectbridge"
@@ -187,7 +184,7 @@ msgstr "Renewal"
 #: front/config.form.php:268
 msgctxt "projectbridge"
 msgid "The selected user has no default email adress configured"
-msgstr ""
+msgstr "The selected user has no default email adress configured"
 
 #: front/config.form.php:276
 msgctxt "projectbridge"
@@ -215,7 +212,6 @@ msgid "Add contract selector on creating ticket form"
 msgstr "Add contract selector on creating ticket form"
 
 #: front/config.form.php:398
-#, fuzzy
 msgctxt "projectbridge"
 msgid "Contract selector on creating ticket form is required"
 msgstr "Add contract selector on creating ticket form"
@@ -223,7 +219,7 @@ msgstr "Add contract selector on creating ticket form"
 #: front/config.form.php:414
 msgctxt "projectbridge"
 msgid "Global percentage quota to send alert notification"
-msgstr ""
+msgstr "Global percentage quota to send alert notification"
 
 #: front/config.form.php:447
 msgctxt "projectbridge"
@@ -325,21 +321,19 @@ msgid "No linked contract"
 msgstr "No linked contract"
 
 #: inc/contract.class.php:1187
-#, fuzzy
 msgctxt "projectbridge"
 msgid "ProjectBridge"
-msgstr "ProjectBridge project tasks"
+msgstr "ProjectBridge"
 
 #: inc/contract.class.php:1212
-#, fuzzy
 msgctxt "projectbridge"
 msgid "ProjectBridge Configurations"
-msgstr "ProjectBridge Configuration"
+msgstr "ProjectBridge Configurations"
 
 #: inc/contract.class.php:1216
 msgctxt "projectbridge"
 msgid "Percentage quota to send alert notification"
-msgstr ""
+msgstr "Percentage quota to send alert notification"
 
 #: inc/entity.class.php:75
 msgctxt "projectbridge"
@@ -374,7 +368,7 @@ msgstr "Contract Alert to renew"
 #: inc/task.class.php:94
 msgctxt "projectbridge"
 msgid "Send email alert containing contract with consumption over quota"
-msgstr ""
+msgstr "Send email alert containing contract with consumption over quota"
 
 #: inc/task.class.php:119 inc/task.class.php:818 inc/task.class.php:924
 msgctxt "projectbridge"
@@ -416,7 +410,7 @@ msgstr "person(s) to alert"
 #: inc/task.class.php:547
 msgctxt "projectbridge"
 msgid "Hello"
-msgstr ""
+msgstr "Hello"
 
 #: inc/task.class.php:549
 msgctxt "projectbridge"
@@ -434,7 +428,6 @@ msgid "Reason"
 msgstr "Reason"
 
 #: inc/task.class.php:561
-#, fuzzy
 msgctxt "projectbridge"
 msgid "Expired_period"
 msgstr "Expired in"
@@ -442,7 +435,7 @@ msgstr "Expired in"
 #: inc/task.class.php:563
 msgctxt "projectbridge"
 msgid "Overtaking_minutes_credit"
-msgstr ""
+msgstr "Overtaking minutes credit"
 
 #: inc/task.class.php:592
 msgctxt "projectbridge"
@@ -460,10 +453,9 @@ msgid "Adjustment task"
 msgstr "Adjustment task"
 
 #: inc/task.class.php:668
-#, fuzzy
 msgctxt "projectbridge"
 msgid "re-calculuation for projectTask"
-msgstr "re-calculuation for ticket task"
+msgstr "re-calculation for ticket task"
 
 #: inc/task.class.php:828 inc/task.class.php:830 inc/task.class.php:834
 msgctxt "projectbridge"
@@ -478,22 +470,22 @@ msgstr "Expected end date"
 #: inc/task.class.php:897
 msgctxt "projectbridge"
 msgid "This Email is send automatically by the plugin projectBridge"
-msgstr ""
+msgstr "This Email is send automatically by the plugin projectBridge"
 
 #: inc/task.class.php:935 inc/task.class.php:939
 msgctxt "projectbridge"
 msgid "Contract(s) over limit quota alert"
-msgstr ""
+msgstr "Contract(s) over limit quota alert"
 
 #: inc/task.class.php:953
 msgctxt "projectbridge"
 msgid "Quota"
-msgstr ""
+msgstr "Quota"
 
 #: inc/task.class.php:967
 msgctxt "projectbridge"
 msgid "This Email si send automacitly by the plugin projectBridge"
-msgstr ""
+msgstr "This Email is send automatically by the plugin projectBridge"
 
 #: inc/ticket.class.php:99
 msgctxt "projectbridge"
