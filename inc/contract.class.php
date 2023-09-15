@@ -1055,6 +1055,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $consumption = 0;
                if ($projectTask) {
                     $consumption = self::getTicketsTotalActionTime($projectTask->getField('id')) / 3600;
+                    $nb_hours = $projectTask->getField('planned_duration') / 3600;
                }
                if ($consumption >= $nb_hours || $planEndDate <= $now) {
                      $contracts[$contract->getId()] = [
@@ -1109,6 +1110,7 @@ class PluginProjectbridgeContract extends CommonDBTM
                 $consumption = 0;
                if ($projectTask) {
                     $consumption = self::getTicketsTotalActionTime($projectTask->getField('id')) / 3600;
+                    $nb_hours = $projectTask->getField('planned_duration') / 3600;
                }
                 $isOverQuota = false;
                 $ratio = 0;
