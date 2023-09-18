@@ -78,13 +78,19 @@ class PluginProjectbridgeContract extends CommonDBTM
           $lastActiveProjectTask = $activeProjectTasks[0];
           $this->_nb_hours = (int) $lastActiveProjectTask['planned_duration'] / 3600;
       } else {
+          // search close projecttask
+          $projectTask = self::getProjectTaskOject($this->_project_id, true);
+           if ($projectTask) {
+                $this->_nb_hours = $projectTask->getField('planned_duration') / 3600;
+           }
+      }
          if ($this->_nb_hours === null) {
              $result = $this->getFromDBByCrit(['contract_id' => $this->_contract->getId()]);
             if ($result) {
                $this->_nb_hours = (int) $this->fields['nb_hours'];
             }
          }
-      }
+      
 
        return $this->_nb_hours;
    }

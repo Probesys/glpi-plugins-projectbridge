@@ -691,7 +691,10 @@ class PluginProjectbridgeTask extends CommonDBTM {
        $bridge_contract = new PluginProjectbridgeContract($contract);
        $nb_hours = $bridge_contract->getNbHours();
        $consumption = PluginProjectbridgeContract::getTicketsTotalActionTime($taskId) / 3600;
-       $ratio = round(($consumption * 100) / $nb_hours);
+       $ratio = 100;
+       if($nb_hours) {
+        $ratio = round(($consumption * 100) / $nb_hours);
+       }
        $projectTask->update([
            'id' => $taskId,
            'percent_done' => $ratio,
