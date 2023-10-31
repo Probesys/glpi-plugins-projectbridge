@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: ProjectBridge 2.4RC3\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
 "POT-Creation-Date: 2023-10-31 14:48+0100\n"
-"PO-Revision-Date: 2023-10-31 13:50+0000\n"
+"PO-Revision-Date: 2023-10-31 14:01+0000\n"
 "Last-Translator: fernando.lagrange <fernando.lagrange@probesys.com>\n"
 "Language-Team: English (United Kingdom) <http://i18n.probesys.com/projects/"
 "plugins-glpi/projectbridge/en_GB/>\n"
@@ -300,12 +300,10 @@ msgid "Remember to refresh this page after creating the project"
 msgstr "Remember to refresh this page after creating the project"
 
 #: ../projectbridge/inc/contract.class.php:666
-#, fuzzy, php-format
-#| msgctxt "projectbridge"
-#| msgid "Please define the correspondence of the \"Closed\" status."
+#, php-format
 msgctxt "projectbridge"
 msgid "Please define the correspondence of the %1$s status."
-msgstr "Please define the correspondence of the \"Closed\" status."
+msgstr "Please define the correspondence of the %1$s status."
 
 #: ../projectbridge/inc/contract.class.php:821
 msgctxt "projectbridge"
