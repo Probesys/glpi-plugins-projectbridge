@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: ProjectBridge 2.4RC3\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
 "POT-Creation-Date: 2023-10-31 14:48+0100\n"
-"PO-Revision-Date: 2023-10-31 14:01+0000\n"
+"PO-Revision-Date: 2023-10-31 14:54+0000\n"
 "Last-Translator: fernando.lagrange <fernando.lagrange@probesys.com>\n"
 "Language-Team: Czech <http://i18n.probesys.com/projects/plugins-glpi/"
 "projectbridge/cs/>\n"
@@ -116,9 +116,6 @@ msgstr "Požadavek na úpravu"
 
 #: ../projectbridge/hook.php:820 ../projectbridge/inc/contract.class.php:257
 #: ../projectbridge/inc/contract.class.php:262
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Comsuption"
 msgctxt "projectbridge"
 msgid "Comsuption"
 msgstr "Spotřeba"
@@ -129,27 +126,16 @@ msgid "Number of project tasks tickets"
 msgstr ""
 
 #: ../projectbridge/hook.php:1533
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Delete the link with any project task"
 msgctxt "projectbridge"
 msgid "Delete the link with any project task"
 msgstr "Smazat jakékoli propojení s úkolem projektu"
 
 #: ../projectbridge/hook.php:1536
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Force link to a project task"
 msgctxt "projectbridge"
 msgid "Force link to a project task"
 msgstr "Vynutit propojení s úkolem projektu"
 
 #: ../projectbridge/ajax/get_renewal_tickets.php:97
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid ""
-#| "Select tickets in the entity (not deleted and unrelated to a project "
-#| "task) that you want to link to the new task"
 msgctxt "projectbridge"
 msgid ""
 "Select tickets in the entity (not deleted and unrelated to a project task) "
@@ -160,74 +146,47 @@ msgstr ""
 
 #: ../projectbridge/front/config.form.php:84
 #: ../projectbridge/front/config.form.php:88
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "ProjectBridge Configuration"
 msgctxt "projectbridge"
 msgid "ProjectBridge Configuration"
 msgstr "Nastavení ProjectBridge"
 
 #: ../projectbridge/front/config.form.php:116
 #: ../projectbridge/front/projecttask.php:35
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Project Tasks"
 msgctxt "projectbridge"
 msgid "Project Tasks"
 msgstr "Úkoly projektu"
 
 #: ../projectbridge/front/config.form.php:122
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Status Configuration"
 msgctxt "projectbridge"
 msgid "Status Configuration"
 msgstr "Nastavení stavu"
 
 #: ../projectbridge/front/config.form.php:128
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Please match the status names and their values in GLPI"
 msgctxt "projectbridge"
 msgid "Please match the status names and their values in GLPI"
 msgstr "Používejte stejné názvy stavů, jaké mají hodnoty v GLPI"
 
 #: ../projectbridge/front/config.form.php:138
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Status name"
 msgctxt "projectbridge"
 msgid "Status name"
 msgstr "Název stavu"
 
 #: ../projectbridge/front/config.form.php:141
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Status type"
 msgctxt "projectbridge"
 msgid "Status type"
 msgstr "Typ stavu"
 
 #: ../projectbridge/front/config.form.php:144
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Corresponding status"
 msgctxt "projectbridge"
 msgid "Corresponding status"
 msgstr "Odpovídající stav"
 
 #: ../projectbridge/front/config.form.php:220
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "In progress"
 msgctxt "projectbridge"
 msgid "In progress"
 msgstr "Probíhá"
 
 #: ../projectbridge/front/config.form.php:248
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Renewal"
 msgctxt "projectbridge"
 msgid "Renewal"
 msgstr "Obnovení"
@@ -238,33 +197,21 @@ msgid "The selected user has no default email adress configured"
 msgstr ""
 
 #: ../projectbridge/front/config.form.php:302
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "People receiving alerts"
 msgctxt "projectbridge"
 msgid "People receiving alerts"
 msgstr "Lidí, kteří obdrží výstrahu"
 
 #: ../projectbridge/front/config.form.php:344
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Nobody receive alerts"
 msgctxt "projectbridge"
 msgid "Nobody receive alerts"
 msgstr "Výstrahu neobdrží nikdo"
 
 #: ../projectbridge/front/config.form.php:372
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "General config"
 msgctxt "projectbridge"
 msgid "General config"
 msgstr "Obecné nastavení"
 
 #: ../projectbridge/front/config.form.php:394
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Count only public tasks in project"
 msgctxt "projectbridge"
 msgid "Count only public tasks in project"
 msgstr "Spočítat pouze veřejné úkoly v projektu"
@@ -290,128 +237,82 @@ msgid "Elements from previous ticket to be associated with renewed ticket"
 msgstr ""
 
 #: ../projectbridge/front/config.form.php:519
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Please activate the plugin or get the right of access"
 msgctxt "projectbridge"
 msgid "Please activate the plugin or get the right of access"
 msgstr "Aktivujte zásuvný modul nebo získejte oprávnění pro přístup k němu"
 
 #: ../projectbridge/inc/contract.class.php:115
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "linking Project"
 msgctxt "projectbridge"
 msgid "linking Project"
 msgstr "propojuje se projekt"
 
 #: ../projectbridge/inc/contract.class.php:164
 #: ../projectbridge/inc/contract.class.php:497
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Create project"
 msgctxt "projectbridge"
 msgid "Create project"
 msgstr "Vytvořit projekt"
 
 #: ../projectbridge/inc/contract.class.php:215
 #: ../projectbridge/inc/ticket.class.php:133
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Access to linked project"
 msgctxt "projectbridge"
 msgid "Access to linked project"
 msgstr "Přístup k propojeným projektům"
 
 #: ../projectbridge/inc/contract.class.php:237
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Warning ! No associate projectTask with \"In progress\" status exist"
 msgctxt "projectbridge"
 msgid "Warning ! No associate projectTask with \"In progress\" status exist"
 msgstr ""
 "Varování! Neexistují žádné související úkoly projektu ve stavu „Zpracovávání“"
 
 #: ../projectbridge/inc/contract.class.php:278
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Expired in less than 24h"
 msgctxt "projectbridge"
 msgid "Expired in less than 24h"
 msgstr "Platnost skončí za méně než 24 hodin"
 
 #: ../projectbridge/inc/contract.class.php:280
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Expired in"
 msgctxt "projectbridge"
 msgid "Expired in"
 msgstr "Platnost skončila v"
 
 #: ../projectbridge/inc/contract.class.php:285
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Expired today"
 msgctxt "projectbridge"
 msgid "Expired today"
 msgstr "Platnost skončila dnes"
 
 #: ../projectbridge/inc/contract.class.php:287
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Expired since"
 msgctxt "projectbridge"
 msgid "Expired since"
 msgstr "Platnost skončila od"
 
 #: ../projectbridge/inc/contract.class.php:295
 #: ../projectbridge/inc/contract.class.php:345
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Renew the contract"
 msgctxt "projectbridge"
 msgid "Renew the contract"
 msgstr "Obnovit smlouvu"
 
 #: ../projectbridge/inc/contract.class.php:326
 #: ../projectbridge/inc/contract.class.php:598
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Number of hours"
 msgctxt "projectbridge"
 msgid "Number of hours"
 msgstr "Počet hodin"
 
 #: ../projectbridge/inc/contract.class.php:334
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Confirm renewal"
 msgctxt "projectbridge"
 msgid "Confirm renewal"
 msgstr "Potvrdit obnovení"
 
 #: ../projectbridge/inc/contract.class.php:501
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Remember to refresh this page after creating the project"
 msgctxt "projectbridge"
 msgid "Remember to refresh this page after creating the project"
 msgstr "Po vytvoření projektu nezapomeňte tuto stránku načíst znovu"
 
 #: ../projectbridge/inc/contract.class.php:666
-#, fuzzy, php-format
-#| msgctxt "projectbridge"
-#| msgid "Please define the correspondence of the \"Closed\" status."
+#, php-format
 msgctxt "projectbridge"
 msgid "Please define the correspondence of the %1$s status."
-msgstr "Definujte korespondenci stavu „Uzavřeno“."
+msgstr "Definujte korespondenci stavu %1$s."
 
 #: ../projectbridge/inc/contract.class.php:821
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid ""
-#| "The match for the status \"In progress\" has not been defined. The "
-#| "contract could not be renewed."
 msgctxt "projectbridge"
 msgid ""
 "The match for the status \"In progress\" has not been defined. The contract "
@@ -422,25 +323,16 @@ msgstr ""
 
 #: ../projectbridge/inc/contract.class.php:1177
 #: ../projectbridge/inc/contract.class.php:1180
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Access to linked contract"
 msgctxt "projectbridge"
 msgid "Access to linked contract"
 msgstr "Přístup k propojeným smlouvám"
 
 #: ../projectbridge/inc/contract.class.php:1180
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Link to contract nonexistent"
 msgctxt "projectbridge"
 msgid "Link to contract nonexistent"
 msgstr "Propojení se smlouvou neexistuje"
 
 #: ../projectbridge/inc/contract.class.php:1184
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "No linked contract"
 msgctxt "projectbridge"
 msgid "No linked contract"
 msgstr "Žádná propojená smlouva"
@@ -463,49 +355,31 @@ msgid "Percentage quota to send alert notification"
 msgstr ""
 
 #: ../projectbridge/inc/entity.class.php:100
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Default contract access"
 msgctxt "projectbridge"
 msgid "Default contract access"
 msgstr "Přístup k výchozí smlouvě"
 
 #: ../projectbridge/inc/entity.class.php:104
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Create a new contract"
 msgctxt "projectbridge"
 msgid "Create a new contract"
 msgstr "Vytvořit novou smlouvu"
 
 #: ../projectbridge/inc/entity.class.php:108
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Remember to refresh this page after creating the contract"
 msgctxt "projectbridge"
 msgid "Remember to refresh this page after creating the contract"
 msgstr "Po vytvoření smlouvy nezapomeňte tuto stránku načíst znovu"
 
 #: ../projectbridge/inc/task.class.php:100
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Project task treatment"
 msgctxt "projectbridge"
 msgid "Project task treatment"
 msgstr "Nakládání s úkolem projektu"
 
 #: ../projectbridge/inc/task.class.php:106
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Update percentage counters performed in project tasks"
 msgctxt "projectbridge"
 msgid "Update percentage counters performed in project tasks"
 msgstr "Aktualizovat čítače procent provedených v úkolech projektu"
 
 #: ../projectbridge/inc/task.class.php:111
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Contract Alert to renew"
 msgctxt "projectbridge"
 msgid "Contract Alert to renew"
 msgstr "Výstraha ohledně obnovení smlouvy"
@@ -518,52 +392,32 @@ msgstr ""
 #: ../projectbridge/inc/task.class.php:140
 #: ../projectbridge/inc/task.class.php:824
 #: ../projectbridge/inc/task.class.php:927
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Plugin is not installed"
 msgctxt "projectbridge"
 msgid "Plugin is not installed"
 msgstr "Zásuvný modul není nainstalovaný"
 
 #: ../projectbridge/inc/task.class.php:149
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Please define the correspondence of the \"Closed\" status."
 msgctxt "projectbridge"
 msgid "Please define the correspondence of the \"Closed\" status."
 msgstr "Definujte korespondenci stavu „Uzavřeno“."
 
 #: ../projectbridge/inc/task.class.php:156
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Please define the correspondence of the \"Renewal\" status."
 msgctxt "projectbridge"
 msgid "Please define the correspondence of the \"Renewal\" status."
 msgstr "Definujte korespondenci stavu „Obnovení“."
 
 #: ../projectbridge/inc/task.class.php:287
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "This ticket comes from an automatic copy of the ticket"
 msgctxt "projectbridge"
 msgid "This ticket comes from an automatic copy of the ticket"
 msgstr "Tento požadavek pochází z automatické kopie požadavku"
 
 #: ../projectbridge/inc/task.class.php:287
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid ""
-#| "following the overtaking of hours or the expiry of the maintenance "
-#| "contract"
 msgctxt "projectbridge"
 msgid ""
 "following the overtaking of hours or the expiry of the maintenance contract"
 msgstr "následuje překročení hodin nebo skončení platnosti smlouvy údržbě"
 
 #: ../projectbridge/inc/task.class.php:528
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "find"
 msgctxt "projectbridge"
 msgid "find"
 msgstr "najít"
@@ -571,9 +425,6 @@ msgstr "najít"
 #: ../projectbridge/inc/task.class.php:528
 #: ../projectbridge/inc/task.class.php:830
 #: ../projectbridge/inc/task.class.php:933
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "person(s) to alert"
 msgctxt "projectbridge"
 msgid "person(s) to alert"
 msgstr "osoba/y, které upozornit"
@@ -584,25 +435,16 @@ msgid "Hello"
 msgstr ""
 
 #: ../projectbridge/inc/task.class.php:559
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "The open task of the project"
 msgctxt "projectbridge"
 msgid "The open task of the project"
 msgstr "Otevřený úkol projektu"
 
 #: ../projectbridge/inc/task.class.php:559
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "just closed"
 msgctxt "projectbridge"
 msgid "just closed"
 msgstr "právě uzavřeno"
 
 #: ../projectbridge/inc/task.class.php:569
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Reason"
 msgctxt "projectbridge"
 msgid "Reason"
 msgstr "Důvod"
@@ -619,25 +461,16 @@ msgid "Overtaking_minutes_credit"
 msgstr ""
 
 #: ../projectbridge/inc/task.class.php:600
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Adjustment ticket"
 msgctxt "projectbridge"
 msgid "Adjustment ticket"
 msgstr "Požadavek na úpravu"
 
 #: ../projectbridge/inc/task.class.php:601
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Time Adjustment ticket"
 msgctxt "projectbridge"
 msgid "Time Adjustment ticket"
 msgstr "Požadavek na úpravu času"
 
 #: ../projectbridge/inc/task.class.php:615
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Adjustment task"
 msgctxt "projectbridge"
 msgid "Adjustment task"
 msgstr "Úkol úpravy"
@@ -651,17 +484,11 @@ msgstr "přepočítání pro úkol požadavku"
 #: ../projectbridge/inc/task.class.php:834
 #: ../projectbridge/inc/task.class.php:836
 #: ../projectbridge/inc/task.class.php:840
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "contract(s) to renew"
 msgctxt "projectbridge"
 msgid "contract(s) to renew"
 msgstr "smlouva/y, které obnovit"
 
 #: ../projectbridge/inc/task.class.php:874
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Expected end date"
 msgctxt "projectbridge"
 msgid "Expected end date"
 msgstr "Očekávaný datum skončení"
@@ -688,17 +515,11 @@ msgid "This Email si send automacitly by the plugin projectBridge"
 msgstr ""
 
 #: ../projectbridge/inc/ticket.class.php:124
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Related project"
 msgctxt "projectbridge"
 msgid "Related project"
 msgstr "Související projekt"
 
 #: ../projectbridge/inc/ticket.class.php:351
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Link(s) with project task(s) deleted"
 msgctxt "projectbridge"
 msgid "Link(s) with project task(s) deleted"
 msgstr "Propojení s úkolem/y projektu smazáno/y"
