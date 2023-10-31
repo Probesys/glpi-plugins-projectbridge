@@ -663,7 +663,7 @@ class PluginProjectbridgeContract extends CommonDBTM
           global $CFG_GLPI;
           $redirect_url = PLUGIN_PROJECTBRIDGE_WEB_DIR . '/front/config.form.php';
 
-          Session::addMessageAfterRedirect(__('Please define the correspondence of the "' . ucfirst($status) . '" status.', 'projectbridge'), false, ERROR);
+          Session::addMessageAfterRedirect(__('Please define the correspondence of the %1$s status.', ucfirst($status)), false, ERROR);
           Html::redirect($redirect_url);
           return null;
       }
