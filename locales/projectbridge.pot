@@ -7,7 +7,7 @@
 msgid   ""
 msgstr  "Project-Id-Version: projectbridge 2.7.6\n"
         "Report-Msgid-Bugs-To: contact@probesys.com\n"
-        "POT-Creation-Date: 2023-10-31 14:17+0100\n"
+        "POT-Creation-Date: 2023-10-31 14:48+0100\n"
         "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
         "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
         "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -289,6 +289,12 @@ msgstr  ""
 #: ../projectbridge/inc/contract.class.php:501
 msgctxt "projectbridge"
 msgid   "Remember to refresh this page after creating the project"
+msgstr  ""
+
+#: ../projectbridge/inc/contract.class.php:666
+#, php-format
+msgctxt "projectbridge"
+msgid   "Please define the correspondence of the %1$s status."
 msgstr  ""
 
 #: ../projectbridge/inc/contract.class.php:821
