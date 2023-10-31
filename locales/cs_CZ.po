@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ProjectBridge 2.4RC3\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
-"POT-Creation-Date: 2023-10-31 14:17+0100\n"
+"POT-Creation-Date: 2023-10-31 14:48+0100\n"
 "PO-Revision-Date: 2021-03-03 09:51+0100\n"
 "Last-Translator: probeSys <contact@probesys.com>\n"
 "Language-Team: \n"
@@ -413,6 +413,14 @@ msgctxt "projectbridge"
 msgid "Remember to refresh this page after creating the project"
 msgstr "Po vytvoření projektu nezapomeňte tuto stránku načíst znovu"
 
+#: ../projectbridge/inc/contract.class.php:666
+#, fuzzy, php-format
+#| msgctxt "projectbridge"
+#| msgid "Please define the correspondence of the \"Closed\" status."
+msgctxt "projectbridge"
+msgid "Please define the correspondence of the %1$s status."
+msgstr "Definujte korespondenci stavu „Uzavřeno“."
+
 #: ../projectbridge/inc/contract.class.php:821
 #, fuzzy
 #| msgctxt "projectbridge"
@@ -736,12 +744,6 @@ msgstr "Propojení s úkolem/y projektu smazáno/y"
 #, fuzzy
 #~ msgid "Duration"
 #~ msgstr "Spotřeba"
-
-#, fuzzy, php-format
-#~| msgctxt "projectbridge"
-#~| msgid "Please define the correspondence of the \"Closed\" status."
-#~ msgid "Please define the correspondence of the %1$s status."
-#~ msgstr "Definujte korespondenci stavu „Uzavřeno“."
 
 #, fuzzy
 #~| msgctxt "projectbridge"

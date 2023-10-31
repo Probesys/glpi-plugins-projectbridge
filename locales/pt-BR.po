@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ProjectBridge 2.6.0\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
-"POT-Creation-Date: 2023-10-31 14:17+0100\n"
+"POT-Creation-Date: 2023-10-31 14:48+0100\n"
 "PO-Revision-Date: 2023-01-31 08:52+0000\n"
 "Last-Translator: fernando.lagrange <fernando.lagrange@probesys.com>\n"
 "Language-Team: Portuguese (Brazil) <http://i18n.probesys.com/projects/"
@@ -464,6 +464,14 @@ msgctxt "projectbridge"
 msgid "Remember to refresh this page after creating the project"
 msgstr "Lembre-se de atualizar essa página após criar o projeto"
 
+#: ../projectbridge/inc/contract.class.php:666
+#, fuzzy, php-format
+#| msgctxt "projectbridge"
+#| msgid "Please define the correspondence of the \"Closed\" status."
+msgctxt "projectbridge"
+msgid "Please define the correspondence of the %1$s status."
+msgstr "Por favor, defina a correspondência para o status “Fechado”."
+
 #: ../projectbridge/inc/contract.class.php:821
 #, fuzzy
 #| msgctxt "projectbridge"
@@ -898,12 +906,6 @@ msgstr "Vínculo(s) com tarefa(s) de projeto(s) excluídas"
 #~ msgid_plural "months"
 #~ msgstr[0] "mês"
 #~ msgstr[1] "meses"
-
-#, fuzzy, php-format
-#~| msgctxt "projectbridge"
-#~| msgid "Please define the correspondence of the \"Closed\" status."
-#~ msgid "Please define the correspondence of the %1$s status."
-#~ msgstr "Por favor, defina a correspondência para o status “Fechado”."
 
 #, fuzzy
 #~| msgctxt "projectbridge"
