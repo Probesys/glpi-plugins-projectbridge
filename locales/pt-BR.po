@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ProjectBridge 2.6.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-31 10:44+0100\n"
+"Report-Msgid-Bugs-To: contact@probesys.com\n"
+"POT-Creation-Date: 2023-10-31 14:17+0100\n"
 "PO-Revision-Date: 2023-01-31 08:52+0000\n"
 "Last-Translator: fernando.lagrange <fernando.lagrange@probesys.com>\n"
 "Language-Team: Portuguese (Brazil) <http://i18n.probesys.com/projects/"
@@ -19,252 +19,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 4.15.1\n"
 
-#: ../projectbridge/js/projectbridge.js.php:40
-msgid "Plugin"
-msgid_plural "Plugins"
-msgstr[0] "Plug-in"
-msgstr[1] "Plugins"
-
-#: ../projectbridge/front/config.form.php:84
-#: ../projectbridge/front/config.form.php:88
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "ProjectBridge Configuration"
-msgid "ProjectBridge Configuration"
-msgstr "Configuração de ProjectBridge"
-
-#: ../projectbridge/front/config.form.php:116
-#: ../projectbridge/front/projecttask.php:35
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Project Tasks"
-msgid "Project Tasks"
-msgstr "Tarefas do Projeto"
-
-#: ../projectbridge/front/config.form.php:122
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Status Configuration"
-msgid "Status Configuration"
-msgstr "Configuração de status"
-
-#: ../projectbridge/front/config.form.php:128
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Please match the status names and their values in GLPI"
-msgid "Please match the status names and their values in GLPI"
-msgstr "Por favor, correlacione os nomes de status e seus valores no GLPI"
-
-#: ../projectbridge/front/config.form.php:138
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Status name"
-msgid "Status name"
-msgstr "Nome do status"
-
-#: ../projectbridge/front/config.form.php:141
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Status type"
-msgid "Status type"
-msgstr "Tipo de status"
-
-#: ../projectbridge/front/config.form.php:144
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Corresponding status"
-msgid "Corresponding status"
-msgstr "Status correspondente"
-
-#: ../projectbridge/front/config.form.php:220
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "In progress"
-msgid "In progress"
-msgstr "Em andamento"
-
-#: ../projectbridge/front/config.form.php:223
-#: ../projectbridge/front/config.form.php:237
-#: ../projectbridge/front/config.form.php:449
-msgid "Task"
-msgid_plural "Tasks"
-msgstr[0] "Tarefa"
-msgstr[1] "Tarefas"
-
-#: ../projectbridge/front/config.form.php:234
-msgid "Close"
-msgstr ""
-
-#: ../projectbridge/front/config.form.php:248
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Renewal"
-msgid "Renewal"
-msgstr "Renovação"
-
-#: ../projectbridge/front/config.form.php:251
-#: ../projectbridge/front/config.form.php:453
-msgid "Ticket"
-msgid_plural "Tickets"
-msgstr[0] "Chamado"
-msgstr[1] "Chamados"
-
-#: ../projectbridge/front/config.form.php:260
-#: ../projectbridge/front/config.form.php:512
-msgid "Save"
-msgstr ""
-
-#: ../projectbridge/front/config.form.php:294
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "The selected user has no default email adress configured"
-msgid "The selected user has no default email adress configured"
-msgstr "O usuário selecionado não possuí nenhum endereço de e-mail configurado"
-
-#: ../projectbridge/front/config.form.php:302
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "People receiving alerts"
-msgid "People receiving alerts"
-msgstr "Pessoas recebendo alertas"
-
-#: ../projectbridge/front/config.form.php:314
-#: ../projectbridge/front/config.form.php:380
-#: ../projectbridge/inc/task.class.php:848
-#: ../projectbridge/inc/task.class.php:950
-#: ../projectbridge/ajax/get_renewal_tickets.php:114
-msgid "Name"
-msgstr ""
-
-#: ../projectbridge/front/config.form.php:317
-msgid "Action"
-msgstr ""
-
-#: ../projectbridge/front/config.form.php:336
-msgid "Delete"
-msgstr ""
-
-#: ../projectbridge/front/config.form.php:344
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Nobody receive alerts"
-msgid "Nobody receive alerts"
-msgstr "Ninguém está recebendo alertas"
-
-#: ../projectbridge/front/config.form.php:361
-msgid "Add"
-msgstr ""
-
-#: ../projectbridge/front/config.form.php:372
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "General config"
-msgid "General config"
-msgstr "Configuração geral"
-
-#: ../projectbridge/front/config.form.php:383
-msgid "Value"
-msgstr ""
-
-#: ../projectbridge/front/config.form.php:394
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Count only public tasks in project"
-msgid "Count only public tasks in project"
-msgstr "Contabilizar apenas tarefas públicas no projeto"
-
-#: ../projectbridge/front/config.form.php:408
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Add contract selector on creating ticket form"
-msgid "Add contract selector on creating ticket form"
-msgstr "Adicionar seletor de contrato no formulário de criação de Chamados"
-
-#: ../projectbridge/front/config.form.php:424
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Contract selector on creating ticket form is required"
-msgid "Contract selector on creating ticket form is required"
-msgstr "Adicionar seletor de contrato no formulário de criação de Chamados"
-
-#: ../projectbridge/front/config.form.php:440
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Global percentage quota to send alert notification"
-msgid "Global percentage quota to send alert notification"
-msgstr "Percentual de quota global para enviar notificações de alerta"
-
-#: ../projectbridge/front/config.form.php:450
-msgid "Followup"
-msgid_plural "Followup"
-msgstr[0] "Acompanhamento"
-msgstr[1] "Acompanhamentos"
-
-#: ../projectbridge/front/config.form.php:451
-msgid "Document"
-msgid_plural "Documents"
-msgstr[0] "Documento"
-msgstr[1] "Documentos"
-
-#: ../projectbridge/front/config.form.php:452
-msgid "Solution"
-msgid_plural "Solutions"
-msgstr[0] "Solução"
-msgstr[1] "Soluções"
-
-#: ../projectbridge/front/config.form.php:454
-msgid "Requester group"
-msgid_plural "Requester groups"
-msgstr[0] "Grupo requerente"
-msgstr[1] "Grupos requerentes"
-
-#: ../projectbridge/front/config.form.php:455
-#, fuzzy
-#| msgid "Requester user"
-#| msgid_plural "Requester users"
-msgid "Requester user"
-msgstr "Usuário requerente"
-
-#: ../projectbridge/front/config.form.php:456
-msgid "Group in charge of the ticket"
-msgstr ""
-
-#: ../projectbridge/front/config.form.php:457
-msgid "Assigned to technicians"
-msgstr ""
-
-#: ../projectbridge/front/config.form.php:458
-#, fuzzy
-#| msgid "Watcher user"
-#| msgid_plural "Watcher users"
-msgid "Watcher user"
-msgstr "Usuário observador"
-
-#: ../projectbridge/front/config.form.php:459
-msgid "Watcher group"
-msgid_plural "Watcher groups"
-msgstr[0] "Grupo observador"
-msgstr[1] "Grupos observadores"
-
-#: ../projectbridge/front/config.form.php:473
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Elements from previous ticket to be associated with renewed ticket"
-msgid "Elements from previous ticket to be associated with renewed ticket"
-msgstr "Elementos de chamados anteriores associados com a renovação do chamado"
-
-#: ../projectbridge/front/config.form.php:519
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Please activate the plugin or get the right of access"
-msgid "Please activate the plugin or get the right of access"
-msgstr "Por favor, ative o plug-in ou obtenha o privilégio de acesso"
-
 #: ../projectbridge/hook.php:313
 #: ../projectbridge/ajax/get_renewal_tickets.php:161
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Link tickets to renewal"
+msgctxt "projectbridge"
 msgid "Link tickets to renewal"
 msgstr "Vincular chamados para renovação"
 
@@ -272,6 +32,7 @@ msgstr "Vincular chamados para renovação"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Please complete all renewal fields"
+msgctxt "projectbridge"
 msgid "Please complete all renewal fields"
 msgstr "Por favor, preencha todos os campos de renovação"
 
@@ -279,6 +40,7 @@ msgstr "Por favor, preencha todos os campos de renovação"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "The contract has no start date. The project could not be created."
+msgctxt "projectbridge"
 msgid "The contract has no start date. The project could not be created."
 msgstr ""
 "O contrato não possui nenhuma data de início. O projeto não pode ser criado."
@@ -289,6 +51,7 @@ msgstr ""
 #| msgid ""
 #| "The correspondence for the status \"In progress\" has not been defined. "
 #| "The project could not be created."
+msgctxt "projectbridge"
 msgid ""
 "The correspondence for the status \"In progress\" has not been defined. The "
 "project could not be created."
@@ -300,6 +63,7 @@ msgstr ""
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Make the connection"
+msgctxt "projectbridge"
 msgid "Make the connection"
 msgstr "Fazer a conexão"
 
@@ -307,6 +71,7 @@ msgstr "Fazer a conexão"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Default contract"
+msgctxt "projectbridge"
 msgid "Default contract"
 msgstr "Contrato padrão"
 
@@ -314,6 +79,7 @@ msgstr "Contrato padrão"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Time not affected to a project task (hours)"
+msgctxt "projectbridge"
 msgid "Time not affected to a project task (hours)"
 msgstr "Tempo não afetado para uma tarefa de projeto (horas)"
 
@@ -321,6 +87,7 @@ msgstr "Tempo não afetado para uma tarefa de projeto (horas)"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Project tasks"
+msgctxt "projectbridge"
 msgid "Project tasks"
 msgstr "Tarefas de projeto"
 
@@ -328,6 +95,7 @@ msgstr "Tarefas de projeto"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "ProjectTask status"
+msgctxt "projectbridge"
 msgid "ProjectTask status"
 msgstr "Status da ProjectTask"
 
@@ -335,6 +103,7 @@ msgstr "Status da ProjectTask"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Is linked to a project task"
+msgctxt "projectbridge"
 msgid "Is linked to a project task"
 msgstr "Está vinculada a uma tarefa de projeto"
 
@@ -342,6 +111,7 @@ msgstr "Está vinculada a uma tarefa de projeto"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Effective duration (hours)"
+msgctxt "projectbridge"
 msgid "Effective duration (hours)"
 msgstr "Duração real (horas)"
 
@@ -349,6 +119,7 @@ msgstr "Duração real (horas)"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Project name"
+msgctxt "projectbridge"
 msgid "Project name"
 msgstr "Nome do projeto"
 
@@ -356,6 +127,7 @@ msgstr "Nome do projeto"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "ProjectBridge project tasks"
+msgctxt "projectbridge"
 msgid "ProjectBridge project tasks"
 msgstr "Tarefas de projeto ProjectBridge"
 
@@ -363,6 +135,7 @@ msgstr "Tarefas de projeto ProjectBridge"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Planned duration (hours)"
+msgctxt "projectbridge"
 msgid "Planned duration (hours)"
 msgstr "Duração planejada (horas)"
 
@@ -370,6 +143,7 @@ msgstr "Duração planejada (horas)"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Last project task ?"
+msgctxt "projectbridge"
 msgid "Last project task ?"
 msgstr "Última tarefa do projeto ?"
 
@@ -377,6 +151,7 @@ msgstr "Última tarefa do projeto ?"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Project status"
+msgctxt "projectbridge"
 msgid "Project status"
 msgstr "Status do projeto"
 
@@ -384,6 +159,7 @@ msgstr "Status do projeto"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Associate tickets"
+msgctxt "projectbridge"
 msgid "Associate tickets"
 msgstr "Associar chamados"
 
@@ -392,6 +168,7 @@ msgstr "Associar chamados"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Comsuption"
+msgctxt "projectbridge"
 msgid "Comsuption"
 msgstr "Consumido"
 
@@ -399,25 +176,15 @@ msgstr "Consumido"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Number of project tasks tickets"
+msgctxt "projectbridge"
 msgid "Number of project tasks tickets"
 msgstr "Número de chamados de tarefas de projeto"
-
-#: ../projectbridge/hook.php:1072 ../projectbridge/hook.php:1453
-#: ../projectbridge/inc/task.class.php:571
-#: ../projectbridge/inc/task.class.php:573
-msgid "Yes"
-msgstr ""
-
-#: ../projectbridge/hook.php:1076 ../projectbridge/hook.php:1454
-#: ../projectbridge/inc/task.class.php:571
-#: ../projectbridge/inc/task.class.php:573
-msgid "No"
-msgstr ""
 
 #: ../projectbridge/hook.php:1533
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Delete the link with any project task"
+msgctxt "projectbridge"
 msgid "Delete the link with any project task"
 msgstr "Excluir o link com qualquer tarefa de projeto"
 
@@ -425,274 +192,183 @@ msgstr "Excluir o link com qualquer tarefa de projeto"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Force link to a project task"
+msgctxt "projectbridge"
 msgid "Force link to a project task"
 msgstr "Forçar link a uma tarefa de projeto"
 
-#: ../projectbridge/inc/task.class.php:100
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Project task treatment"
-msgid "Project task treatment"
-msgstr "Tratamento da tarefa de projeto"
-
-#: ../projectbridge/inc/task.class.php:106
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Update percentage counters performed in project tasks"
-msgid "Update percentage counters performed in project tasks"
-msgstr "Atualizar contadores de porcentagem realizada em tarefas de projeto"
-
-#: ../projectbridge/inc/task.class.php:111
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Contract Alert to renew"
-msgid "Contract Alert to renew"
-msgstr "Alerta de Contrato para renovação"
-
-#: ../projectbridge/inc/task.class.php:116
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Send email alert containing contract with consumption over quota"
-msgid "Send email alert containing contract with consumption over quota"
-msgstr ""
-"Enviar e-mail de alerta contendo o consumo do contrato em relação a quota"
-
-#: ../projectbridge/inc/task.class.php:136
-#: ../projectbridge/inc/task.class.php:638
-#: ../projectbridge/inc/task.class.php:820
-#: ../projectbridge/inc/task.class.php:923
-msgid "Disabled plugin"
-msgstr ""
-
-#: ../projectbridge/inc/task.class.php:140
-#: ../projectbridge/inc/task.class.php:642
-#: ../projectbridge/inc/task.class.php:824
-#: ../projectbridge/inc/task.class.php:927
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Plugin is not installed"
-msgid "Plugin is not installed"
-msgstr "Plug-in não instalado"
-
-#: ../projectbridge/inc/task.class.php:149
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Please define the correspondence of the \"Closed\" status."
-msgid "Please define the correspondence of the \"Closed\" status."
-msgstr "Por favor, defina a correspondência para o status “Fechado”."
-
-#: ../projectbridge/inc/task.class.php:156
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Please define the correspondence of the \"Renewal\" status."
-msgid "Please define the correspondence of the \"Renewal\" status."
-msgstr "Por favor, defina a correspondência para o status “Renovação”."
-
-#: ../projectbridge/inc/task.class.php:186
-#: ../projectbridge/inc/task.class.php:680
-#: ../projectbridge/inc/task.class.php:913
-#: ../projectbridge/inc/task.class.php:984
-msgid "Finish"
-msgstr ""
-
-#: ../projectbridge/inc/task.class.php:287
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "This ticket comes from an automatic copy of the ticket"
-msgid "This ticket comes from an automatic copy of the ticket"
-msgstr "O chamado vem de uma cópia automática do chamado"
-
-#: ../projectbridge/inc/task.class.php:287
+#: ../projectbridge/ajax/get_renewal_tickets.php:97
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid ""
-#| "following the overtaking of hours or the expiry of the maintenance "
-#| "contract"
+#| "Select tickets in the entity (not deleted and unrelated to a project "
+#| "task) that you want to link to the new task"
+msgctxt "projectbridge"
 msgid ""
-"following the overtaking of hours or the expiry of the maintenance contract"
+"Select tickets in the entity (not deleted and unrelated to a project task) "
+"that you want to link to the new task"
 msgstr ""
-"na sequência da ultrapassagem do número de horas ou da expiração da duração "
-"do contrato"
+"Selecionar chamados na entidade (não excluídos e não relacionados a uma "
+"tarefa de projeto) que você deseja relacionar a nova tarefa"
 
-#: ../projectbridge/inc/task.class.php:528
+#: ../projectbridge/front/config.form.php:84
+#: ../projectbridge/front/config.form.php:88
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "find"
-msgid "find"
-msgstr "encontrar"
+#| msgid "ProjectBridge Configuration"
+msgctxt "projectbridge"
+msgid "ProjectBridge Configuration"
+msgstr "Configuração de ProjectBridge"
 
-#: ../projectbridge/inc/task.class.php:528
-#: ../projectbridge/inc/task.class.php:830
-#: ../projectbridge/inc/task.class.php:933
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "person(s) to alert"
-msgid "person(s) to alert"
-msgstr "pessoa(s) a serem alertas"
-
-#: ../projectbridge/inc/task.class.php:544
+#: ../projectbridge/front/config.form.php:116
+#: ../projectbridge/front/projecttask.php:35
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Project Tasks"
-msgid "project Task"
+msgctxt "projectbridge"
+msgid "Project Tasks"
 msgstr "Tarefas do Projeto"
 
-#: ../projectbridge/inc/task.class.php:544
+#: ../projectbridge/front/config.form.php:122
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "just closed"
-msgid "closed"
-msgstr "foi fechada"
+#| msgid "Status Configuration"
+msgctxt "projectbridge"
+msgid "Status Configuration"
+msgstr "Configuração de status"
 
-#: ../projectbridge/inc/task.class.php:553
+#: ../projectbridge/front/config.form.php:128
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Project tasks"
-msgid "Project task"
-msgstr "Tarefas de projeto"
+#| msgid "Please match the status names and their values in GLPI"
+msgctxt "projectbridge"
+msgid "Please match the status names and their values in GLPI"
+msgstr "Por favor, correlacione os nomes de status e seus valores no GLPI"
 
-#: ../projectbridge/inc/task.class.php:553
-msgid "Closed"
-msgstr ""
-
-#: ../projectbridge/inc/task.class.php:557
+#: ../projectbridge/front/config.form.php:138
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Hello"
-msgid "Hello"
-msgstr "Olá"
+#| msgid "Status name"
+msgctxt "projectbridge"
+msgid "Status name"
+msgstr "Nome do status"
 
-#: ../projectbridge/inc/task.class.php:559
+#: ../projectbridge/front/config.form.php:141
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "The open task of the project"
-msgid "The open task of the project"
-msgstr "A tarefa aberta do projeto"
+#| msgid "Status type"
+msgctxt "projectbridge"
+msgid "Status type"
+msgstr "Tipo de status"
 
-#: ../projectbridge/inc/task.class.php:559
+#: ../projectbridge/front/config.form.php:144
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "just closed"
-msgid "just closed"
-msgstr "foi fechada"
+#| msgid "Corresponding status"
+msgctxt "projectbridge"
+msgid "Corresponding status"
+msgstr "Status correspondente"
 
-#: ../projectbridge/inc/task.class.php:569
+#: ../projectbridge/front/config.form.php:220
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Reason"
-msgid "Reason"
-msgstr "Razão"
+#| msgid "In progress"
+msgctxt "projectbridge"
+msgid "In progress"
+msgstr "Em andamento"
 
-#: ../projectbridge/inc/task.class.php:571
+#: ../projectbridge/front/config.form.php:248
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Expired_period"
-msgid "Expired_period"
-msgstr "Período_expirado"
+#| msgid "Renewal"
+msgctxt "projectbridge"
+msgid "Renewal"
+msgstr "Renovação"
 
-#: ../projectbridge/inc/task.class.php:573
+#: ../projectbridge/front/config.form.php:294
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Overtaking_minutes_credit"
-msgid "Overtaking_minutes_credit"
-msgstr "Número_de_minutos_ultrapassados"
+#| msgid "The selected user has no default email adress configured"
+msgctxt "projectbridge"
+msgid "The selected user has no default email adress configured"
+msgstr "O usuário selecionado não possuí nenhum endereço de e-mail configurado"
 
-#: ../projectbridge/inc/task.class.php:600
+#: ../projectbridge/front/config.form.php:302
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Adjustment ticket"
-msgid "Adjustment ticket"
-msgstr "Ajustes de chamado"
+#| msgid "People receiving alerts"
+msgctxt "projectbridge"
+msgid "People receiving alerts"
+msgstr "Pessoas recebendo alertas"
 
-#: ../projectbridge/inc/task.class.php:601
+#: ../projectbridge/front/config.form.php:344
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Time Adjustment ticket"
-msgid "Time Adjustment ticket"
-msgstr "Ajuste de Tempo do chamado"
+#| msgid "Nobody receive alerts"
+msgctxt "projectbridge"
+msgid "Nobody receive alerts"
+msgstr "Ninguém está recebendo alertas"
 
-#: ../projectbridge/inc/task.class.php:615
+#: ../projectbridge/front/config.form.php:372
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Adjustment task"
-msgid "Adjustment task"
-msgstr "Ajuste de tarefa"
+#| msgid "General config"
+msgctxt "projectbridge"
+msgid "General config"
+msgstr "Configuração geral"
 
-#: ../projectbridge/inc/task.class.php:672
+#: ../projectbridge/front/config.form.php:394
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "re-calculuation for ticket task"
-msgid "re-calculuation for projectTask"
-msgstr "re-cálculo para a tarefa de chamado"
+#| msgid "Count only public tasks in project"
+msgctxt "projectbridge"
+msgid "Count only public tasks in project"
+msgstr "Contabilizar apenas tarefas públicas no projeto"
 
-#: ../projectbridge/inc/task.class.php:834
-#: ../projectbridge/inc/task.class.php:836
-#: ../projectbridge/inc/task.class.php:840
+#: ../projectbridge/front/config.form.php:408
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "contract(s) to renew"
-msgid "contract(s) to renew"
-msgstr "contrato(s) para renovação"
+#| msgid "Add contract selector on creating ticket form"
+msgctxt "projectbridge"
+msgid "Add contract selector on creating ticket form"
+msgstr "Adicionar seletor de contrato no formulário de criação de Chamados"
 
-#: ../projectbridge/inc/task.class.php:856
-#: ../projectbridge/inc/task.class.php:962
-msgid "Entity"
-msgstr ""
-
-#: ../projectbridge/inc/task.class.php:874
+#: ../projectbridge/front/config.form.php:424
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Expected end date"
-msgid "Expected end date"
-msgstr "Data estimada de término"
+#| msgid "Contract selector on creating ticket form is required"
+msgctxt "projectbridge"
+msgid "Contract selector on creating ticket form is required"
+msgstr "Adicionar seletor de contrato no formulário de criação de Chamados"
 
-#: ../projectbridge/inc/task.class.php:881
+#: ../projectbridge/front/config.form.php:440
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Effective duration (hours)"
-msgid "Effective duration"
-msgstr "Duração real (horas)"
+#| msgid "Global percentage quota to send alert notification"
+msgctxt "projectbridge"
+msgid "Global percentage quota to send alert notification"
+msgstr "Percentual de quota global para enviar notificações de alerta"
 
-#: ../projectbridge/inc/task.class.php:888
+#: ../projectbridge/front/config.form.php:473
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Planned duration (hours)"
-msgid "Planned duration"
-msgstr "Duração planejada (horas)"
+#| msgid "Elements from previous ticket to be associated with renewed ticket"
+msgctxt "projectbridge"
+msgid "Elements from previous ticket to be associated with renewed ticket"
+msgstr "Elementos de chamados anteriores associados com a renovação do chamado"
 
-#: ../projectbridge/inc/task.class.php:901
+#: ../projectbridge/front/config.form.php:519
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "This Email is send automatically by the plugin projectBridge"
-msgid "This Email is send automatically by the plugin projectBridge"
-msgstr "Esse e-mail foi enviado automaticamente pelo plug-in projectBridge"
-
-#: ../projectbridge/inc/task.class.php:938
-#: ../projectbridge/inc/task.class.php:942
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Contract(s) over limit quota alert"
-msgid "Contract(s) over limit quota alert"
-msgstr "Contrato(s) que ultrapassaram a quota de alerta"
-
-#: ../projectbridge/inc/task.class.php:956
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "Quota"
-msgid "Quota"
-msgstr "Quota"
-
-#: ../projectbridge/inc/task.class.php:970
-#, fuzzy
-#| msgctxt "projectbridge"
-#| msgid "This Email is send automatically by the plugin projectBridge"
-msgid "This Email si send automacitly by the plugin projectBridge"
-msgstr "Esse e-mail foi enviado automaticamente pelo plug-in projectBridge"
+#| msgid "Please activate the plugin or get the right of access"
+msgctxt "projectbridge"
+msgid "Please activate the plugin or get the right of access"
+msgstr "Por favor, ative o plug-in ou obtenha o privilégio de acesso"
 
 #: ../projectbridge/inc/contract.class.php:115
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "linking Project"
+msgctxt "projectbridge"
 msgid "linking Project"
 msgstr "relacionando Projeto"
 
@@ -701,6 +377,7 @@ msgstr "relacionando Projeto"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Create project"
+msgctxt "projectbridge"
 msgid "Create project"
 msgstr "Criar projeto"
 
@@ -709,6 +386,7 @@ msgstr "Criar projeto"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Access to linked project"
+msgctxt "projectbridge"
 msgid "Access to linked project"
 msgstr "Acesso ao projeto vinculado"
 
@@ -716,20 +394,15 @@ msgstr "Acesso ao projeto vinculado"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Warning ! No associate projectTask with \"In progress\" status exist"
+msgctxt "projectbridge"
 msgid "Warning ! No associate projectTask with \"In progress\" status exist"
 msgstr "Aviso ! Não existe nenhuma tarefa de projeto com status “Em andamento”"
-
-#: ../projectbridge/inc/contract.class.php:258
-#: ../projectbridge/inc/contract.class.php:262
-msgid "Hour"
-msgid_plural "Hours"
-msgstr[0] "Hora"
-msgstr[1] "Horas"
 
 #: ../projectbridge/inc/contract.class.php:278
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Expired in less than 24h"
+msgctxt "projectbridge"
 msgid "Expired in less than 24h"
 msgstr "Expirado em menos de 24h"
 
@@ -737,20 +410,15 @@ msgstr "Expirado em menos de 24h"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Expired in"
+msgctxt "projectbridge"
 msgid "Expired in"
 msgstr "Expirado em"
-
-#: ../projectbridge/inc/contract.class.php:280
-#: ../projectbridge/inc/contract.class.php:287
-msgid "Day"
-msgid_plural "Days"
-msgstr[0] "Dia"
-msgstr[1] "Dias"
 
 #: ../projectbridge/inc/contract.class.php:285
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Expired today"
+msgctxt "projectbridge"
 msgid "Expired today"
 msgstr "Expirado hoje"
 
@@ -758,6 +426,7 @@ msgstr "Expirado hoje"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Expired since"
+msgctxt "projectbridge"
 msgid "Expired since"
 msgstr "Expirado desde"
 
@@ -766,31 +435,16 @@ msgstr "Expirado desde"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Renew the contract"
+msgctxt "projectbridge"
 msgid "Renew the contract"
 msgstr "Renovar o contrato"
-
-#: ../projectbridge/inc/contract.class.php:304
-msgid "Start date"
-msgstr ""
-
-#: ../projectbridge/inc/contract.class.php:317
-#, fuzzy
-#| msgid "Solution"
-#| msgid_plural "Solutions"
-msgid "Duration"
-msgstr "Solução"
-
-#: ../projectbridge/inc/contract.class.php:317
-msgid "month"
-msgid_plural "months"
-msgstr[0] "mês"
-msgstr[1] "meses"
 
 #: ../projectbridge/inc/contract.class.php:326
 #: ../projectbridge/inc/contract.class.php:598
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Number of hours"
+msgctxt "projectbridge"
 msgid "Number of hours"
 msgstr "Número de horas"
 
@@ -798,26 +452,17 @@ msgstr "Número de horas"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Confirm renewal"
+msgctxt "projectbridge"
 msgid "Confirm renewal"
 msgstr "Confirmar renovação"
-
-#: ../projectbridge/inc/contract.class.php:335
-msgid "Cancel"
-msgstr ""
 
 #: ../projectbridge/inc/contract.class.php:501
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Remember to refresh this page after creating the project"
+msgctxt "projectbridge"
 msgid "Remember to refresh this page after creating the project"
 msgstr "Lembre-se de atualizar essa página após criar o projeto"
-
-#: ../projectbridge/inc/contract.class.php:666
-#, fuzzy, php-format
-#| msgctxt "projectbridge"
-#| msgid "Please define the correspondence of the \"Closed\" status."
-msgid "Please define the correspondence of the %1$s status."
-msgstr "Por favor, defina a correspondência para o status “Fechado”."
 
 #: ../projectbridge/inc/contract.class.php:821
 #, fuzzy
@@ -825,6 +470,7 @@ msgstr "Por favor, defina a correspondência para o status “Fechado”."
 #| msgid ""
 #| "The match for the status \"In progress\" has not been defined. The "
 #| "contract could not be renewed."
+msgctxt "projectbridge"
 msgid ""
 "The match for the status \"In progress\" has not been defined. The contract "
 "could not be renewed."
@@ -837,6 +483,7 @@ msgstr ""
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Access to linked contract"
+msgctxt "projectbridge"
 msgid "Access to linked contract"
 msgstr "Acesso ao contrato vinculado"
 
@@ -844,6 +491,7 @@ msgstr "Acesso ao contrato vinculado"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Link to contract nonexistent"
+msgctxt "projectbridge"
 msgid "Link to contract nonexistent"
 msgstr "Vínculo inexistente ao contrato"
 
@@ -851,6 +499,7 @@ msgstr "Vínculo inexistente ao contrato"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "No linked contract"
+msgctxt "projectbridge"
 msgid "No linked contract"
 msgstr "Nenhum contrato vinculado"
 
@@ -858,6 +507,7 @@ msgstr "Nenhum contrato vinculado"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "ProjectBridge"
+msgctxt "projectbridge"
 msgid "ProjectBridge"
 msgstr "ProjectBridge"
 
@@ -865,6 +515,7 @@ msgstr "ProjectBridge"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "ProjectBridge Configurations"
+msgctxt "projectbridge"
 msgid "ProjectBridge Configurations"
 msgstr "Configurações de ProjectBridge"
 
@@ -872,18 +523,15 @@ msgstr "Configurações de ProjectBridge"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Percentage quota to send alert notification"
+msgctxt "projectbridge"
 msgid "Percentage quota to send alert notification"
 msgstr "Percentual de quota para enviar notificação de alerta"
-
-#: ../projectbridge/inc/contract.class.php:1230
-msgctxt "button"
-msgid "Save"
-msgstr ""
 
 #: ../projectbridge/inc/entity.class.php:100
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Default contract access"
+msgctxt "projectbridge"
 msgid "Default contract access"
 msgstr "Acesso padrão ao contrato"
 
@@ -891,6 +539,7 @@ msgstr "Acesso padrão ao contrato"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Create a new contract"
+msgctxt "projectbridge"
 msgid "Create a new contract"
 msgstr "Criar novo contrato"
 
@@ -898,20 +547,244 @@ msgstr "Criar novo contrato"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Remember to refresh this page after creating the contract"
+msgctxt "projectbridge"
 msgid "Remember to refresh this page after creating the contract"
 msgstr "Lembre-se de atualizar a página após criar o contrato"
 
-#: ../projectbridge/inc/itemform.class.php:209
+#: ../projectbridge/inc/task.class.php:100
 #, fuzzy
 #| msgctxt "projectbridge"
-#| msgid "Access to linked contract"
-msgid "Associated contract"
-msgstr "Acesso ao contrato vinculado"
+#| msgid "Project task treatment"
+msgctxt "projectbridge"
+msgid "Project task treatment"
+msgstr "Tratamento da tarefa de projeto"
+
+#: ../projectbridge/inc/task.class.php:106
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Update percentage counters performed in project tasks"
+msgctxt "projectbridge"
+msgid "Update percentage counters performed in project tasks"
+msgstr "Atualizar contadores de porcentagem realizada em tarefas de projeto"
+
+#: ../projectbridge/inc/task.class.php:111
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Contract Alert to renew"
+msgctxt "projectbridge"
+msgid "Contract Alert to renew"
+msgstr "Alerta de Contrato para renovação"
+
+#: ../projectbridge/inc/task.class.php:116
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Send email alert containing contract with consumption over quota"
+msgctxt "projectbridge"
+msgid "Send email alert containing contract with consumption over quota"
+msgstr ""
+"Enviar e-mail de alerta contendo o consumo do contrato em relação a quota"
+
+#: ../projectbridge/inc/task.class.php:140
+#: ../projectbridge/inc/task.class.php:824
+#: ../projectbridge/inc/task.class.php:927
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Plugin is not installed"
+msgctxt "projectbridge"
+msgid "Plugin is not installed"
+msgstr "Plug-in não instalado"
+
+#: ../projectbridge/inc/task.class.php:149
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Please define the correspondence of the \"Closed\" status."
+msgctxt "projectbridge"
+msgid "Please define the correspondence of the \"Closed\" status."
+msgstr "Por favor, defina a correspondência para o status “Fechado”."
+
+#: ../projectbridge/inc/task.class.php:156
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Please define the correspondence of the \"Renewal\" status."
+msgctxt "projectbridge"
+msgid "Please define the correspondence of the \"Renewal\" status."
+msgstr "Por favor, defina a correspondência para o status “Renovação”."
+
+#: ../projectbridge/inc/task.class.php:287
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "This ticket comes from an automatic copy of the ticket"
+msgctxt "projectbridge"
+msgid "This ticket comes from an automatic copy of the ticket"
+msgstr "O chamado vem de uma cópia automática do chamado"
+
+#: ../projectbridge/inc/task.class.php:287
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid ""
+#| "following the overtaking of hours or the expiry of the maintenance "
+#| "contract"
+msgctxt "projectbridge"
+msgid ""
+"following the overtaking of hours or the expiry of the maintenance contract"
+msgstr ""
+"na sequência da ultrapassagem do número de horas ou da expiração da duração "
+"do contrato"
+
+#: ../projectbridge/inc/task.class.php:528
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "find"
+msgctxt "projectbridge"
+msgid "find"
+msgstr "encontrar"
+
+#: ../projectbridge/inc/task.class.php:528
+#: ../projectbridge/inc/task.class.php:830
+#: ../projectbridge/inc/task.class.php:933
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "person(s) to alert"
+msgctxt "projectbridge"
+msgid "person(s) to alert"
+msgstr "pessoa(s) a serem alertas"
+
+#: ../projectbridge/inc/task.class.php:557
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Hello"
+msgctxt "projectbridge"
+msgid "Hello"
+msgstr "Olá"
+
+#: ../projectbridge/inc/task.class.php:559
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "The open task of the project"
+msgctxt "projectbridge"
+msgid "The open task of the project"
+msgstr "A tarefa aberta do projeto"
+
+#: ../projectbridge/inc/task.class.php:559
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "just closed"
+msgctxt "projectbridge"
+msgid "just closed"
+msgstr "foi fechada"
+
+#: ../projectbridge/inc/task.class.php:569
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Reason"
+msgctxt "projectbridge"
+msgid "Reason"
+msgstr "Razão"
+
+#: ../projectbridge/inc/task.class.php:571
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Expired_period"
+msgctxt "projectbridge"
+msgid "Expired_period"
+msgstr "Período_expirado"
+
+#: ../projectbridge/inc/task.class.php:573
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Overtaking_minutes_credit"
+msgctxt "projectbridge"
+msgid "Overtaking_minutes_credit"
+msgstr "Número_de_minutos_ultrapassados"
+
+#: ../projectbridge/inc/task.class.php:600
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Adjustment ticket"
+msgctxt "projectbridge"
+msgid "Adjustment ticket"
+msgstr "Ajustes de chamado"
+
+#: ../projectbridge/inc/task.class.php:601
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Time Adjustment ticket"
+msgctxt "projectbridge"
+msgid "Time Adjustment ticket"
+msgstr "Ajuste de Tempo do chamado"
+
+#: ../projectbridge/inc/task.class.php:615
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Adjustment task"
+msgctxt "projectbridge"
+msgid "Adjustment task"
+msgstr "Ajuste de tarefa"
+
+#: ../projectbridge/inc/task.class.php:672
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "re-calculuation for ticket task"
+msgctxt "projectbridge"
+msgid "re-calculuation for projectTask"
+msgstr "re-cálculo para a tarefa de chamado"
+
+#: ../projectbridge/inc/task.class.php:834
+#: ../projectbridge/inc/task.class.php:836
+#: ../projectbridge/inc/task.class.php:840
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "contract(s) to renew"
+msgctxt "projectbridge"
+msgid "contract(s) to renew"
+msgstr "contrato(s) para renovação"
+
+#: ../projectbridge/inc/task.class.php:874
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Expected end date"
+msgctxt "projectbridge"
+msgid "Expected end date"
+msgstr "Data estimada de término"
+
+#: ../projectbridge/inc/task.class.php:901
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "This Email is send automatically by the plugin projectBridge"
+msgctxt "projectbridge"
+msgid "This Email is send automatically by the plugin projectBridge"
+msgstr "Esse e-mail foi enviado automaticamente pelo plug-in projectBridge"
+
+#: ../projectbridge/inc/task.class.php:938
+#: ../projectbridge/inc/task.class.php:942
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Contract(s) over limit quota alert"
+msgctxt "projectbridge"
+msgid "Contract(s) over limit quota alert"
+msgstr "Contrato(s) que ultrapassaram a quota de alerta"
+
+#: ../projectbridge/inc/task.class.php:956
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "Quota"
+msgctxt "projectbridge"
+msgid "Quota"
+msgstr "Quota"
+
+#: ../projectbridge/inc/task.class.php:970
+#, fuzzy
+#| msgctxt "projectbridge"
+#| msgid "This Email is send automatically by the plugin projectBridge"
+msgctxt "projectbridge"
+msgid "This Email si send automacitly by the plugin projectBridge"
+msgstr "Esse e-mail foi enviado automaticamente pelo plug-in projectBridge"
 
 #: ../projectbridge/inc/ticket.class.php:124
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Related project"
+msgctxt "projectbridge"
 msgid "Related project"
 msgstr "Projetos relacionados"
 
@@ -919,44 +792,124 @@ msgstr "Projetos relacionados"
 #, fuzzy
 #| msgctxt "projectbridge"
 #| msgid "Link(s) with project task(s) deleted"
+msgctxt "projectbridge"
 msgid "Link(s) with project task(s) deleted"
 msgstr "Vínculo(s) com tarefa(s) de projeto(s) excluídas"
 
-#: ../projectbridge/inc/ticket.class.php:377
-#: ../projectbridge/inc/ticket.class.php:391
-#: ../projectbridge/inc/ticket.class.php:448
-msgctxt "button"
-msgid "Post"
-msgstr ""
+#~ msgid "Plugin"
+#~ msgid_plural "Plugins"
+#~ msgstr[0] "Plug-in"
+#~ msgstr[1] "Plugins"
 
-#: ../projectbridge/ajax/get_renewal_tickets.php:97
+#~ msgid "Task"
+#~ msgid_plural "Tasks"
+#~ msgstr[0] "Tarefa"
+#~ msgstr[1] "Tarefas"
+
+#~ msgid "Ticket"
+#~ msgid_plural "Tickets"
+#~ msgstr[0] "Chamado"
+#~ msgstr[1] "Chamados"
+
+#~ msgid "Followup"
+#~ msgid_plural "Followup"
+#~ msgstr[0] "Acompanhamento"
+#~ msgstr[1] "Acompanhamentos"
+
+#~ msgid "Document"
+#~ msgid_plural "Documents"
+#~ msgstr[0] "Documento"
+#~ msgstr[1] "Documentos"
+
+#~ msgid "Solution"
+#~ msgid_plural "Solutions"
+#~ msgstr[0] "Solução"
+#~ msgstr[1] "Soluções"
+
+#~ msgid "Requester group"
+#~ msgid_plural "Requester groups"
+#~ msgstr[0] "Grupo requerente"
+#~ msgstr[1] "Grupos requerentes"
+
 #, fuzzy
-#| msgctxt "projectbridge"
-#| msgid ""
-#| "Select tickets in the entity (not deleted and unrelated to a project "
-#| "task) that you want to link to the new task"
-msgid ""
-"Select tickets in the entity (not deleted and unrelated to a project task) "
-"that you want to link to the new task"
-msgstr ""
-"Selecionar chamados na entidade (não excluídos e não relacionados a uma "
-"tarefa de projeto) que você deseja relacionar a nova tarefa"
+#~| msgid "Requester user"
+#~| msgid_plural "Requester users"
+#~ msgid "Requester user"
+#~ msgstr "Usuário requerente"
 
-#: ../projectbridge/ajax/get_renewal_tickets.php:117
-msgid "Time"
-msgstr ""
+#, fuzzy
+#~| msgid "Watcher user"
+#~| msgid_plural "Watcher users"
+#~ msgid "Watcher user"
+#~ msgstr "Usuário observador"
 
-#: ../projectbridge/ajax/get_renewal_tickets.php:120
-msgid "Opening date"
-msgstr ""
+#~ msgid "Watcher group"
+#~ msgid_plural "Watcher groups"
+#~ msgstr[0] "Grupo observador"
+#~ msgstr[1] "Grupos observadores"
 
-#: ../projectbridge/ajax/get_renewal_tickets.php:123
-msgid "Closing date"
-msgstr ""
+#, fuzzy
+#~| msgctxt "projectbridge"
+#~| msgid "Project Tasks"
+#~ msgid "project Task"
+#~ msgstr "Tarefas do Projeto"
 
-#: ../projectbridge/ajax/get_renewal_tickets.php:154
-msgid "No ticket found"
-msgstr ""
+#, fuzzy
+#~| msgctxt "projectbridge"
+#~| msgid "just closed"
+#~ msgid "closed"
+#~ msgstr "foi fechada"
+
+#, fuzzy
+#~| msgctxt "projectbridge"
+#~| msgid "Project tasks"
+#~ msgid "Project task"
+#~ msgstr "Tarefas de projeto"
+
+#, fuzzy
+#~| msgctxt "projectbridge"
+#~| msgid "Effective duration (hours)"
+#~ msgid "Effective duration"
+#~ msgstr "Duração real (horas)"
+
+#, fuzzy
+#~| msgctxt "projectbridge"
+#~| msgid "Planned duration (hours)"
+#~ msgid "Planned duration"
+#~ msgstr "Duração planejada (horas)"
+
+#~ msgid "Hour"
+#~ msgid_plural "Hours"
+#~ msgstr[0] "Hora"
+#~ msgstr[1] "Horas"
+
+#~ msgid "Day"
+#~ msgid_plural "Days"
+#~ msgstr[0] "Dia"
+#~ msgstr[1] "Dias"
+
+#, fuzzy
+#~| msgid "Solution"
+#~| msgid_plural "Solutions"
+#~ msgid "Duration"
+#~ msgstr "Solução"
+
+#~ msgid "month"
+#~ msgid_plural "months"
+#~ msgstr[0] "mês"
+#~ msgstr[1] "meses"
+
+#, fuzzy, php-format
+#~| msgctxt "projectbridge"
+#~| msgid "Please define the correspondence of the \"Closed\" status."
+#~ msgid "Please define the correspondence of the %1$s status."
+#~ msgstr "Por favor, defina a correspondência para o status “Fechado”."
+
+#, fuzzy
+#~| msgctxt "projectbridge"
+#~| msgid "Access to linked contract"
+#~ msgid "Associated contract"
+#~ msgstr "Acesso ao contrato vinculado"
 
 #~ msgctxt "projectbridge"
 #~ msgid "Please define the correspondence of the \""
