@@ -70,17 +70,17 @@ class PluginProjectbridgeTask extends CommonDBTM {
      *
      * @return array
      */
-   public static function getMenuContent() {
-       $menu = parent::getMenuContent();
-
-       $menu = [
-           'title' => self::getMenuName(),
-           'page' => Plugin::getPhpDir('projectbridge', false) . '/front/projecttask.php',
-           'icon' => self::getIcon(),
-       ];
-
-       return $menu;
-   }
+   //   public static function getMenuContent() {
+   //       $menu = parent::getMenuContent();
+   //
+   //       $menu = [
+   //           'title' => self::getMenuName(),
+   //           'page' => Plugin::getPhpDir('projectbridge', false) . '/front/projecttask.php',
+   //           'icon' => self::getIcon(),
+   //       ];
+   //
+   //       return $menu;
+   //   }
 
    public static function getIcon() {
        return "fa fa-tasks";
@@ -592,7 +592,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param int $entities_id
      * @return void
      */
-   public function createExcessTicket($timediff, $entities_id) {
+   public static function createExcessTicket($timediff, $entities_id) {
        $ticket_request_type = PluginProjectbridgeState::getProjectStateIdByStatus('renewal');
 
        $ticket_fields = [
@@ -662,7 +662,9 @@ class PluginProjectbridgeTask extends CommonDBTM {
                    ]
                ]
            ],
-           'WHERE' => ['pt.projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('in_progress')]
+           'WHERE' => [
+               'pt.projectstates_id' => PluginProjectbridgeState::getProjectStateIdByStatus('in_progress'),
+              ]
        ]) as $data) {
           $taskInfos[] = $data;
       }
@@ -687,14 +689,19 @@ class PluginProjectbridgeTask extends CommonDBTM {
        $projectTask = new ProjectTask();
        $contract = new Contract();
        $contract->getFromDB($contract_id);
+      if ($taskId) {
+           $projectTask->getFromDB($taskId);
+           $nb_hours = $projectTask->fields['planned_duration'] / 3600;
+      } else {
+           $bridge_contract = new PluginProjectbridgeContract($contract);
+           $nb_hours = $bridge_contract->getNbHours();
+      }
 
-       $bridge_contract = new PluginProjectbridgeContract($contract);
-       $nb_hours = $bridge_contract->getNbHours();
        $consumption = PluginProjectbridgeContract::getTicketsTotalActionTime($taskId) / 3600;
        $ratio = 100;
-       if($nb_hours) {
-        $ratio = round(($consumption * 100) / $nb_hours);
-       }
+      if ($nb_hours) {
+         $ratio = round(($consumption * 100) / $nb_hours);
+      }
        $projectTask->update([
            'id' => $taskId,
            'percent_done' => $ratio,

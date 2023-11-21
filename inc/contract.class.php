@@ -30,9 +30,9 @@
 
 class PluginProjectbridgeContract extends CommonDBTM
 {
-    private $_contract;
-    private $_project_id;
-    private $_nb_hours;
+   private $_contract;
+   private $_project_id;
+   private $_nb_hours;
    public static $table_name = 'glpi_plugin_projectbridge_contracts';
 
     /**
@@ -72,7 +72,7 @@ class PluginProjectbridgeContract extends CommonDBTM
      */
    public function getNbHours() {
        // get all activ projectTasks
-       $activeProjectTasks = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($this->_project_id);
+      $activeProjectTasks = PluginProjectbridgeContract::getAllActiveProjectTasksForProject($this->_project_id);
       if (count($activeProjectTasks)) {
           // verification nombre d'heure actuelle liée aux tâches projets
           $lastActiveProjectTask = $activeProjectTasks[0];
@@ -80,17 +80,16 @@ class PluginProjectbridgeContract extends CommonDBTM
       } else {
           // search close projecttask
           $projectTask = self::getProjectTaskOject($this->_project_id, true);
-           if ($projectTask) {
-                $this->_nb_hours = $projectTask->getField('planned_duration') / 3600;
-           }
-      }
-         if ($this->_nb_hours === null) {
-             $result = $this->getFromDBByCrit(['contract_id' => $this->_contract->getId()]);
-            if ($result) {
-               $this->_nb_hours = (int) $this->fields['nb_hours'];
-            }
+         if ($projectTask) {
+              $this->_nb_hours = $projectTask->getField('planned_duration') / 3600;
          }
-      
+      }
+      if ($this->_nb_hours === null) {
+          $result = $this->getFromDBByCrit(['contract_id' => $this->_contract->getId()]);
+         if ($result) {
+            $this->_nb_hours = (int) $this->fields['nb_hours'];
+         }
+      }
 
        return $this->_nb_hours;
    }
