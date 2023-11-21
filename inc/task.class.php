@@ -194,7 +194,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param boolean $fromCronTask
      * @return type
      */
-   public static function closeTaskAndCreateExcessTicket($tasks, $fromCronTask = true) {
+   public function closeTaskAndCreateExcessTicket($tasks, $fromCronTask = true) {
        $newTicketIds = [];
       foreach ($tasks as $task_data) {
           $expired = false;
@@ -231,7 +231,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
      * @param integer $action_time
      * @return int
      */
-   public static function closeTask($expired = false, $action_time = 0) {
+   public function closeTask($expired = false, $action_time = 0) {
        $newTicketIds = [];
 
        echo 'Fermeture de la tâche ' . $this->_task->getId() . "<br />\n";

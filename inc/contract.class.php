@@ -805,7 +805,7 @@ class PluginProjectbridgeContract extends CommonDBTM
      * @param void
      * @return void
      */
-   public static function renewProjectTask() {
+   public function renewProjectTask() {
        global $DB;
        $project_id = $this->getProjectId();
        $newTicketIds = [];
@@ -907,7 +907,7 @@ class PluginProjectbridgeContract extends CommonDBTM
      * @param boolean $use_input_data
      * @return array
      */
-   public static function getRenewalData($use_input_data = false) {
+   public function getRenewalData($use_input_data = false) {
        $project_id = $this->getProjectId();
        $open_exists = self::getProjectTasksForProjectByStatus($project_id, 'closed', '!=', 1);
        $closed_exists = self::getProjectTasksForProjectByStatus($project_id, 'closed', '=', 1);
