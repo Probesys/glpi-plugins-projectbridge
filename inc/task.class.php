@@ -8,12 +8,12 @@
  *
  *  This file is part of projectBridge.
  *
- *  rgpdTools is free software; you can redistribute it and/or modify
+ *  projectBridge is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 3 of the License, or
  *  (at your option) any later version.
  *
- *  rgpdTools is distributed in the hope that it will be useful,
+ *  projectBridge is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -861,7 +861,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
              $entity = new Entity();
              $entity->getFromDB($contract_data['contract']->fields['entities_id']);
              $html_parts[] = '<strong>' . __('Entity') . '</strong> : ';
-             $html_parts[] = $entity->fields['name'];
+             $html_parts[] = $entity->fields['completename'];
              $html_parts[] = '<br />' . "\n";
 
              $bridge_contract = new PluginProjectbridgeContract($contract_data['contract']);
@@ -967,7 +967,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
              $entity = new Entity();
              $entity->getFromDB($contract_data['contract']->fields['entities_id']);
              $html_parts[] = '<strong>' . __('Entity') . '</strong> : ';
-             $html_parts[] = $entity->fields['name'];
+             $html_parts[] = $entity->fields['completename'];
              $html_parts[] = '<br />' . "\n";
              $html_parts[] = '</li>' . "\n";
          }
