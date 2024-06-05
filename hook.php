@@ -40,7 +40,7 @@ function plugin_projectbridge_install() {
        $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeEntity::$table_name . "`
             (
-                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `entity_id` INT(11) NOT NULL,
                 `contract_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
@@ -56,7 +56,7 @@ function plugin_projectbridge_install() {
        $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeContract::$table_name . "`
             (
-                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `contract_id` INT(11) NOT NULL,
                 `project_id` INT(11) NOT NULL,
                 `nb_hours` INT(11) NOT NULL,
@@ -73,7 +73,7 @@ function plugin_projectbridge_install() {
        $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeTicket::$table_name . "`
             (
-                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `ticket_id` INT(11) NOT NULL,
                 `projecttasks_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
@@ -94,7 +94,7 @@ function plugin_projectbridge_install() {
     $create_tableConfig_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeConfig::$table_name . "`
             (
-                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `name` VARCHAR(50) NOT NULL ,
                 `value` VARCHAR(250) NOT NULL,
                 PRIMARY KEY (`id`)
@@ -162,7 +162,7 @@ function plugin_projectbridge_install() {
        $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeState::$table_name . "`
             (
-                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `status` VARCHAR(250) NOT NULL,
                 `projectstates_id` INT(11) NOT NULL,
                 PRIMARY KEY (`id`),
@@ -176,7 +176,7 @@ function plugin_projectbridge_install() {
        $create_table_query = "
             CREATE TABLE IF NOT EXISTS `" . PluginProjectbridgeContractQuotaAlert::$table_name . "`
             (
-                `id` INT(11) SIGNED NOT NULL AUTO_INCREMENT,
+                `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `contract_id` INT(11) NOT NULL,
                 `quotaAlert` INT(11) NOT NULL,
                 PRIMARY KEY (`id`)
