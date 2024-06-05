@@ -96,14 +96,14 @@ class PluginProjectbridgeConfig extends CommonDBTM
      * @param type $name
      * @return type
      */
-   public static function getConfValueByName($name) {
-       $value = false;
-       $conf = self::getConfByName($name);
-      if ($conf) {
+   public static function getConfValueByName($name, $defaultValue = false) {
+      $value = $defaultValue;
+      $conf = self::getConfByName($name);
+      if (!is_null($conf)) {
           $value = json_decode($conf['value']);
       }
 
-       return $value;
+      return $value;
    }
 
     /**

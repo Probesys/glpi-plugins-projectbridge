@@ -428,6 +428,22 @@ if ($can_update) {
     echo '</span>';
     echo '</td>' . "\n";
     echo '</tr>' . "\n";
+    
+    // force change ProjectTask with last active after entity Transfert
+    $forceActiveProjectTaskAfterTranfer = PluginProjectbridgeConfig::getConfValueByName('forceActiveProjectTaskAfterTranfer', true);
+    
+    if (isset($post_data['projectbridge_config_forceActiveProjectTaskAfterTranfer'])) {
+       $isRequiredContractSelectorOnCreatingTicketForm = $post_data['projectbridge_config_forceActiveProjectTaskAfterTranfer'];
+       PluginProjectbridgeConfig::updateConfValue('forceActiveProjectTaskAfterTranfer', $forceActiveProjectTaskAfterTranfer);
+    }
+    echo '<tr id="forceActiveProjectTaskAfterTranfer" >' . "\n";
+    echo '<td>' . __('Force change ProjectTask with last active after entity Transfert', 'projectbridge') . '' . "\n";
+    echo '</td>' . "\n";
+    echo '<td>' . "\n";
+    Dropdown::showYesNo('projectbridge_config_forceActiveProjectTaskAfterTranfer', $forceActiveProjectTaskAfterTranfer, []);
+    echo '</span>';
+    echo '</td>' . "\n";
+    echo '</tr>' . "\n";
 
 
     // projectbridge_config_globalContractQuotaAlert

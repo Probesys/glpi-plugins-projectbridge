@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ProjectBridge 2.4RC3\n"
 "Report-Msgid-Bugs-To: contact@probesys.com\n"
-"POT-Creation-Date: 2023-10-31 14:48+0100\n"
-"PO-Revision-Date: 2023-10-31 14:01+0000\n"
+"POT-Creation-Date: 2024-06-05 16:00+0200\n"
+"PO-Revision-Date: 2024-06-05 16:02+0200\n"
 "Last-Translator: fernando.lagrange <fernando.lagrange@probesys.com>\n"
 "Language-Team: French <http://i18n.probesys.com/projects/plugins-glpi/"
 "projectbridge/fr/>\n"
@@ -17,25 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
-#: ../projectbridge/hook.php:313
+#: ../projectbridge/hook.php:358
 #: ../projectbridge/ajax/get_renewal_tickets.php:161
 msgctxt "projectbridge"
 msgid "Link tickets to renewal"
 msgstr "Lier les tickets au renouvellement"
 
-#: ../projectbridge/hook.php:367
+#: ../projectbridge/hook.php:412
 msgctxt "projectbridge"
 msgid "Please complete all renewal fields"
 msgstr "Veuillez remplir tous les champs de renouvellement"
 
-#: ../projectbridge/hook.php:400
+#: ../projectbridge/hook.php:445
 msgctxt "projectbridge"
 msgid "The contract has no start date. The project could not be created."
 msgstr "Le contrat n'a pas de date de début. Le projet n'a pas pu être crée."
 
-#: ../projectbridge/hook.php:448
+#: ../projectbridge/hook.php:493
 msgctxt "projectbridge"
 msgid ""
 "The correspondence for the status \"In progress\" has not been defined. The "
@@ -44,88 +44,88 @@ msgstr ""
 "La correspondance pour le statut \"En cours\" n'a pas été définie. Le projet "
 "n'a pas pu être créé."
 
-#: ../projectbridge/hook.php:515 ../projectbridge/inc/ticket.class.php:137
+#: ../projectbridge/hook.php:560 ../projectbridge/inc/ticket.class.php:137
 msgctxt "projectbridge"
 msgid "Make the connection"
 msgstr "Construire la connexion"
 
-#: ../projectbridge/hook.php:685 ../projectbridge/inc/entity.class.php:93
+#: ../projectbridge/hook.php:730 ../projectbridge/inc/entity.class.php:93
 msgctxt "projectbridge"
 msgid "Default contract"
 msgstr "Contrat par défaut"
 
-#: ../projectbridge/hook.php:693
+#: ../projectbridge/hook.php:738
 msgctxt "projectbridge"
 msgid "Time not affected to a project task (hours)"
 msgstr "Durée non affectée à une tâche de projet (heures)"
 
-#: ../projectbridge/hook.php:716
+#: ../projectbridge/hook.php:761
 msgctxt "projectbridge"
 msgid "Project tasks"
 msgstr "Tâches de projet"
 
-#: ../projectbridge/hook.php:725
+#: ../projectbridge/hook.php:770
 msgctxt "projectbridge"
 msgid "ProjectTask status"
 msgstr "Statut de la Tâches de projet"
 
-#: ../projectbridge/hook.php:734
+#: ../projectbridge/hook.php:778
 msgctxt "projectbridge"
 msgid "Is linked to a project task"
 msgstr "Est lié à une tâche de projet"
 
-#: ../projectbridge/hook.php:742 ../projectbridge/hook.php:782
+#: ../projectbridge/hook.php:786 ../projectbridge/hook.php:826
 msgctxt "projectbridge"
 msgid "Effective duration (hours)"
 msgstr "Durée effective (heures)"
 
-#: ../projectbridge/hook.php:759
+#: ../projectbridge/hook.php:803
 msgctxt "projectbridge"
 msgid "Project name"
 msgstr "Nom du projet"
 
-#: ../projectbridge/hook.php:767
+#: ../projectbridge/hook.php:811
 msgctxt "projectbridge"
 msgid "ProjectBridge project tasks"
 msgstr "Tâche de projet projectbridge"
 
-#: ../projectbridge/hook.php:790
+#: ../projectbridge/hook.php:834
 msgctxt "projectbridge"
 msgid "Planned duration (hours)"
 msgstr "Durée planifiée (heures)"
 
-#: ../projectbridge/hook.php:798
+#: ../projectbridge/hook.php:842
 msgctxt "projectbridge"
 msgid "Last project task ?"
 msgstr "Dernière tâche de projet ?"
 
-#: ../projectbridge/hook.php:806
+#: ../projectbridge/hook.php:850
 msgctxt "projectbridge"
 msgid "Project status"
 msgstr "Statut de la tâche de projet"
 
-#: ../projectbridge/hook.php:813
+#: ../projectbridge/hook.php:857
 msgctxt "projectbridge"
 msgid "Associate tickets"
 msgstr "Tickets associés"
 
-#: ../projectbridge/hook.php:820 ../projectbridge/inc/contract.class.php:257
-#: ../projectbridge/inc/contract.class.php:262
+#: ../projectbridge/hook.php:864 ../projectbridge/inc/contract.class.php:256
+#: ../projectbridge/inc/contract.class.php:261
 msgctxt "projectbridge"
 msgid "Comsuption"
 msgstr "Consommation"
 
-#: ../projectbridge/hook.php:836
+#: ../projectbridge/hook.php:880
 msgctxt "projectbridge"
 msgid "Number of project tasks tickets"
 msgstr "Nombre de tickets de tâches de projet"
 
-#: ../projectbridge/hook.php:1533
+#: ../projectbridge/hook.php:1577
 msgctxt "projectbridge"
 msgid "Delete the link with any project task"
 msgstr "Supprimer le lien avec toutes les tâches de projet"
 
-#: ../projectbridge/hook.php:1536
+#: ../projectbridge/hook.php:1580
 msgctxt "projectbridge"
 msgid "Force link to a project task"
 msgstr "Forcer le lien avec une tâche de projet"
@@ -222,96 +222,103 @@ msgstr ""
 msgctxt "projectbridge"
 msgid "Contract selector on creating ticket form is required"
 msgstr ""
-"Ajouter un sélecteur de contrat dans le formulaire de création de ticket"
+"Le sélecteur de contrat dans le formulaire de création de ticket est "
+"obligatoire"
 
 #: ../projectbridge/front/config.form.php:440
+msgctxt "projectbridge"
+msgid "Force change ProjectTask with last active after entity Transfert"
+msgstr "Forcer le changement de tâche de projet après un transfert d'entité"
+
+#: ../projectbridge/front/config.form.php:456
 msgctxt "projectbridge"
 msgid "Global percentage quota to send alert notification"
 msgstr "Pourcentage de consommation auquel envoyer une alerte"
 
-#: ../projectbridge/front/config.form.php:473
+#: ../projectbridge/front/config.form.php:489
 msgctxt "projectbridge"
 msgid "Elements from previous ticket to be associated with renewed ticket"
 msgstr ""
 "Éléments associés à l'ancien ticket devant être associé à la copie "
 "automatique du ticket"
 
-#: ../projectbridge/front/config.form.php:519
+#: ../projectbridge/front/config.form.php:535
 msgctxt "projectbridge"
 msgid "Please activate the plugin or get the right of access"
 msgstr "Merci d'activer le plugin ou donner les bonnes permissions"
 
-#: ../projectbridge/inc/contract.class.php:115
+#: ../projectbridge/inc/contract.class.php:114
 msgctxt "projectbridge"
 msgid "linking Project"
 msgstr "projet lié"
 
-#: ../projectbridge/inc/contract.class.php:164
-#: ../projectbridge/inc/contract.class.php:497
+#: ../projectbridge/inc/contract.class.php:163
+#: ../projectbridge/inc/contract.class.php:496
 msgctxt "projectbridge"
 msgid "Create project"
 msgstr "Créer le projet"
 
-#: ../projectbridge/inc/contract.class.php:215
+#: ../projectbridge/inc/contract.class.php:214
 #: ../projectbridge/inc/ticket.class.php:133
 msgctxt "projectbridge"
 msgid "Access to linked project"
 msgstr "Accéder au projet lié"
 
-#: ../projectbridge/inc/contract.class.php:237
+#: ../projectbridge/inc/contract.class.php:236
 msgctxt "projectbridge"
 msgid "Warning ! No associate projectTask with \"In progress\" status exist"
-msgstr "Attention ! Il n'y a pas de tâche de projet avec le statut \"En cours\""
+msgstr ""
+"Attention ! Il n'y a pas de tâche de projet avec le statut \"En cours\""
 
-#: ../projectbridge/inc/contract.class.php:278
+#: ../projectbridge/inc/contract.class.php:277
 msgctxt "projectbridge"
 msgid "Expired in less than 24h"
 msgstr "Expire dans moins de 24h"
 
-#: ../projectbridge/inc/contract.class.php:280
+#: ../projectbridge/inc/contract.class.php:279
 msgctxt "projectbridge"
 msgid "Expired in"
 msgstr "Expire dans"
 
-#: ../projectbridge/inc/contract.class.php:285
+#: ../projectbridge/inc/contract.class.php:284
 msgctxt "projectbridge"
 msgid "Expired today"
 msgstr "Expire aujourd'hui"
 
-#: ../projectbridge/inc/contract.class.php:287
+#: ../projectbridge/inc/contract.class.php:286
 msgctxt "projectbridge"
 msgid "Expired since"
 msgstr "Expiré depuis"
 
-#: ../projectbridge/inc/contract.class.php:295
-#: ../projectbridge/inc/contract.class.php:345
+#: ../projectbridge/inc/contract.class.php:294
+#: ../projectbridge/inc/contract.class.php:344
 msgctxt "projectbridge"
 msgid "Renew the contract"
 msgstr "Renouveler le contrat"
 
-#: ../projectbridge/inc/contract.class.php:326
-#: ../projectbridge/inc/contract.class.php:598
+#: ../projectbridge/inc/contract.class.php:325
+#: ../projectbridge/inc/contract.class.php:597
 msgctxt "projectbridge"
 msgid "Number of hours"
 msgstr "Nombre d'heures"
 
-#: ../projectbridge/inc/contract.class.php:334
+#: ../projectbridge/inc/contract.class.php:333
 msgctxt "projectbridge"
 msgid "Confirm renewal"
 msgstr "Confirmer le renouvellement"
 
-#: ../projectbridge/inc/contract.class.php:501
+#: ../projectbridge/inc/contract.class.php:500
 msgctxt "projectbridge"
 msgid "Remember to refresh this page after creating the project"
 msgstr "Souvenez vous de bien actualiser cette page après avoir crée le projet"
 
-#: ../projectbridge/inc/contract.class.php:666
+#: ../projectbridge/inc/contract.class.php:665
 #, php-format
 msgctxt "projectbridge"
 msgid "Please define the correspondence of the %1$s status."
 msgstr "Merci de définir une correspondance pour le statut %1$s."
 
-#: ../projectbridge/inc/contract.class.php:821
+#: ../projectbridge/inc/contract.class.php:841
 msgctxt "projectbridge"
 msgid ""
 "The match for the status \"In progress\" has not been defined. The contract "
@@ -320,33 +327,33 @@ msgstr ""
 "La correspondance pour le statut \"En cours\" n'a pas été définie. Le "
 "contrat n'a pas pu être renouvelé."
 
-#: ../projectbridge/inc/contract.class.php:1177
-#: ../projectbridge/inc/contract.class.php:1180
+#: ../projectbridge/inc/contract.class.php:1197
+#: ../projectbridge/inc/contract.class.php:1200
 msgctxt "projectbridge"
 msgid "Access to linked contract"
 msgstr "Accéder au contrat lié"
 
-#: ../projectbridge/inc/contract.class.php:1180
+#: ../projectbridge/inc/contract.class.php:1200
 msgctxt "projectbridge"
 msgid "Link to contract nonexistent"
 msgstr "Lien vers le contrat inexistant"
 
-#: ../projectbridge/inc/contract.class.php:1184
+#: ../projectbridge/inc/contract.class.php:1204
 msgctxt "projectbridge"
 msgid "No linked contract"
 msgstr "Pas de contrat lié"
 
-#: ../projectbridge/inc/contract.class.php:1196
+#: ../projectbridge/inc/contract.class.php:1216
 msgctxt "projectbridge"
 msgid "ProjectBridge"
 msgstr "Projectbridge"
 
-#: ../projectbridge/inc/contract.class.php:1220
+#: ../projectbridge/inc/contract.class.php:1240
 msgctxt "projectbridge"
 msgid "ProjectBridge Configurations"
 msgstr "Configuration de ProjectBridge"
 
-#: ../projectbridge/inc/contract.class.php:1224
+#: ../projectbridge/inc/contract.class.php:1244
 msgctxt "projectbridge"
 msgid "Percentage quota to send alert notification"
 msgstr "Pourcentage de consommation pour lequel envoyer une alerte"
@@ -385,11 +392,12 @@ msgstr "Alerte de contrat à renouveler"
 #: ../projectbridge/inc/task.class.php:116
 msgctxt "projectbridge"
 msgid "Send email alert containing contract with consumption over quota"
-msgstr "Envoyer l'alerte contentant les contrats avec une consommation dépassée"
+msgstr ""
+"Envoyer l'alerte contentant les contrats avec une consommation dépassée"
 
 #: ../projectbridge/inc/task.class.php:140
-#: ../projectbridge/inc/task.class.php:824
-#: ../projectbridge/inc/task.class.php:927
+#: ../projectbridge/inc/task.class.php:831
+#: ../projectbridge/inc/task.class.php:934
 msgctxt "projectbridge"
 msgid "Plugin is not installed"
 msgstr "Plugin non installé"
@@ -422,8 +430,8 @@ msgid "find"
 msgstr "trouvé"
 
 #: ../projectbridge/inc/task.class.php:528
-#: ../projectbridge/inc/task.class.php:830
-#: ../projectbridge/inc/task.class.php:933
+#: ../projectbridge/inc/task.class.php:837
+#: ../projectbridge/inc/task.class.php:940
 msgctxt "projectbridge"
 msgid "person(s) to alert"
 msgstr "personnes(s) à alerter"
@@ -473,40 +481,40 @@ msgctxt "projectbridge"
 msgid "Adjustment task"
 msgstr "Tâche d'ajustement"
 
-#: ../projectbridge/inc/task.class.php:672
+#: ../projectbridge/inc/task.class.php:674
 msgctxt "projectbridge"
 msgid "re-calculuation for projectTask"
 msgstr "re-calcul pour la tâche de ticket"
 
-#: ../projectbridge/inc/task.class.php:834
-#: ../projectbridge/inc/task.class.php:836
-#: ../projectbridge/inc/task.class.php:840
+#: ../projectbridge/inc/task.class.php:841
+#: ../projectbridge/inc/task.class.php:843
+#: ../projectbridge/inc/task.class.php:847
 msgctxt "projectbridge"
 msgid "contract(s) to renew"
 msgstr "contrat(s) à renouveler"
 
-#: ../projectbridge/inc/task.class.php:874
+#: ../projectbridge/inc/task.class.php:881
 msgctxt "projectbridge"
 msgid "Expected end date"
 msgstr "Date de fin requise"
 
-#: ../projectbridge/inc/task.class.php:901
+#: ../projectbridge/inc/task.class.php:908
 msgctxt "projectbridge"
 msgid "This Email is send automatically by the plugin projectBridge"
 msgstr "Ce courriel a été envoyé automatiquement par le plugin projectBridge"
 
-#: ../projectbridge/inc/task.class.php:938
-#: ../projectbridge/inc/task.class.php:942
+#: ../projectbridge/inc/task.class.php:945
+#: ../projectbridge/inc/task.class.php:949
 msgctxt "projectbridge"
 msgid "Contract(s) over limit quota alert"
 msgstr "Alerte des contrats dont le quota est dépassé"
 
-#: ../projectbridge/inc/task.class.php:956
+#: ../projectbridge/inc/task.class.php:963
 msgctxt "projectbridge"
 msgid "Quota"
 msgstr "Quota"
 
-#: ../projectbridge/inc/task.class.php:970
+#: ../projectbridge/inc/task.class.php:977
 msgctxt "projectbridge"
 msgid "This Email si send automacitly by the plugin projectBridge"
 msgstr "Ce courriel a été envoyé automatiquement par le plugin projectBridge"

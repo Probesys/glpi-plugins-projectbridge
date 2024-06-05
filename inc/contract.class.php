@@ -680,6 +680,27 @@ class PluginProjectbridgeContract extends CommonDBTM
 
        return $tasks;
    }
+   
+   public function getLastActiveProjectTasksForProject($project_id) {
+
+       global $DB;
+
+       $state_closed_value = PluginProjectbridgeState::getProjectStateIdByStatus('closed');
+
+       $task = null;
+      foreach ($DB->request(
+           'glpi_projecttasks',
+           [
+                   "projects_id" => $project_id,
+                   "projectstates_id" => ['!=', $state_closed_value],
+                   'ORDER' => ['plan_start_date DESC'],
+                   'LIMIT' => 1
+               ]
+       ) as $data) {
+          $task = $data;
+      }
+       return $task;
+   }
 
     /**
      * get all active projecttask associate to one project

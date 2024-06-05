@@ -29,7 +29,7 @@
  */
 
 
-define('PLUGIN_PROJECTBRIDGE_VERSION', '2.7.8');
+define('PLUGIN_PROJECTBRIDGE_VERSION', '2.7.9');
 
 define('PLUGIN_PROJECTBRIDGE_MIN_GLPI_VERSION', '10.0');
 define('PLUGIN_PROJECTBRIDGE_MAX_GLPI_VERSION', '11.0');
@@ -97,6 +97,8 @@ function plugin_init_projectbridge() {
         'TicketTask' => 'plugin_projectbridge_ticketask_add',
         'Ticket'=> 'plugin_projectbridge_ticket_update',
     ];
+    
+    $PLUGIN_HOOKS['item_transfer'][PluginProjectbridgeConfig::NAMESPACE] = 'plugin_projectbridge_item_transfer';
 
     $PLUGIN_HOOKS['use_massive_action'][PluginProjectbridgeConfig::NAMESPACE] = 1;
 
