@@ -291,7 +291,7 @@ function plugin_projectbridge_item_transfer(array $params) {
 
                     $project_task_ticket = new ProjectTask_Ticket();
                     // delete previous association between Ticket and projectTask
-                    $project_task_ticket->delete([
+                    $project_task_ticket->deleteByCriteria([
                         'tickets_id' => $ticket_id,
                     ]);
                     if($projectTask) {
