@@ -103,7 +103,7 @@ class PluginProjectbridgeContract extends CommonDBTM
    public static function postShow(Contract $contract) {
        $contract_id = $contract->getId();
        $html_parts = [];
-       $html_parts[]= '$contract_id ='.$contract->getId();
+       #$html_parts[]= '$contract_id ='.$contract->getId();
        $html_parts[] = '<div style="display: none;">' . "\n";
        $html_parts[] = '       <div id="projectbridge_config"class="col-12 col-xxl-12 flex-column" >' . "\n";
        $html_parts[] = '           <div class="d-flex flex-row flex-wrap flex-xl-nowrap" >' . "\n";

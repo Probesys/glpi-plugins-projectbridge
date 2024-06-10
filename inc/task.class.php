@@ -288,6 +288,7 @@ class PluginProjectbridgeTask extends CommonDBTM {
                             $ticket_fields['content'] = $additional_content . $ticket_fields['content'];
                             $ticket_fields['content'] = str_replace("'", "\'", $ticket_fields['content']);
                             $ticket_fields['content'] = str_replace('"', '\"', $ticket_fields['content']);
+                            $ticket_fields['content'] = str_replace(';n&', ';&', $ticket_fields['content']);
                             $ticket_fields['actiontime'] = 0;
                             $ticket_fields['requesttypes_id'] = $ticket_request_type;
                             $ticket_fields['status'] = $old_status;
